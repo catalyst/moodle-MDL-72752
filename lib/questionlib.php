@@ -269,6 +269,13 @@ function question_category_delete_safe($category): void {
                     $parentcontextid = $parentcontext->id;
                 }
             }
+            if (empty($moduletouse)) {
+                $qbankname = 'Question bank to save from deletion';
+                $course = get_course(SITEID);
+                $moduletouse = mod_qbank\data_migration_helper::create_qbank_instance($qbankname, $course);
+                $parentcontextid = context_module::instance($moduletouse->coursemodule)->id;
+            }
+            $name = $category->contextid;
             question_save_from_deletion(array_keys($questionids), $parentcontextid, $name, $rescue);
         }
     }
@@ -805,8 +812,9 @@ function move_question_set_references(int $oldcategoryid, int $newcatgoryid,
  * @param integer $categoryid the id of the category being moved.
  * @param integer $oldcontextid the old context id.
  * @param integer $newcontextid the new context id.
+ * @param bool $purgecache if calling this function will purge question from the cache or not.
  */
-function question_move_category_to_context($categoryid, $oldcontextid, $newcontextid): void {
+function question_move_category_to_context($categoryid, $oldcontextid, $newcontextid, $purgecache = true) {
     global $DB;
 
     $questions = [];
@@ -818,10 +826,12 @@ function question_move_category_to_context($categoryid, $oldcontextid, $newconte
 
     $questionids = $DB->get_records_sql_menu($sql, [$categoryid]);
     foreach ($questionids as $questionid => $qtype) {
-        question_bank::get_qtype($qtype)->move_files($questionid, $oldcontextid, $newcontextid);
-        // Purge this question from the cache.
-        question_bank::notify_question_edited($questionid);
-
+        question_bank::get_qtype($qtype)->move_files(
+                $questionid, $oldcontextid, $newcontextid);
+        if ($purgecache) {
+            // Purge this question from the cache.
+            question_bank::notify_question_edited($questionid);
+        }
         $questions[] = (object) [
             'id' => $questionid,
             'contextid' => $oldcontextid
