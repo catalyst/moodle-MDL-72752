@@ -14,6 +14,9 @@ Feature: A teacher can put questions in categories in the question bank
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
       | contextlevel | reference | questioncategory | name           |
       | Course       | C1        | Top              | top            |
@@ -27,8 +30,7 @@ Feature: A teacher can put questions in categories in the question bank
       | Another subcat  | essay | Question 1                | Write about whatever you want |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
-    And I navigate to "Question bank" in current page administration
-    And I select "Categories" from the "Question bank tertiary navigation" singleselect
+    And I am on the "Test quiz" "quiz activity" page
 
   Scenario: A new question category can be created
     And I press "Add category"
