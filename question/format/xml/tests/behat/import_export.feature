@@ -14,11 +14,15 @@ Feature: Test importing questions from Moodle XML format.
     And the following "course enrolments" exist:
       | user    | course | role           |
       | teacher | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And I log in as "teacher"
     And I am on "Course 1" course homepage
 
   @javascript @_file_upload
   Scenario: import some true/false questions from Moodle XML format
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_xml" to "1"
@@ -34,6 +38,7 @@ Feature: Test importing questions from Moodle XML format.
 
     # Now export again.
     And I am on "Course 1" course homepage
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Export" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_xml" to "1"
@@ -43,6 +48,7 @@ Feature: Test importing questions from Moodle XML format.
 
   @javascript @_file_upload
   Scenario: import some multiple choice questions from Moodle XML format
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_xml" to "1"
@@ -56,6 +62,7 @@ Feature: Test importing questions from Moodle XML format.
 
   @javascript @_file_upload
   Scenario: import some multi-answer questions from Moodle XML format
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_xml" to "1"
@@ -69,6 +76,7 @@ Feature: Test importing questions from Moodle XML format.
 
   @javascript @_file_upload
   Scenario: import some questions with legacy-style images from Moodle XML format
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_xml" to "1"

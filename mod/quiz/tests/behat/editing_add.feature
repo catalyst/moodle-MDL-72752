@@ -1,4 +1,4 @@
-@mod @mod_quiz
+@mod @mod_quiz @javascript
 Feature: Edit quiz page - adding things
   In order to build the quiz I want my students to attempt
   As a teacher
@@ -15,8 +15,11 @@ Feature: Edit quiz page - adding things
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
     And the following "activities" exist:
-      | activity   | name   | intro                           | course | idnumber |
-      | quiz       | Quiz 1 | Quiz 1 for testing the Add menu | C1     | quiz1    |
+      | activity   | name             | intro                           | course | idnumber |
+      | quiz       | Quiz 1           | Quiz 1 for testing the Add menu | C1     | quiz1    |
+    And the following "question categories" exist:
+      | contextlevel          | reference | name           |
+      | Activity module       | quiz1     | Test questions |
     And I am on the "Quiz 1" "mod_quiz > Edit" page logged in as "teacher1"
 
   @javascript
