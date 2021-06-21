@@ -21,9 +21,12 @@ Feature: The questions in the question bank can be filtered by discrimination in
       | student1 | C1     | student        |
       | student2 | C1     | student        |
       | student3 | C1     | student        |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
+      | contextlevel          | reference    | name           |
+      | Activity module       | quiz1        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype       | name  | questiontext    |
       | Test questions   | truefalse   | TF1   | First question  |
@@ -90,6 +93,7 @@ Feature: The questions in the question bank can be filtered by discrimination in
       |   4  | True     |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
+    And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
 
   @javascript
