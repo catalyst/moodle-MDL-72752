@@ -14,12 +14,18 @@ Feature: Test creating a Calculated multichoice question
     And the following "course enrolments" exist:
       | user    | course | role           |
       | teacher | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name             | intro                   | course | idnumber |
+      | qbank      | Test qbank name  | Test qbank description  | C1     | qbank1   |
     And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
+      | contextlevel          | reference | name           |
+      | Activity module       | qbank1    | Test questions |
 
   Scenario: Create a Calculated question
-    When I am on the "Course 1" "core_question > course question bank" page logged in as teacher
+    When I log in as "teacher"
+    And I am on "Course 1" course homepage
+    And I navigate to "Question bank" in current page administration
+    And I follow "Test qbank name"
     And I press "Create a new question ..."
     And I set the field "Calculated multichoice" to "1"
     And I press "Add"

@@ -20,9 +20,6 @@ Feature: Regrading quiz attempts using the Grades report
       | student1 | C1     | student        |
       | student2 | C1     | student        |
       | student3 | C1     | student        |
-    And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
     And the following "activities" exist:
       | activity | name                       | course | idnumber |
       | quiz     | Quiz for testing regrading | C1     | quiz1    |

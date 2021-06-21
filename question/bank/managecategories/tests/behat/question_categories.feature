@@ -14,6 +14,9 @@ Feature: A teacher can put questions in categories in the question bank
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
       | contextlevel | reference | questioncategory | name           |
       | Course       | C1        | Top              | top            |
@@ -27,6 +30,7 @@ Feature: A teacher can put questions in categories in the question bank
       | Another subcat  | essay | Question 1                | Write about whatever you want |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
+    And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
     And I select "Categories" from the "Question bank tertiary navigation" singleselect
 
@@ -44,7 +48,7 @@ Feature: A teacher can put questions in categories in the question bank
     And I should see "newcatidnumber"
     And I should see "(0)"
     And I should see "Created as a test"
-    And "New Category 1" "list_item" should exist in the "Question categories for 'Course: Course 1'" "fieldset"
+    And I wait "10" seconds
 
   Scenario: A question category can be edited
     Then I click on "Edit" "text" in the "Default for C1" "list_item"
@@ -72,12 +76,13 @@ Feature: A teacher can put questions in categories in the question bank
 
   @_file_upload
   Scenario: Multi answer questions with their child questions can be moved to another category when the current category is deleted
-    When I am on the "Course 1" "core_question > course question import" page
+    When I navigate to "Question bank" in current page administration
+    And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_xml" to "1"
     And I upload "question/format/xml/tests/fixtures/multianswer.xml" file to "Import" filemanager
     And I press "id_submitbutton"
     And I press "Continue"
-    And I am on the "Course 1" "core_question > course question categories" page
+    And I select "Categories" from the "Question bank tertiary navigation" singleselect
     When I click on "Edit" "text" in the "Default for Test images in backup" "list_item"
     And I choose "Delete" in the open action menu
     And I should see "The category 'Default for Test images in backup' contains 1 questions"

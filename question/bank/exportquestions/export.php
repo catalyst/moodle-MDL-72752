@@ -97,9 +97,7 @@ if ($fromform = $exportform->get_data()) {
         $PAGE->requires->js_function_call('document.location.replace', [$exporturl->out(false)], false, 1);
     }
 
-    echo $OUTPUT->continue_button(new moodle_url($PAGE->settingsnav->find(
-                                            'questionbank',
-                                            \navigation_node::TYPE_CONTAINER)->action, $thispageurl->params()));
+    echo $OUTPUT->continue_button(new moodle_url($baseurl, $thispageurl->params()));
     echo $OUTPUT->footer();
     exit;
 }

@@ -8,15 +8,15 @@ Feature: Test duplicating a quiz containing a drag and drop markers question
     And the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C1        | 0        |
-    And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
-    And the following "questions" exist:
-      | questioncategory | qtype    | name         | template |
-      | Test questions   | ddmarker | Drag markers | mkmap    |
     And the following "activities" exist:
       | activity   | name      | course | idnumber |
       | quiz       | Test quiz | C1     | quiz1    |
+    And the following "question categories" exist:
+      | contextlevel          | reference | name           |
+      | Activity module       | quiz1     | Test questions |
+    And the following "questions" exist:
+      | questioncategory | qtype    | name         | template |
+      | Test questions   | ddmarker | Drag markers | mkmap    |
     And quiz "Test quiz" contains the following questions:
       | Drag markers | 1 |
     And I log in as "admin"
