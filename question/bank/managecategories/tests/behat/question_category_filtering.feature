@@ -14,11 +14,14 @@ Feature: The questions in the question bank can be filtered by categories
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
-      | contextlevel | reference | name                |
-      | Course       | C1        | Test questions      |
-      | Course       | C1        | Some other category |
-      | Course       | C1        | Subcategory         |
+      | contextlevel          | reference    | name                |
+      | Activity module       | quiz1        | Test questions      |
+      | Activity module       | quiz1        | Some other category |
+      | Activity module       | quiz1        | Subcategory         |
     And the following "questions" exist:
       | questioncategory      | qtype     | name            | user     | questiontext    |
       | Test questions        | essay     | question 1 name | admin    | Question 1 text |
@@ -26,6 +29,7 @@ Feature: The questions in the question bank can be filtered by categories
       | Subcategory           | essay     | question 3 name | teacher1 | Question 3 text |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
+    And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
 
   Scenario: The questions can be filtered by category filter

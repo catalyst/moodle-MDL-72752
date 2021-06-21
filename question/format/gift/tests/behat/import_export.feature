@@ -14,12 +14,16 @@ Feature: Test importing questions from GIFT format.
     And the following "course enrolments" exist:
       | user    | course | role           |
       | teacher | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And I log in as "teacher"
     And I am on "Course 1" course homepage
 
   @javascript @_file_upload
   Scenario: import some GIFT questions
-    When I navigate to "Question bank" in current page administration
+    When I follow "Test quiz"
+    And I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_gift" to "1"
     And I upload "question/format/gift/tests/fixtures/questions.gift.txt" file to "Import" filemanager
@@ -32,6 +36,7 @@ Feature: Test importing questions from GIFT format.
 
     # Now export again.
     And I am on "Course 1" course homepage
+    And I follow "Test quiz"
     And I navigate to "Question bank" in current page administration
     And I select "Export" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_gift" to "1"
@@ -40,6 +45,7 @@ Feature: Test importing questions from GIFT format.
 
   @javascript @_file_upload
   Scenario: import a GIFT file which specifies the category
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_gift" to "1"
@@ -53,6 +59,7 @@ Feature: Test importing questions from GIFT format.
 
   @javascript @_file_upload
   Scenario: import some GIFT questions with unsupported encoding
+    And I follow "Test quiz"
     When I navigate to "Question bank" in current page administration
     And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_gift" to "1"

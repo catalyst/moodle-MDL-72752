@@ -10,8 +10,8 @@ Feature: Use the qbank plugin manager page for deletequestion
       | activity   | name      | course | idnumber |
       | quiz       | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
+      | contextlevel          | reference | name           |
+      | Activity module       | quiz1     | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype     | name                  | questiontext              |
       | Test questions   | truefalse | First question        | Answer the first question |
@@ -64,6 +64,7 @@ Feature: Use the qbank plugin manager page for deletequestion
       | question       | page |
       | First question | 1    |
     When I am on "Course 1" course homepage
+    And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
     And I click on "Clear filters" "button"
     And I set the field "type" in the "Filter 1" "fieldset" to "Category"

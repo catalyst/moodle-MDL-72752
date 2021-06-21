@@ -2384,6 +2384,7 @@ function mod_quiz_output_fragment_quiz_question_bank($args): string {
     $querystring = parse_url($args['querystring'], PHP_URL_QUERY);
     parse_str($querystring, $params);
 
+
     $viewclass = \mod_quiz\question\bank\custom_view::class;
     $extraparams['view'] = $viewclass;
 
@@ -2580,13 +2581,13 @@ function build_required_parameters_for_custom_view(array $params, array $extrapa
         list($thispageurl, $contexts, $cmid, $cm, $quiz, $pagevars) =
             question_build_edit_resources('editq', '/mod/quiz/edit.php',
                 array_merge($params, $extraparams),
-                $viewclass::DEFAULT_PAGE_SIZE);
+                $viewclass::DEFAULT_PAGE_SIZE, true);
     } else {
         // Build the required params.
         list($thispageurl, $contexts, $cmid, $cm, $quiz, $pagevars) =
             question_build_edit_resources('editq',
                 '/mod/quiz/edit.php',
-                array_merge($params, $extraparams));
+                array_merge($params, $extraparams), DEFAULT_QUESTIONS_PER_PAGE, true);
     }
 
     // Get the course object.

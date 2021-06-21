@@ -14,9 +14,12 @@ Feature: Filter the questions in the question bank by tags
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity   | name      | course | idnumber |
+      | quiz       | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
+      | contextlevel          | reference    | name           |
+      | Activity module       | quiz1        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype     | name            | user     | questiontext    |
       | Test questions   | essay     | question 1 name | admin    | Question 1 text |
@@ -27,6 +30,7 @@ Feature: Filter the questions in the question bank by tags
       | question 2 name | bar |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
+    And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
 
   @javascript

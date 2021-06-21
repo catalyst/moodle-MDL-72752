@@ -29,8 +29,8 @@ Feature: A teacher can edit question with custom fields
       | section  | 1                     |
       | grade    | 10                    |
     And the following "question categories" exist:
-      | contextlevel | reference | name           |
-      | Course       | C1        | Test questions |
+      | contextlevel          | reference    | name           |
+      | Activity module       | 00001        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype     | name           | questiontext              |
       | Test questions   | truefalse | First question | Answer the first question |
