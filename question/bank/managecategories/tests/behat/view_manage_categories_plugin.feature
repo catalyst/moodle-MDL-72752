@@ -1,4 +1,4 @@
-@qbank @qbank_managecategories @javascript
+@qbank @qbank_managecategories @view_manage_categories_plugin @javascript
 Feature: Use the qbank plugin manager page for managecategories
   In order to check the plugin behaviour with enable and disable
 
@@ -7,8 +7,8 @@ Feature: Use the qbank plugin manager page for managecategories
       | fullname | shortname | category |
       | Course 1 | C1        | 0        |
     And the following "activities" exist:
-      | activity   | name      | course | idnumber |
-      | quiz       | Test quiz | C1     | quiz1    |
+      | activity | name      | course | idnumber |
+      | quiz     | Test quiz | C1     | quiz1    |
     And the following "question categories" exist:
       | contextlevel | reference | name           |
       | Course       | C1        | Test questions |
