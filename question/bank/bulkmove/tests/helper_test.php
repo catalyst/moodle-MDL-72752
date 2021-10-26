@@ -126,6 +126,7 @@ class helper_test extends \advanced_testcase {
      * @covers ::bulk_move_questions
      */
     public function test_bulk_move_questions() {
+        global $DB;
         $this->helper_setup();
         // Verify that the questions are available in the current view.
         $view = new \core_question\local\bank\view($this->contexts, new \moodle_url('/'), $this->course);
@@ -145,6 +146,9 @@ class helper_test extends \advanced_testcase {
 
         // Get the processed question ids.
         $questionlist = $this->process_question_ids_test();
+
+        // Verify that the questions are available in the current view.
+        $this->assertEquals(2, $DB->count_records_sql($sql, [$this->cat->id]));
 
         helper::bulk_move_questions($questionlist, $this->secondcategory);
 
