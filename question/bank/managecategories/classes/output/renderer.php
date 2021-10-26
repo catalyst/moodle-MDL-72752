@@ -19,7 +19,7 @@ namespace qbank_managecategories\output;
 use plugin_renderer_base;
 
 /**
- * Class renderer.
+ * Class renderer for managecategories.
  *
  * @package    qbank_managecategories
  * @copyright  2021 Catalyst IT Australia Pty Ltd
@@ -36,4 +36,25 @@ class renderer extends plugin_renderer_base {
     public function render_qbank_categories($data) {
         return $this->render_from_template('qbank_managecategories/categories', $data);
     }
+
+    /**
+     * Render category condition advanced.
+     *
+     * @param array $displaydata
+     * @return bool|string
+     */
+    public function render_category_condition_advanced($displaydata) {
+        return $this->render_from_template('qbank_managecategories/category_condition_advanced', $displaydata);
+    }
+
+    /**
+     * Render category condition.
+     *
+     * @param array $displaydata
+     * @return bool|string
+     */
+    public function render_category_condition($displaydata) {
+        return $this->render_from_template('qbank_managecategories/category_condition', $displaydata);
+    }
+
 }

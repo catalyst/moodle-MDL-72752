@@ -35,3 +35,4 @@ $string['movequestions'] = 'Move questions to category';
 $string['pluginname'] = 'Manage categories';
 $string['privacy:metadata'] = 'The Manage Categories question bank plugin does not store any personal data.';
 $string['showcategorydescription'] = 'Show descriptions';
+$string['filterdescription'] =  '{$a->jointype} categories in the following "{$a->categories}" ';

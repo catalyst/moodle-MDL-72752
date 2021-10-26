@@ -68,4 +68,27 @@ class behat_qbank_managecategories extends behat_base {
         );
     }
 
+    /**
+     * Add / Append query to current url and visit it for category filter.
+     *
+     * @param string $category category name to get proper question category id.
+     * @param string $course course name to get proper course id.
+     * @param string $jointype join type for query.
+     *
+     * @Given /^I add "(?P<category>[^"]*)" and "(?P<course>[^"]*)" with "(?P<join_type>[^"]*)" join type parameters to url and visit it$/
+     */
+    public function i_add_and_with_join_type_parameters_to_url_and_visit_it($category, $course, $jointype) {
+        global $DB;
+        $jointypes = [
+            'None' => 0,
+            'Any' => 1,
+            'All' => 2
+        ];
+        $categoryid = $DB->get_field('question_categories', 'id', ['name' => $category]);
+        $courseid = $DB->get_field('course', 'id', ['fullname' => $course]);
+        $querystring = "courseid%3Dname%253Dcourseid%2526jointype%253D1%2526values%253D0%25253D" . $courseid . "%26category%3Dname%253Dcategory%2526jointype%253D" . $jointypes[$jointype] . "%2526values%253D0%25253D" . $categoryid;
+        $querystring = urldecode($querystring);
+        $url = new moodle_url($this->getSession()->getCurrentUrl(), ['filter' => $querystring]);
+        $this->execute('behat_general::i_visit', [$url->out(false)]);
+    }
 }
