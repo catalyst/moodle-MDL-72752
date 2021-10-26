@@ -1,4 +1,4 @@
-@qtype @qtype_essay
+@qtype @qtype_essay @javascript
 Feature: Test editing an Essay question
   As a teacher
   In order to be able to update my Essay question
@@ -23,6 +23,7 @@ Feature: Test editing an Essay question
       | Test questions   | essay | essay-002 | editorfilepicker |
       | Test questions   | essay | essay-003 | plain            |
 
+  @javascript
   Scenario: Edit an Essay question
     When I am on the "Course 1" "core_question > course question bank" page logged in as teacher
     And I choose "Edit question" action for "essay-001" in the question bank
