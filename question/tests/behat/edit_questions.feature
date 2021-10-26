@@ -21,6 +21,7 @@ Feature: A teacher can edit questions in the question bank
       | questioncategory | qtype | name                       | questiontext                  |
       | Test questions   | essay | Test question to be edited | Write about whatever you want |
 
+  @javascript
   Scenario: Edit a previously created question
     When I am on the "Test question to be edited" "core_question > edit" page logged in as "teacher1"
     And I set the following fields to these values:
@@ -59,6 +60,7 @@ Feature: A teacher can edit questions in the question bank
     And I press "id_submitbutton"
     Then I should see "You don't have permission to edit questions from here."
 
+  @javascript
   Scenario: Editing a question can be cancelled
     When I am on the "Test question to be edited" "core_question > edit" page logged in as "teacher1"
     And I set the field "Question name" to "Edited question name"
@@ -66,6 +68,7 @@ Feature: A teacher can edit questions in the question bank
     Then I should see "Test question to be edited"
     And "Test question to be edited" row "Created by" column of "categoryquestions" table should contain "Admin User"
 
+  @javascript
   Scenario: A question can have its idnumber removed
     Given the following "questions" exist:
       | questioncategory | qtype | name                   | idnumber |
@@ -77,6 +80,7 @@ Feature: A teacher can edit questions in the question bank
     And I press "id_submitbutton"
     Then I should not see "frog" in the "Question with idnumber" "table_row"
 
+  @javascript
   Scenario: If the question type is no longer installed, then most edit actions are not present
     Given the following "questions" exist:
       | questioncategory | qtype       | name            | questiontext    |
