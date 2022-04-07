@@ -44,7 +44,7 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
         }
 
         // Question name.
-        echo \html_writer::span(format_string($question->name), 'questionname flex-grow-1 flex-shrink-1 text-truncate');
+        echo $OUTPUT->render(helper::question_name_in_place_editing($question));
 
         // Question idnumber.
         if ($question->idnumber !== null && $question->idnumber !== '') {
