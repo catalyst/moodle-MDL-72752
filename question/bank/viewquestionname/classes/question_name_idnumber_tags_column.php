@@ -36,13 +36,10 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
         echo \html_writer::start_tag('div', ['class' => 'd-inline-flex flex-nowrap overflow-hidden w-100']);
 
         $questionname = format_string($question->name);
-        $labelfor = $this->label_for($question);
-        if ($labelfor) {
-            echo \html_writer::label($questionname, $labelfor);
-        } else {
-            // Question name.
-            echo \html_writer::span($questionname, 'questionname flex-grow-1 flex-shrink-1 text-truncate');
-        }
+        $questiondisplay =   \html_writer::span($questionname, 'questionname flex-grow-1 flex-shrink-1 text-truncate');
+
+        // Question name.
+        echo $OUTPUT->render(helper::make_question_name_inplace_editable($question, $questiondisplay));
 
         // Question idnumber.
         // The non-breaking space '&nbsp;' is used in html to fix MDL-75051 (browser issues caused by chrome and Edge).
