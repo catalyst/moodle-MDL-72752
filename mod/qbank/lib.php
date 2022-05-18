@@ -43,6 +43,8 @@ function qbank_supports(string $feature): ?bool {
         case FEATURE_GRADE_HAS_GRADE:
         case FEATURE_COMPLETION_HAS_RULES:
             return false;
+        case FEATURE_MOD_PURPOSE:
+            return MOD_PURPOSE_ASSESSMENT;
         default:
             return null;
     }
