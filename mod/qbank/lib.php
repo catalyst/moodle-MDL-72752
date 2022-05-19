@@ -140,3 +140,18 @@ function mod_qbank_output_fragment_question_data($args) {
     list($questionhtml, $jsfooter) = $questionbank->display_questions_table();
     return [$questionhtml, $jsfooter];
 }
+
+/**
+ * This function extends the settings navigation block for the site.
+ *
+ * It is safe to rely on PAGE here as we will only ever be within the module
+ * context when this is called
+ *
+ * @param settings_navigation $settings
+ * @param navigation_node $qbanknode
+ * @return void
+ */
+function qbank_extend_settings_navigation(settings_navigation $settings, navigation_node $qbanknode) {
+    question_extend_settings_navigation($qbanknode, $settings->get_page()->cm->context)->trim_if_empty();
+}
+

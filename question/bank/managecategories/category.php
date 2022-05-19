@@ -61,6 +61,7 @@ foreach ((array)$param as $key => $value) {
     }
 }
 $PAGE->set_url($url);
+$baseurl = optional_param('baseurl', '/question/edit.php', PARAM_TEXT);
 
 $qcobject = new question_category_object($pagevars['cpage'], $thispageurl,
         $contexts->having_one_edit_tab_cap('categories'), $param->edit,
@@ -160,8 +161,7 @@ echo $OUTPUT->header();
 
 // Print horizontal nav if needed.
 $renderer = $PAGE->get_renderer('core_question', 'bank');
-
-$qbankaction = new \core_question\output\qbank_action_menu($url);
+$qbankaction = new \core_question\output\qbank_action_menu($thispageurl, $contexts->lowest()->id, $baseurl);
 echo $renderer->render($qbankaction);
 
 // Display the UI.
