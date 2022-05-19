@@ -40,3 +40,18 @@ Feature: Use the qbank plugin manager page for question history
     And the "History" action should not exist for the "First question" question in the question bank
     And I click on "#qbank-history-close" "css_element"
     And the "History" action should exist for the "First question" question in the question bank
+
+  Scenario: Actions in the history page should redirect to history page
+    Given I log in as "admin"
+    And I am on the "Test quiz" "quiz activity" page
+    When I navigate to "Question bank" in current page administration
+    And I choose "History" action for "First question" in the question bank
+    And I should see "First question"
+    And I choose "Edit question" action for "First question" in the question bank
+    And I set the field "id_name" to "Renamed question v2"
+    And I set the field "id_questiontext" to "edited question"
+    And I press "id_submitbutton"
+    And I should not see "First question"
+    And I should see "Renamed question v2"
+    And I click on ".dropdown-toggle" "css_element" in the "First question" "table_row"
+    Then I should not see "History" in the "region-main" "region"
