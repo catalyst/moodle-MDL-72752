@@ -123,7 +123,11 @@ function core_question_output_fragment_question_data($args) {
         $extraparams = [];
     }
     $nodeparent = $PAGE->settingsnav->find('questionbank', \navigation_node::TYPE_CONTAINER);
-    $thispageurl = new \moodle_url($nodeparent->action->get_path());
+    if ($nodeparent) {
+        $thispageurl = new \moodle_url($nodeparent->action->get_path());
+    } else {
+        $thispageurl = new \moodle_url('/question/edit.php');
+    }
     $thiscontext = \context::instance_by_id($param->contextid);
     $thispageurl->param('cmid', $thiscontext->instanceid);
     $contexts = new \core_question\local\bank\question_edit_contexts($thiscontext);
@@ -135,9 +139,6 @@ function core_question_output_fragment_question_data($args) {
     if (isset($extraparams["cmid"])) {
         list(, $cm) = get_module_from_cmid($extraparams["cmid"]);
     }
-
-    $nodeparent = $PAGE->settingsnav->find('questionbank', \navigation_node::TYPE_CONTAINER);
-    $thispageurl = new \moodle_url($nodeparent->action->get_path());
     if ($cm) {
         $thispageurl->param('cmid', $cm->id);
     } else {
