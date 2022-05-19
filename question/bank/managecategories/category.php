@@ -53,6 +53,7 @@ $param->delete = optional_param('delete', 0, PARAM_INT);
 $param->showdescr = optional_param('qbshowdescr', 0, PARAM_INT);
 
 $PAGE->set_url($thispageurl);
+$baseurl = optional_param('baseurl', '/question/edit.php', PARAM_TEXT);
 
 $qcobject = new question_category_object($pagevars['cpage'], $thispageurl,
     $contexts->having_one_edit_tab_cap('categories'), 0,
@@ -116,7 +117,7 @@ $PAGE->activityheader->disable();
 $renderer = $PAGE->get_renderer('core_question', 'bank');
 $categoriesrenderer = $PAGE->get_renderer('qbank_managecategories');
 echo $OUTPUT->header();
-$qbankaction = new \core_question\output\qbank_action_menu($thispageurl);
+$qbankaction = new \core_question\output\qbank_action_menu($thispageurl, $contexts->lowest()->id, $baseurl);
 echo $renderer->render($qbankaction);
 if ($questionstomove) {
     $qcobject->display_move_form($questionstomove, $category);
