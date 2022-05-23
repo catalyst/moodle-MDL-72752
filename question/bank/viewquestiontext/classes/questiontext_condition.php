@@ -71,6 +71,7 @@ class questiontext_condition extends condition {
             'title' => get_string('showquestiontext', 'core_question'),
             'custom' => true,
             'multiple' => true,
+            'conditionclass' => get_class($this),
             'filterclass' => 'core/local/filter/filtertypes/showtext',
             'values' => [],
             'allowempty' => true,

@@ -71,6 +71,7 @@ class subcategories_condition extends condition {
             'title' => get_string('includesubcategories', 'core_question'),
             'custom' => true,
             'multiple' => true,
+            'conditionclass' => get_class($this),
             'filterclass' => 'core/local/filter/filtertypes/subcategories',
             'values' => [],
             'allowempty' => true,

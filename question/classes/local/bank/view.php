@@ -31,7 +31,7 @@ use core_plugin_manager;
 use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;
-
+use qbank_managecategories\category_condition;
 /**
  * This class prints a view of the question bank.
  *
@@ -205,6 +205,20 @@ class view {
         $this->course = $course;
         $this->cm = $cm;
         $this->extraparams = $extraparams;
+
+        // Default filter condition.
+        if (!isset($params['filters']) && isset($params['cat']) && class_exists(category_condition::class)) {
+            $category = category_condition::get_current_category($params['cat']);
+            $filters = [
+                'category' => [
+                    'jointype' => category_condition::JOINTYPE_DEFAULT,
+                    'rangetype' => null,
+                    'conditionclass' => category_condition::class,
+                    'values' => [$category->id],
+                ]
+            ];
+            $params['filters'] = $filters;
+        }
 
         // Create the url of the new question page to forward to.
         $this->returnurl = $pageurl->out_as_local_url(false);
@@ -838,7 +852,8 @@ class view {
             'perpage' => $this->pagevars['qperpage'],
         ];
         echo $PAGE->get_renderer('core_question', 'bank')->render_questionbank_filter($catcontext,
-            $this->searchconditions, $additionalparams, $this->component, $this->callback, $this->course->id, $this->extraparams);
+            $this->searchconditions, $additionalparams, $this->component, $this->callback, $this->course->id,
+            $this->pagevars, $this->extraparams);
     }
 
     /**
@@ -998,6 +1013,7 @@ class view {
         // We probably do not want to raise it to unlimited, so randomly picking 5 minutes.
         // Note: We do not call this in the loop because quiz ob_ captures this function (see raise() PHP doc).
         \core_php_time_limit::raise(300);
+
         $category = \qbank_managecategories\category_condition::get_current_category($this->pagevars['cat']);
 
         list($categoryid, $contextid) = explode(',', $this->pagevars['cat']);
@@ -1125,14 +1141,20 @@ class view {
      *
      * @param array $questions
      */
-    public function display_questions($questions, $page = 1, $perpage = DEFAULT_QUESTIONS_PER_PAGE): void {
+    public function display_questions($questions, $page = 0, $perpage = DEFAULT_QUESTIONS_PER_PAGE): void {
         global $OUTPUT;
+        // Pagination.
         $pageingurl = new \moodle_url($this->base_url());
         $pagingbar = new \paging_bar($this->totalcount, $page, $perpage, $pageingurl);
         $pagingbar->pagevar = 'qpage';
         echo $OUTPUT->render($pagingbar);
+
+        // Table of questions.
+        // Embeded filterconditon into the div.
+        $filtercondition = json_encode($this->get_pagevars());
+
         echo \html_writer::start_tag('div',
-            ['class' => 'categoryquestionscontainer', 'id' => 'questionscontainer']);
+            ['class' => 'question_table', 'id' => 'question_table', 'data-filtercondition' => $filtercondition]);
         $this->print_table($questions);
         echo \html_writer::end_tag('div');
         echo $OUTPUT->render($pagingbar);
@@ -1354,7 +1376,7 @@ class view {
         $PAGE->start_collecting_javascript_requirements();
         if ($totalquestions > 0) {
             ob_start();
-            $this->display_questions($questions, $this->pagevars['qpage']);
+            $this->display_questions($questions, $this->pagevars['qpage'], $this->pagevars['qperpage']);
             $questionhtml = ob_get_clean();
         }
         $jsfooter = $PAGE->requires->get_end_code();

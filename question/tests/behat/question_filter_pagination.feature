@@ -39,10 +39,6 @@ Feature: A teacher can pagimate through question bank questions
       | Used category    | essay | Tests question 18 | Write about whatever you want |
       | Used category    | essay | Tests question 19 | Write about whatever you want |
       | Used category    | essay | Tests question 20 | Write about whatever you want |
-      | Used category    | essay | Tests question 21 | Write about whatever you want |
-      | Used category    | essay | Tests question 22 | Write about whatever you want |
-      | Used category    | essay | Tests question 23 | Write about whatever you want |
-      | Used category    | essay | Tests question 24 | Write about whatever you want |
       | Used category    | essay | Not on first page | Write about whatever you want |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
@@ -54,5 +50,5 @@ Feature: A teacher can pagimate through question bank questions
     And I click on "Apply filters" "button"
     And I should see "Tests question 1"
     And I should not see "Not on first page"
-    And I click on "2" "link" in the ".pagination" "css_element"
+    And I click on "2" "link"
     And I should see "Not on first page"

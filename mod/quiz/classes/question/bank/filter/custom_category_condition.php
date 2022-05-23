@@ -52,6 +52,7 @@ class custom_category_condition extends \qbank_managecategories\category_conditi
             'custom' => false,
             'multiple' => false,
             'filterclass' => null,
+            'conditionclass' => get_class($this),
             'values' => $values,
             'allowempty' => false,
         ];

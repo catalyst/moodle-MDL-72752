@@ -15,28 +15,24 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core_question/qbank_filter
+    @template mod_quiz/update_filter_condition_form
 
-    Template for the form containing one or more filter rows.
+    From to add random questions.
 
     Example context (json):
-    {
-        "filtertypes": [
-            {
-                "name": "status",
-                "title": "Status",
-                "values": [
-                    {
-                        "value": 1,
-                        "title": "Active"
-                    },
-                    {
-                        "value": 0,
-                        "title": "Suspended"
-                    }
-                ]
-            }
-        ]
-    }
+    {}
 }}
-{{> core/local/filter/filter }}
+<div>
+    <!-- Question bank -->
+    <div id="questionbank_container">
+        {{{questionbank}}}
+    </div>
+
+
+    <!-- submit buttons -->
+    <form action="{{returnurl}}" method="POST" id="update_filter_condition_form" data-cmid="{{cmid}}" data-id="{{id}}">
+        <input type="hidden" name="message" value="" />
+        <input type="submit" class="btn btn-primary" name="update" value="{{#str}} updatefilterconditon, mod_quiz {{/str}}">
+        <input type="submit" class="btn btn-secondary" name="cancel" value="{{#str}} cancel {{/str}}">
+    </form>
+</div>

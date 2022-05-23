@@ -122,4 +122,14 @@ abstract class condition {
             self::JOINTYPE_ALL => get_string('all'),
         ];
     }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filters filter objects
+     * @return array where sql and params
+     */
+    public static function build_query_from_filters(array $filters): array {
+        return ['', []];
+    }
 }

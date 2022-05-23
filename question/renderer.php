@@ -250,11 +250,13 @@ class core_question_bank_renderer extends plugin_renderer_base {
      * @param string $component the component for the fragment
      * @param string $callback the callback for the fragment
      * @param int $courseid id of the course
+     * @param array $pagevars extra pamams for the extended apis
      * @param array $exraparams extra pamams for the extended apis
      * @return string
      */
     public function render_questionbank_filter(\context $context, array $searchconditions, array $additionalparams,
-        $component, $callback, $courseid, $exraparams): string {
+                                               string $component, string $callback, int $courseid,
+                                               array $pagevars = [], array $exraparams = []): string {
         global $PAGE;
         $filter = new \core_question\local\bank\qbank_filter($context, 'qbank-table');
         $filter->set_searchconditions($searchconditions, $additionalparams);
@@ -272,6 +274,7 @@ class core_question_bank_renderer extends plugin_renderer_base {
             'contextid' => $context->id,
             'component' => $component,
             'callback' => $callback,
+            'pagevars' => json_encode($pagevars),
             'extraparams' => json_encode($exraparams),
         ];
         $PAGE->requires->js_call_amd('core_question/filter', 'init', $params);

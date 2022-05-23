@@ -128,6 +128,7 @@ class helper_test extends \advanced_testcase {
     public function test_bulk_move_questions() {
         global $DB;
         $this->helper_setup();
+
         $sql = 'SELECT COUNT(q.id)
                   FROM {question} q
                   JOIN {question_versions} qv ON qv.questionid = q.id

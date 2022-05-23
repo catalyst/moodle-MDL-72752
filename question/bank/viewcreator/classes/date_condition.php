@@ -38,21 +38,8 @@ class date_condition extends condition {
      */
     public function __construct($qbank) {
         $this->filters = $qbank->get_pagevars('filters');
-        if (isset($this->filters['date'])) {
-            if ($this->filters['date']['rangetype'] === self::RANGETYPE_AFTER) {
-                $timeafter = $this->filters['date']['values'][0];
-                $this->where = "q.timecreated >= {$timeafter}";
-            }
-            if ($this->filters['date']['rangetype'] === self::RANGETYPE_BEFORE) {
-                $timebefore = $this->filters['date']['values'][0];
-                $this->where = "q.timecreated <= {$timebefore}";
-            }
-            if ($this->filters['date']['rangetype'] === self::RANGETYPE_BETWEEN) {
-                $timefrom = $this->filters['date']['values'][0];
-                $timeto = $this->filters['date']['values'][1];
-                $this->where = "q.timecreated >= {$timefrom} AND q.timecreated <= {$timeto}";
-            }
-        }
+        // Build where and params.
+        list($this->where, $this->params) = self::build_query_from_filters($this->filters);
     }
 
     public function where() {
@@ -108,6 +95,7 @@ class date_condition extends condition {
             'title' => 'Date',
             'custom' => true,
             'multiple' => true,
+            'conditionclass' => get_class($this),
             'filterclass' => 'core/local/filter/filtertypes/date',
             'values' => [],
             'allowempty' => true,
@@ -125,5 +113,33 @@ class date_condition extends condition {
             self::JOINTYPE_ANY => get_string('any'),
             self::JOINTYPE_ALL => get_string('all'),
         ];
+    }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filters filter objects
+     * @return array where sql and params
+     */
+    public static function build_query_from_filters(array $filters): array {
+        if (isset($filters['date'])) {
+            $filter = (object) $filters['date'];
+            $where = "";
+            if ($filter->rangetype === self::RANGETYPE_AFTER) {
+                $timeafter = $filter->values[0];
+                $where = "q.timecreated >= {$timeafter}";
+            }
+            if ($filter->rangetype === self::RANGETYPE_BEFORE) {
+                $timebefore = $filter->values[0];
+                $$where = "q.timecreated <= {$timebefore}";
+            }
+            if ($filter->rangetype === self::RANGETYPE_BETWEEN) {
+                $timefrom = $filter->values[0];
+                $timeto = $filter->values[1];
+                $where = "q.timecreated >= {$timefrom} AND q.timecreated <= {$timeto}";
+            }
+            return [$where, []];
+        }
+        return ['', []];
     }
 }

@@ -32,23 +32,8 @@ class discrimination_condition extends condition {
 
     public function __construct($qbank) {
         $this->filters = $qbank->get_pagevars('filters');
-        if (isset($this->filters['discrimination'])) {
-            $this->where = 'q.id IN (SELECT qs.questionid
-                               FROM {question_statistics} qs
-                          LEFT JOIN {question} q ON qs.questionid = q.id
-                           GROUP BY qs.questionid
-                              HAVING AVG(qs.discriminationindex)';
-            if ($this->filters['discrimination']['rangetype'] === self::RANGETYPE_AFTER) {
-                $this->where .= ' > ' . $this->filters['discrimination']['values'][0] . ')';
-            }
-            if ($this->filters['discrimination']['rangetype'] === self::RANGETYPE_BEFORE) {
-                $this->where .= ' < ' . $this->filters['discrimination']['values'][0] . ')';
-            }
-            if ($this->filters['discrimination']['rangetype'] === self::RANGETYPE_BETWEEN) {
-                $this->where .= ' > ' . $this->filters['discrimination']['values'][0] .
-                    ' AND AVG(qs.discriminationindex) <' . $this->filters['discrimination']['values'][1] . ')';
-            }
-        }
+        // Build where and params.
+        list($this->where, $this->params) = self::build_query_from_filters($this->filters);
     }
 
     public function where() {
@@ -104,6 +89,7 @@ class discrimination_condition extends condition {
             'title' => 'Discrimination index',
             'custom' => true,
             'multiple' => true,
+            'conditionclass' => get_class($this),
             'filterclass' => 'core/local/filter/filtertypes/discrimination',
             'values' => [],
             'allowempty' => true,
@@ -121,5 +107,37 @@ class discrimination_condition extends condition {
             self::JOINTYPE_ANY => get_string('any'),
             self::JOINTYPE_ALL => get_string('all'),
         ];
+    }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filters filter objects
+     * @return array where sql and params
+     */
+    public static function build_query_from_filters(array $filters): array {
+        if (isset($filters['discrimination'])) {
+            $filter = (object) $filters['discrimination'];
+            $where = 'q.id IN (SELECT qs.questionid
+                               FROM {question_statistics} qs
+                          LEFT JOIN {question} q ON qs.questionid = q.id
+                           GROUP BY qs.questionid
+                              HAVING AVG(qs.discriminationindex)';
+            if ($filter->rangetype === self::RANGETYPE_AFTER) {
+                $where .= ' > ' . $filter->values[0] . ')';
+            }
+            if ($filter->rangetype === self::RANGETYPE_BEFORE) {
+                $where .= ' < ' . $filter->values[0] . ')';
+            }
+            if ($filter->rangetype === self::RANGETYPE_BETWEEN) {
+                $where .= ' > '
+                    . $filter->values[0]
+                    . ' AND AVG(qs.discriminationindex) <'
+                    . $filter->values[1]
+                    . ')';
+            }
+            return [$where, []];
+        }
+        return ['', []];
     }
 }

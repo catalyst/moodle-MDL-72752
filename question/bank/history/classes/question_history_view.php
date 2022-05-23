@@ -52,12 +52,13 @@ class question_history_view extends view {
      * @param stdClass $course course settings
      * @param null $cm (optional) activity settings.
      * @param array $params the parameters required to initialize the api.
+     * @param array $extraparams any extra parameters need to initialized if the api is extended, it will be passed to js.
      */
     public function __construct(question_edit_contexts $contexts, moodle_url $pageurl, stdClass $course, $cm = null,
-        array $params) {
-        parent::__construct($contexts, $pageurl, $course, null, $params);
-        $this->entryid = $params['entryid'];
-        $this->basereturnurl = new \moodle_url($params['returnurl']);
+        array $params, $extraparams = []) {
+        $this->entryid = $extraparams['entryid'];
+        $this->basereturnurl = new \moodle_url($extraparams['returnurl']);
+        parent::__construct($contexts, $pageurl, $course, $cm, $params, $extraparams);
     }
 
     protected function wanted_columns(): array {

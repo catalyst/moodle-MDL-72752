@@ -38,7 +38,13 @@ $pagevars['entryid'] = $entryid;
 $pagevars['returnurl'] = $returnurl;
 $url = new moodle_url($thispageurl, ['entryid' => $entryid, 'returnurl' => $returnurl]);
 $PAGE->set_url($url);
-$questionbank = new \qbank_history\question_history_view($contexts, $url, $COURSE, null, $pagevars);
+
+// Additional param to differentiate with other question bank view
+$viewclass = \qbank_history\question_history_view::class;
+$extraparams['view'] = $viewclass;
+$extraparams['entryid'] = $entryid;
+$extraparams['returnurl'] = $returnurl;
+$questionbank = new $viewclass($contexts, $url, $COURSE, null, $pagevars, $extraparams);
 
 $streditingquestions = get_string('history_header', 'qbank_history');
 $PAGE->set_title($streditingquestions);

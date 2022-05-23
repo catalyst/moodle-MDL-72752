@@ -35,9 +35,6 @@ class category_condition extends condition {
     /** @var array of contexts. */
     protected $contexts;
 
-    /** @var bool Whether to include questions from sub-categories. */
-    protected $recurse;
-
     /** @var string SQL fragment to add to the where clause. */
     protected $where;
 
@@ -50,43 +47,21 @@ class category_condition extends condition {
     /** @var int The maximum displayed length of the category info. */
     public $maxinfolength;
 
-    /** @var array Filters assosciated with the apply filter request */
-    public $filters;
-
     /**
      * Constructor to initialize the category filter condition.
      */
     public function __construct($qbank) {
         $this->cat = $qbank->get_pagevars('cat');
-        if (isset($qbank->get_pagevars('filters')['subcategories']['values'][0])) {
-            $this->recurse = (int)$qbank->get_pagevars('filters')['subcategories']['values'][0] === 0;
-        } else {
-            $this->recurse = false;
-        }
         $this->contexts = $qbank->contexts->having_one_edit_tab_cap($qbank->get_pagevars('tabname'));
         $this->course = $qbank->course;
-        $this->filters = $qbank->get_pagevars('filters');
+        $filters = $qbank->get_pagevars('filters');
 
-        $this->init();
-    }
-
-    /**
-     * Initialize the object so it will be ready to return where() and params()
-     */
-    private function init() {
-        global $DB;
         if (!$this->category = self::get_current_category($this->cat)) {
             return;
         }
-        if ($this->recurse) {
-            $categoryids = question_categorylist($this->category->id);
-        } else {
-            $categoryids = [$this->category->id];
-        }
-        $filterverb = $this->filters['category']['jointype'] ?? self::JOINTYPE_DEFAULT;
-        $equal = !($filterverb === self::JOINTYPE_NONE);
-        list($catidtest, $this->params) = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'cat', $equal);
-        $this->where = 'qbe.questioncategoryid ' . $catidtest;
+
+        // Build where and params.
+        list($this->where, $this->params) = self::build_query_from_filters($filters);
     }
 
     /**
@@ -261,10 +236,51 @@ class category_condition extends condition {
             'title' => get_string('category', 'core_question'),
             'custom' => false,
             'multiple' => false,
+            'conditionclass' => get_class($this),
             'filterclass' => null,
             'values' => $values,
             'allowempty' => false,
         ];
         return $filteroptions;
+    }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filters filter objects
+     * @return array where sql and params
+     */
+    public static function build_query_from_filters(array $filters): array {
+        global $DB;
+
+        // Category filter
+        if (isset($filters['category'])) {
+            $filter = (object) $filters['category'];
+        } else {
+            return ['', []];
+        }
+
+        $recursive = false;
+        if (isset($filters['subcategories'])) {
+            $subcatfilter = (object) $filters['subcategories'];
+            $recursive = (int) $subcatfilter->values[0];
+        }
+
+        // Sub categories.
+        if ($recursive) {
+            $categories = $filter->values;
+            $categoriesandsubcategories = [];
+            foreach ($categories as $categoryid) {
+                $categoriesandsubcategories += question_categorylist($categoryid);
+            }
+        } else {
+            $categoriesandsubcategories = $filter->values;
+        }
+
+        $filterverb = $filter->jointype ?? self::JOINTYPE_DEFAULT;
+        $equal = !($filterverb === self::JOINTYPE_NONE);
+        list($insql, $params) = $DB->get_in_or_equal($categoriesandsubcategories, SQL_PARAMS_NAMED, 'cat', $equal);
+        $where = 'qbe.questioncategoryid ' . $insql;
+        return [$where, $params];
     }
 }

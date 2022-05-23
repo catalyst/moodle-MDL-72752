@@ -26,7 +26,7 @@
 namespace mod_quiz\question\bank;
 
 use core_question\local\bank\question_version_status;
-
+use mod_quiz\question\bank\filter\custom_category_condition;
 /**
  * Subclass to customise the view of the question bank for the quiz editing screen.
  *
@@ -41,11 +41,10 @@ class custom_view extends \core_question\local\bank\view {
     /** @var bool $quizhasattempts whether the quiz this is used by has been attemptd. */
     protected $quizhasattempts = false;
 
-    /** @var \stdClass $quiz the quiz settings. */
-    protected $quiz = false;
-
-    /** @var int The maximum displayed length of the category info. */
-    const MAX_TEXT_LENGTH = 200;
+    /**
+     * @var string $component the component the api is used from.
+     */
+    public $component = 'mod_quiz';
 
     /**
      * Constructor.
@@ -56,17 +55,33 @@ class custom_view extends \core_question\local\bank\view {
      * @param \stdClass $quiz quiz settings.
      */
     public function __construct($contexts, $pageurl, $course, $cm, $params, $extraparams) {
+        // Default filter condition.
+        if (!isset($params['filters']) && class_exists(custom_category_condition::class)) {
+            $category = custom_category_condition::get_current_category($params['cat']);
+            $filters = [
+                'category' => [
+                    'jointype' => custom_category_condition::JOINTYPE_DEFAULT,
+                    'rangetype' => null,
+                    'conditionclass' => custom_category_condition::class,
+                    'values' => [$category->id],
+                ]
+            ];
+            $params['filters'] = $filters;
+        }
+
+        $this->init_required_columns();
         parent::__construct($contexts, $pageurl, $course, $cm, $params, $extraparams);
-        $this->quiz = $extraparams[0];
+        list($quiz, ) = get_module_from_cmid($extraparams['cmid']);
+        $this->set_quiz_has_attempts(quiz_has_attempts($quiz->id));
         $this->pagesize = self::DEFAULT_PAGE_SIZE;
     }
 
     /**
-     * Get class for each question bank columns.
+     * Init required columns.
      *
-     * @return array
+     * @return void
      */
-    protected function get_class_for_columns(): array {
+    protected function init_required_columns(): void {
         // override core columns.
         $this->corequestionbankcolumns = [
             'add_action_column',
@@ -75,6 +90,14 @@ class custom_view extends \core_question\local\bank\view {
             'question_name_text_column',
             'preview_action_column'
         ];
+    }
+
+    /**
+     * Get class for each question bank columns.
+     *
+     * @return array
+     */
+    protected function get_class_for_columns(): array {
         $questionbankclasscolumns = [];
         foreach ($this->corequestionbankcolumns as $fullname) {
             $shortname = $fullname;
@@ -122,7 +145,7 @@ class custom_view extends \core_question\local\bank\view {
      *
      * @param bool $quizhasattempts whether the quiz has attempts.
      */
-    public function set_quiz_has_attempts($quizhasattempts): void {
+    private function set_quiz_has_attempts($quizhasattempts): void {
         $this->quizhasattempts = $quizhasattempts;
         if ($quizhasattempts && isset($this->visiblecolumns['addtoquizaction'])) {
             unset($this->visiblecolumns['addtoquizaction']);

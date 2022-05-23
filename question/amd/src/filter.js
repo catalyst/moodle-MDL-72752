@@ -37,10 +37,11 @@ import Templates from 'core/templates';
  * @param {int} contextId id of the context
  * @param {string} component name of the component for fragment
  * @param {string} callback name of the callback for the fragment
+ * @param {string} pagevars name of the callback for the fragment
  * @param {string} extraparams json encoded extra params for the extended apis
  */
 export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
-                     perpage, contextId, component, callback, extraparams) => {
+                     perpage, contextId, component, callback, pagevars, extraparams) => {
 
     const filterSet = document.querySelector(`#${filterRegionId}`);
 
@@ -108,6 +109,7 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
             for (const [key, value] of Object.entries(filterdata)) {
                 let filter = {
                     'filtertype': key,
+                    'conditionclass': value.conditionclass,
                     'jointype': value.jointype,
                     'rangetype': value.rangetype,
                     'values': value.values.toString()
@@ -160,8 +162,6 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
      * @return {*}
      */
     const renderQuestiondata = (filtercondition) => {
-        // eslint-disable-next-line no-console
-        console.log(extraparams);
         const viewData = {
             component: component,
             callback: callback,
@@ -302,20 +302,38 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
     });
 
     // Run apply filter at page load.
-    const urlLoadedFilters = loadUrlParams();
-    const filter = filterSet.querySelector(Selectors.filter.region);
-    if (Object.entries(urlLoadedFilters).length !== 0) {
-        for (const urlFilter in urlLoadedFilters) {
+    pagevars = JSON.parse(pagevars);
+    let initialFilters;
+    if (pagevars.filters) {
+        // Load initial filter based on page vars.
+        initialFilters = pagevars.filters;
+    } else {
+        // Otherwise, load filter from URL.
+        initialFilters = loadUrlParams();
+    }
+
+    if (Object.entries(initialFilters).length !== 0) {
+        // Remove the default empty filter row.
+        const emptyFilterRow = filterSet.querySelector(Selectors.filterset.regions.emptyFilterRow);
+        if (emptyFilterRow) {
+            emptyFilterRow.remove();
+        }
+
+        // Add fitlers.
+        for (const urlFilter in initialFilters) {
             if (urlFilter !== 'courseid') {
-                coreFilter.addFilter(filter,
-                                     urlFilter,
-                                     urlLoadedFilters[urlFilter].values,
-                                     urlLoadedFilters[urlFilter].jointype,
-                                     urlLoadedFilters[urlFilter].rangetype);
+                // Add each filter row.
+                const filterdata = {
+                    filtertype: urlFilter,
+                    values:  initialFilters[urlFilter].values,
+                    jointype: initialFilters[urlFilter].jointype,
+                    rangetype: initialFilters[urlFilter].rangetypes
+                };
+                coreFilter.addFilterRow(filterdata);
             }
         }
-    } else {
-        coreFilter.addFilter(filter, 'category', [defaultcategoryid]);
+
+        // Apply filter.
+        applyFilter(initialFilters);
     }
-    applyFilter(urlLoadedFilters);
 };

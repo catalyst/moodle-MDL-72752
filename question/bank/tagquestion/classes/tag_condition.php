@@ -34,7 +34,7 @@ class tag_condition extends condition {
     protected $contexts = [];
 
     /** @var array List of IDs for tags that have been selected in the form. */
-    protected $selectedtagids;
+    protected $selectedtagids = [];
 
     /** @var array named params for the where clause. */
     protected $params;
@@ -45,7 +45,6 @@ class tag_condition extends condition {
      *
      */
     public function __construct($qbank) {
-        global $DB;
         $cat = $qbank->get_pagevars('cat');
         if (is_array($cat)) {
             foreach ($cat as $value) {
@@ -61,41 +60,12 @@ class tag_condition extends condition {
         $thiscontext = $qbank->get_most_specific_context();
         $this->contexts[] = $thiscontext;
         $filters = $qbank->get_pagevars('filters');
-        $selectedtagids = $filters['qtagids']['values'] ?? [];
-        $filterverb = $filters['qtagids']['jointype'] ?? self::JOINTYPE_DEFAULT;
-        // If some tags have been selected then we need to filter
-        // the question list by the selected tags.
-        if ($selectedtagids) {
-            // We treat each additional tag as an AND condition rather than
-            // an OR condition.
-            //
-            // For example, if the user filters by the tags "foo" and "bar" then
-            // we reduce the question list to questions that are tagged with both
-            // "foo" AND "bar". Any question that does not have ALL of the specified
-            // tags will be omitted.
-            $equal = !($filterverb === self::JOINTYPE_NONE);
-            list($tagsql, $tagparams) = $DB->get_in_or_equal($selectedtagids, SQL_PARAMS_NAMED, 'param', $equal);
-            $tagparams['tagcount'] = count($selectedtagids);
-            $tagparams['questionitemtype'] = 'question';
-            $tagparams['questioncomponent'] = 'core_question';
-            $this->selectedtagids = $selectedtagids;
-            $this->params = $tagparams;
-            $this->where = "q.id IN (SELECT ti.itemid
-                                       FROM {tag_instance} ti
-                                      WHERE ti.itemtype = :questionitemtype
-                                            AND ti.component = :questioncomponent
-                                            AND ti.tagid {$tagsql}
-                                   GROUP BY ti.itemid ";
-            if ($filterverb === self::JOINTYPE_ALL) {
-                $this->where .= "HAVING COUNT(itemid) = :tagcount ";
-            }
-            $this->where .= ") ";
-
-        } else {
-            $this->selectedtagids = [];
-            $this->params = [];
-            $this->where = '';
+        if (isset($filters['qtagids'])) {
+            $filter = (object) $filters['qtagids'];
+            $this->selectedtagids = $filter->values ?? [];
         }
+        // Build where and params.
+        list($this->where, $this->params) = self::build_query_from_filters($filters);
     }
 
     public function get_condition_key() {
@@ -156,10 +126,61 @@ class tag_condition extends condition {
             'title' => get_string('tag', 'tag'),
             'custom' => false,
             'multiple' => true,
+            'conditionclass' => get_class($this),
             'filterclass' => null,
             'values' => $values,
             'allowempty' => true,
         ];
         return $filteroptions;
+    }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filters filter objects
+     * @return array where sql and params
+     */
+    public static function build_query_from_filters(array $filters): array {
+        global $DB;
+        if (isset($filters['qtagids'])) {
+            $filter = (object) $filters['qtagids'];
+        } else {
+            return ['', []];
+        }
+
+        $selectedtagids = $filter->values ?? [];
+        $params = [];
+        $where = '';
+        $filterverb = $filter->jointype ?? self::JOINTYPE_DEFAULT;
+        // If some tags have been selected then we need to filter
+        // the question list by the selected tags.
+        if ($selectedtagids) {
+            // We treat each additional tag as an AND condition rather than
+            // an OR condition.
+            //
+            // For example, if the user filters by the tags "foo" and "bar" then
+            // we reduce the question list to questions that are tagged with both
+            // "foo" AND "bar". Any question that does not have ALL of the specified
+            // tags will be omitted.
+            $equal = !($filterverb === self::JOINTYPE_NONE);
+            list($tagsql, $tagparams) = $DB->get_in_or_equal($selectedtagids, SQL_PARAMS_NAMED, 'param', $equal);
+            $tagparams['tagcount'] = count($selectedtagids);
+            $tagparams['questionitemtype'] = 'question';
+            $tagparams['questioncomponent'] = 'core_question';
+            $params = $tagparams;
+            $where = "q.id IN (SELECT ti.itemid
+                                       FROM {tag_instance} ti
+                                      WHERE ti.itemtype = :questionitemtype
+                                            AND ti.component = :questioncomponent
+                                            AND ti.tagid {$tagsql}
+                                   GROUP BY ti.itemid ";
+            if ($filterverb === self::JOINTYPE_ALL) {
+                $where .= "HAVING COUNT(itemid) = :tagcount ";
+            }
+            $where .= ") ";
+
+        }
+
+        return [$where, $params];
     }
 }
