@@ -26,6 +26,7 @@ use external_function_parameters;
 use external_single_structure;
 use external_value;
 use external_api;
+use mod_quiz\question\bank\filter\custom_category_condition;
 
 /**
  * Add random questions to a quiz.
@@ -107,6 +108,16 @@ class add_random_question extends external_api {
                 null,
                 $contexts->having_cap('moodle/question:add'));
             $categoryid = $qcobject->add_category($parentcategory, $newcategory, '', true);
+            $filters = [
+                'category' => [
+                    'jointype' => custom_category_condition::JOINTYPE_DEFAULT,
+                    'conditionclass' => custom_category_condition::class,
+                    'values' => [$categoryid]
+                ]
+            ];
+            $filtercondition = json_decode($filtercondition);
+            $filtercondition->filters = $filters;
+            $filtercondition = json_encode($filtercondition);
         }
 
         // Add random question to the quiz.

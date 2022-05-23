@@ -50,7 +50,7 @@ class question_text_row extends row_base {
 
     protected function display_content($question, $rowclasses): void {
         $display = $this->qbank->get_pagevars('filters')['showtext'] ?? null;
-        if (isset($display) && (int)$display['values'][0] === 0) {
+        if (isset($display) && (int)$display['values'][0] === 1) {
             $text = question_rewrite_question_preview_urls($question->questiontext, $question->id,
                     $question->contextid, 'question', 'questiontext', $question->id,
                     $question->contextid, 'core_question');
