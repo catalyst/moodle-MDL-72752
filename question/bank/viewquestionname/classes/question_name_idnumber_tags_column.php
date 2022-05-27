@@ -44,7 +44,7 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
         }
 
         // Question name.
-        echo $OUTPUT->render(helper::question_name_in_place_editing($question));
+        echo $OUTPUT->render(helper::make_question_name_inplace_editable($question));
 
         // Question idnumber.
         if ($question->idnumber !== null && $question->idnumber !== '') {

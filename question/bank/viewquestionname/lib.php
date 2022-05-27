@@ -40,7 +40,7 @@ function qbank_viewquestionname_inplace_editable($itemtype, $itemid, $newvalue):
         $record->name = $newvalue;
         $DB->update_record('question', $record);
         // Prepare the element for the output.
-        return \qbank_viewquestionname\helper::question_name_in_place_editing($record);
+        return \qbank_viewquestionname\helper::make_question_name_inplace_editable($record);
     }
 
 }

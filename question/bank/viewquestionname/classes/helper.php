@@ -32,7 +32,7 @@ class helper {
      * @param \stdClass $question the question object
      * @return \core\output\inplace_editable
      */
-    public static function question_name_in_place_editing($question): \core\output\inplace_editable {
+    public static function make_question_name_inplace_editable($question): \core\output\inplace_editable {
         $a = new \stdClass();
         $a->name = format_string($question->name);
         return new \core\output\inplace_editable('qbank_viewquestionname', 'questionname', $question->id,
