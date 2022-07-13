@@ -46,28 +46,41 @@
         "extraclasses": "checkbox pr-3",
         "tiptitle": "<input id=\"qbheadercheckbox\" name=\"qbheadercheckbox\" type=\"checkbox\"  value=\"1\"\n       data-action=\"toggle\"\n       data-toggle=\"master\"\n       data-togglegroup=\"qbank\"\n       data-toggle-selectall=\"Select all\"\n       data-toggle-deselectall=\"Deselect all\"\n       \n\/>\n    <label for=\"qbheadercheckbox\" class=\"accesshide\">Select all<\/label>",
         "sorttip": true,
-        "tip": "Select questions for bulk actions"
+        "tip": "Select questions for bulk actions",
+        "class": "plugin_class",
+        "name": "plugin_name"
     }
 }}
-<th class="header {{extraclasses}}" scope="col">
-    {{#title}}
-        <div class="title">{{title}}</div>
-    {{/title}}
-    {{^sortable}}
-        {{^sorttip}}
-            {{tiptitle}}
-        {{/sorttip}}
-        {{#sorttip}}
-            <span title="{{tip}}">{{{tiptitle}}}</span>
-        {{/sorttip}}
-    {{/sortable}}
-    {{#sortable}}
-        <div class="sorters">
-            {{{sortlinks}}}
+<th class="header {{extraclasses}}" scope="col" data-pluginname="{{class}}" data-name="{{name}}">
+    <div class="d-flex justify-content-start">
+        <div class="move-handle ml-1">
         </div>
-    {{/sortable}}
-    {{#help}}
-        {{>core/help_icon}}
-    {{/help}}
-</th>
 
+        <div class="pin-handle ml-1">
+        </div>
+
+        <div class="w-100">
+            {{#title}}
+                <div class="title">{{title}}</div>
+            {{/title}}
+            {{^sortable}}
+                {{^sorttip}}
+                    {{tiptitle}}
+                {{/sorttip}}
+                {{#sorttip}}
+                    <span title="{{tip}}">{{{tiptitle}}}</span>
+                {{/sorttip}}
+            {{/sortable}}
+            {{#sortable}}
+                <div class="sorters">
+                    {{{sortlinks}}}
+                </div>
+            {{/sortable}}
+            {{#help}}
+                {{>core/help_icon}}
+            {{/help}}
+        </div>
+        <div class="icon-no-margin resize-handle">
+        </div>
+    </div>
+</th>
