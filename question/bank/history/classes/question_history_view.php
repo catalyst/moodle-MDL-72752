@@ -58,6 +58,7 @@ class question_history_view extends view {
         parent::__construct($contexts, $pageurl, $course);
         $this->entryid = $entryid;
         $this->basereturnurl = new \moodle_url($returnurl);
+        $this->component = 'qbank_history';
     }
 
     protected function wanted_columns(): array {

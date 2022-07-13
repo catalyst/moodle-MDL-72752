@@ -165,6 +165,11 @@ class view {
     public $bulkactions = [];
 
     /**
+     * @var string $component the component the api is used from.
+     */
+    public $component = 'core_question';
+
+    /**
      * Constructor for view.
      *
      * @param \core_question\local\bank\question_edit_contexts $contexts
@@ -311,8 +316,16 @@ class view {
         }
 
         // Check if qbank_columnsortorder is enabled.
+        // TODO: Extract this into a function, so that it is easier to override.
         if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
-            $columnorder = new column_manager();
+            if (!$this->course->id) {
+                // Site admin context.
+                $preference = "";
+            } else {
+                // Course or module context.
+                $preference = $this->component;
+            }
+            $columnorder = new column_manager($preference);
             $questionbankclasscolumns = $columnorder->get_sorted_columns($questionbankclasscolumns);
         }
 
@@ -335,7 +348,7 @@ class view {
         $this->requiredcolumns = [];
         $questionbankcolumns = $this->get_question_bank_plugins();
         foreach ($questionbankcolumns as $classobject) {
-            if (empty($classobject)) {
+            if (empty($classobject) || !($classobject instanceof \core_question\local\bank\column_base)) {
                 continue;
             }
             $this->requiredcolumns[$classobject->get_column_name()] = $classobject;
@@ -372,6 +385,7 @@ class view {
      * @param string $heading The name of column that is set as heading
      */
     protected function init_columns($wanted, $heading = ''): void {
+        global $PAGE;
         // If we are using the edit menu column, allow it to absorb all the actions.
         foreach ($wanted as $column) {
             if ($column instanceof edit_menu_column) {
@@ -387,7 +401,10 @@ class view {
             if ($column->is_extra_row()) {
                 $this->extrarows[$column->get_column_name()] = $column;
             } else {
-                $this->visiblecolumns[$column->get_column_name()] = $column;
+                // Only add columns which are visible.
+                if ($PAGE->user_is_editing() || $column->isvisible) {
+                    $this->visiblecolumns[$column->get_column_name()] = $column;
+                }
             }
         }
 
@@ -1108,8 +1125,36 @@ class view {
      * @param array $questions
      */
     protected function print_table($questions): void {
+        global $PAGE;
+
+        // Column actions.
+        $columnsortorder = new column_manager($this->component);
+        $pinnedcolumns = $columnsortorder->pinnedcolumns;
+        $hiddencolumns = $columnsortorder->hiddencolumns;
+        $colsize = $columnsortorder->colsize;
+
+        if ($PAGE->user_is_editing()) {
+            // Reset link.
+            $url = new \moodle_url('/question/bank/columnsortorder/reset_preference.php', [
+                'returnurl' => $this->returnurl,
+                'component' => $this->component,
+                'sesskey' => sesskey()
+            ]);
+            $resetlink = \html_writer::link($url, get_string('reset'), ['class' => "btn btn-secondary mr-1"]);
+            $resetlink = \html_writer::div($resetlink, '');
+            // Container for show/hide dropdown.
+            $dropdown = \html_writer::div('', '', ['id' => "show-hide-dropdown"]);
+            echo \html_writer::div( $resetlink . $dropdown, '', ['class' => "row justify-content-end"]);
+        }
+
         // Start of the table.
-        echo \html_writer::start_tag('table', ['id' => 'categoryquestions', 'class' => 'table-responsive']);
+        echo \html_writer::start_tag('table', [
+            'id' => 'categoryquestions',
+            'class' => 'table-responsive',
+            'data-pinnedcolumns' => json_encode($pinnedcolumns),
+            'data-hiddencolumns' => json_encode($hiddencolumns),
+            'data-colsize' => $colsize,
+        ]);
 
         // Prints the table header.
         echo \html_writer::start_tag('thead');
@@ -1129,6 +1174,10 @@ class view {
 
         // End of the table.
         echo \html_writer::end_tag('table');
+
+        // Column Action script.
+        $PAGE->requires->js_call_amd('qbank_columnsortorder/qbank_table_action', 'init',
+            [$PAGE->user_is_editing(), $this->component]);
     }
 
     /**
