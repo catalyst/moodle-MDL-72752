@@ -28,6 +28,9 @@ $string['privacy:metadata'] = 'The Question usage question bank plugin does not 
 $string['questionusage'] = 'Usage';
 $string['questionusage_help'] = 'The number of quizzes in which the question is used, with a link to open a window listing the quizzes and the number of attempts.';
 $string['usageheader'] = 'Question usage';
+$string['questionlastused'] = 'Last used';
+$string['notused'] = 'Never';
+$string['questionlastused_help'] = 'When was the question last attempted by a student.';
 
 // Table.
 $string['modulename'] = 'Activity name';
