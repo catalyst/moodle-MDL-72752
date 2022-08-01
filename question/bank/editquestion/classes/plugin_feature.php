@@ -25,6 +25,8 @@
 
 namespace qbank_editquestion;
 
+use core_question\local\bank\view;
+
 /**
  * Class columns is the entrypoint for the columns.
  *
@@ -35,11 +37,17 @@ namespace qbank_editquestion;
  */
 class plugin_feature extends \core_question\local\bank\plugin_features_base{
 
-    public function get_question_columns($qbank): array {
+    public function get_question_columns(view $qbank): array {
         return [
             new edit_action_column($qbank),
             new copy_action_column($qbank),
             new question_status_column($qbank)
+        ];
+    }
+
+    public function get_question_filters(view $qbank = null): array {
+        return [
+            new question_status_condition($qbank),
         ];
     }
 
