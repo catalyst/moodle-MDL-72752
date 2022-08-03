@@ -1,4 +1,4 @@
-@core @core_question
+@core @core_question @javascript
 Feature: A teacher can duplicate questions in the question bank
   In order to efficiently expand my question bank
   As a teacher
@@ -22,6 +22,7 @@ Feature: A teacher can duplicate questions in the question bank
       | Test questions   | essay | Test question to be copied | Write about whatever you want | qid      |
     And I am on the "Course 1" "core_question > course question bank" page logged in as "teacher"
 
+  @javascript
   Scenario: Duplicating a previously created question
     When I choose "Duplicate" action for "Test question to be copied" in the question bank
     And I set the following fields to these values:
@@ -32,6 +33,7 @@ Feature: A teacher can duplicate questions in the question bank
     And I should see "Test question to be copied"
     And "Test question to be copied ID number qid" row "Created by" column of "categoryquestions" table should contain "Admin User"
 
+  @javascript
   Scenario: Duplicated questions automatically get a new name suggested
     When I choose "Duplicate" action for "Test question to be copied" in the question bank
     Then the field "Question name" matches value "Test question to be copied (copy)"
@@ -41,8 +43,9 @@ Feature: A teacher can duplicate questions in the question bank
     When I choose "Duplicate" action for "Test question to be copied" in the question bank
     And I press "Cancel"
     Then I should see "Test question to be copied"
-    And the field "Select a category" matches value "&nbsp;&nbsp;&nbsp;Test questions (1)"
+    And I should see "Test questions (1)" in the "Filter 1" "fieldset"
 
+  @javascript
   Scenario: Duplicating a question with an idnumber increments it
     Given the following "questions" exist:
       | questioncategory | qtype | name                   | questiontext                  | idnumber |

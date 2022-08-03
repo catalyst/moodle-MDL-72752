@@ -14,18 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace qbank_managecategories;
 
-/**
- * A search class to control from which category questions are listed.
- *
- * @package   core_question
- * @copyright 2013 Ray Morris
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core_question\bank\search;
-
-use qbank_managecategories\helper;
+use core_question\local\bank\condition;
 
 /**
  *  This class controls from which category questions are listed.
@@ -44,9 +35,6 @@ class category_condition extends condition {
     /** @var array of contexts. */
     protected $contexts;
 
-    /** @var bool Whether to include questions from sub-categories. */
-    protected $recurse;
-
     /** @var string SQL fragment to add to the where clause. */
     protected $where;
 
@@ -57,42 +45,49 @@ class category_condition extends condition {
     protected $cat;
 
     /** @var int The maximum displayed length of the category info. */
-    protected $maxinfolength;
+    public $maxinfolength;
 
     /**
-     * Constructor
-     * @param string     $cat           categoryID,contextID as used with question_bank_view->display()
-     * @param bool       $recurse       Whether to include questions from sub-categories
-     * @param array      $contexts      Context objects as used by question_category_options()
-     * @param \moodle_url $baseurl       The URL the form is submitted to
-     * @param \stdClass   $course        Course record
-     * @param integer    $maxinfolength The maximum displayed length of the category info.
+     * Constructor to initialize the category filter condition.
      */
-    public function __construct($cat, $recurse, $contexts, $baseurl, $course, $maxinfolength = null) {
-        $this->cat = $cat;
-        $this->recurse = $recurse;
-        $this->contexts = $contexts;
-        $this->baseurl = $baseurl;
-        $this->course = $course;
-        $this->init();
-        $this->maxinfolength = $maxinfolength;
+    public function __construct($qbank) {
+        $this->cat = $qbank->get_pagevars('cat');
+        $this->contexts = $qbank->contexts->having_one_edit_tab_cap($qbank->get_pagevars('tabname'));
+        $this->course = $qbank->course;
+        $filters = $qbank->get_pagevars('filters');
+
+        if (!$this->category = self::get_current_category($this->cat)) {
+            return;
+        }
+
+        // Build where and params.
+        list($this->where, $this->params) = self::build_query_from_filters($filters);
     }
 
     /**
-     * Initialize the object so it will be ready to return where() and params()
+     * Return default category
+     *
+     * @return \stdClass default category
      */
-    private function init() {
-        global $DB;
-        if (!$this->category = $this->get_current_category($this->cat)) {
-            return;
+    public function get_default_category(): \stdClass {
+        if (empty($this->category)) {
+            return question_get_default_category(\context_course::instance($this->course->id)->id);
         }
-        if ($this->recurse) {
-            $categoryids = question_categorylist($this->category->id);
-        } else {
-            $categoryids = [$this->category->id];
-        }
-        list($catidtest, $this->params) = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'cat');
-        $this->where = 'qbe.questioncategoryid ' . $catidtest;
+
+        return $this->category;
+    }
+
+    public function get_condition_key() {
+        return 'category';
+    }
+
+    /**
+     * Returns course id.
+     *
+     * @return string Course id.
+     */
+    public function get_course_id() {
+        return $this->course->id;
     }
 
     /**
@@ -114,8 +109,11 @@ class category_condition extends condition {
 
     /**
      * Called by question_bank_view to display the GUI for selecting a category
+     * @deprecated since Moodle 4.0 MDL-72321 - please do not use this function any more.
+     * @todo Final deprecation on Moodle 4.1 MDL-72572
      */
     public function display_options() {
+        debugging('Function display_options() is deprecated, please use filtering objects', DEBUG_DEVELOPER);
         global $PAGE;
         $displaydata = [];
         $catmenu = helper::question_category_options($this->contexts, true, 0,
@@ -126,20 +124,23 @@ class category_condition extends condition {
         if ($this->category) {
             $displaydata['categorydesc'] = $this->print_category_info($this->category);
         }
-        return $PAGE->get_renderer('core_question', 'bank')->render_category_condition($displaydata);
+        return $PAGE->get_renderer('qbank_managecategories')->render_category_condition($displaydata);
     }
 
     /**
      * Displays the recursion checkbox GUI.
      * question_bank_view places this within the section that is hidden by default
+     * @deprecated since Moodle 4.0 MDL-72321 - please do not use this function any more.
+     * @todo Final deprecation on Moodle 4.1 MDL-72572
      */
     public function display_options_adv() {
+        debugging('Function display_options_adv() is deprecated, please use filtering objects', DEBUG_DEVELOPER);
         global $PAGE;
         $displaydata = [];
         if ($this->recurse) {
             $displaydata['checked'] = 'checked';
         }
-        return $PAGE->get_renderer('core_question', 'bank')->render_category_condition_advanced($displaydata);
+        return $PAGE->get_renderer('qbank_managecategories')->render_category_condition_advanced($displaydata);
     }
 
     /**
@@ -149,6 +150,7 @@ class category_condition extends condition {
      * @param \moodle_url $pageurl the URL of this page.
      * @param string $current 'categoryID,contextID'.
      * @deprecated since Moodle 4.0
+     * @todo Final deprecation on Moodle 4.4 MDL-72438
      */
     protected function display_category_form($contexts, $pageurl, $current) {
         debugging('Function display_category_form() is deprecated,
@@ -162,15 +164,24 @@ class category_condition extends condition {
     }
 
     /**
-     * Look up the category record based on cateogry ID and context
+     * Print the text if category id not available.
+     */
+    public static function print_choose_category_message(): void {
+        echo \html_writer::start_tag('p', ['style' => "\"text-align:center;\""]);
+        echo \html_writer::tag('b', get_string('selectcategoryabove', 'question'));
+        echo \html_writer::end_tag('p');
+    }
+
+    /**
+     * Look up the category record based on category ID and context
      * @param string $categoryandcontext categoryID,contextID as used with question_bank_view->display()
      * @return \stdClass The category record
      */
-    protected function get_current_category($categoryandcontext) {
+    public static function get_current_category($categoryandcontext) {
         global $DB, $OUTPUT;
         list($categoryid, $contextid) = explode(',', $categoryandcontext);
         if (!$categoryid) {
-            $this->print_choose_category_message($categoryandcontext);
+            self::print_choose_category_message();
             return false;
         }
 
@@ -195,8 +206,81 @@ class category_condition extends condition {
         if (isset($this->maxinfolength)) {
             return shorten_text(format_text($category->info, $category->infoformat, $formatoptions, $this->course->id),
                     $this->maxinfolength);
-        } else {
-            return format_text($category->info, $category->infoformat, $formatoptions, $this->course->id);
         }
+
+        return format_text($category->info, $category->infoformat, $formatoptions, $this->course->id);
+    }
+
+    /**
+     * Get options for filter.
+     *
+     * @return array
+     */
+    public function get_filter_options(): array {
+        $catmenu = helper::question_category_options($this->contexts, true, 0, true, -1, false);
+        $values = [];
+        foreach ($catmenu as $menu) {
+            foreach ($menu as $catlist) {
+                foreach ($catlist as $key => $value) {
+                    $values[] = (object) [
+                        // Remove contextid from value.
+                        'value' => strpos($key, ',') === false ? $key : substr($key, 0, strpos($key, ',')),
+                        'title' => html_entity_decode($value),
+                        'selected' => ($key === $this->cat),
+                    ];
+                }
+            }
+        }
+        $filteroptions = [
+            'name' => 'category',
+            'title' => get_string('category', 'core_question'),
+            'custom' => false,
+            'multiple' => false,
+            'conditionclass' => get_class($this),
+            'filterclass' => null,
+            'values' => $values,
+            'allowempty' => false,
+        ];
+        return $filteroptions;
+    }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filters filter objects
+     * @return array where sql and params
+     */
+    public static function build_query_from_filters(array $filters): array {
+        global $DB;
+
+        // Category filter
+        if (isset($filters['category'])) {
+            $filter = (object) $filters['category'];
+        } else {
+            return ['', []];
+        }
+
+        $recursive = false;
+        if (isset($filters['subcategories'])) {
+            $subcatfilter = (object) $filters['subcategories'];
+            $recursive = (int) $subcatfilter->values[0];
+        }
+
+        // Sub categories.
+        if ($recursive) {
+            $categories = $filter->values;
+            $categoriesandsubcategories = [];
+            foreach ($categories as $categoryid) {
+                $categoriesandsubcategories += question_categorylist($categoryid);
+            }
+        } else {
+            $categoriesandsubcategories = $filter->values;
+        }
+
+        $filterverb = $filter->jointype ?? self::JOINTYPE_DEFAULT;
+        $equal = !($filterverb === self::JOINTYPE_NONE);
+        list($insql, $params) = $DB->get_in_or_equal($categoriesandsubcategories, SQL_PARAMS_NAMED, 'cat', $equal);
+        $where = 'qbe.questioncategoryid ' . $insql;
+        return [$where, $params];
     }
 }
