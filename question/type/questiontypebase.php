@@ -417,26 +417,25 @@ class question_type {
 
         // Only create a new bank entry if the question is not a new version (New question or duplicating a question).
         $questionbankentry = null;
-        if (isset($question->id)) {
+        if (isset($question->id) && !empty($question->id)) {
             $oldparent = $question->id;
-            if (!empty($question->id)) {
-                // Get the bank entry record where the question is referenced.
-                $questionbankentry = get_question_bank_entry($question->id);
-            }
+            // Get the bank entry record where the question is referenced.
+            $questionbankentry = get_question_bank_entry($question->id);
+            $question->modifiedby = $USER->id;
+            $question->timemodified = time();
+        } else {
+            $question->createdby = $USER->id;
+            $question->timecreated = time();
         }
 
         // Get the bank entry old id (this is when there are questions related with a parent, e.g.: qtype_multianswers).
-        if (isset($question->oldid)) {
-            if (!empty($question->oldid)) {
-                $questionbankentry = get_question_bank_entry($question->oldid);
-            }
+        if (isset($question->oldid) && !empty($question->oldid)) {
+            $questionbankentry = get_question_bank_entry($question->oldid);
         }
 
         // Always creates a new question and version record.
         // Set the unique code.
         $question->stamp = make_unique_id_code();
-        $question->createdby = $USER->id;
-        $question->timecreated = time();
 
         // Idnumber validation.
         $question->idnumber = null;
@@ -506,9 +505,6 @@ class question_type {
         // Now, whether we are updating a existing question, or creating a new
         // one, we have to do the files processing and update the record.
         // Question already exists, update.
-        $question->modifiedby = $USER->id;
-        $question->timemodified = time();
-
         if (!empty($question->questiontext) && !empty($form->questiontext['itemid'])) {
             $question->questiontext = file_save_draft_area_files($form->questiontext['itemid'],
                     $context->id, 'question', 'questiontext', (int)$question->id,

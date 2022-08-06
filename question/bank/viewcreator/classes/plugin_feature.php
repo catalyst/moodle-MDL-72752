@@ -31,13 +31,15 @@ class plugin_feature extends plugin_features_base {
 
     public function get_question_columns($qbank): array {
         return [
-            new creator_name_column($qbank)
+            new creator_name_column($qbank),
+            new modifier_name_column($qbank),
         ];
     }
 
     public function get_question_filters(view $qbank): array {
         return [
             new date_condition($qbank),
+            new modified_date_condition($qbank),
         ];
     }
 }
