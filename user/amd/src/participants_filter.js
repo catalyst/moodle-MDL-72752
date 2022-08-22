@@ -34,7 +34,7 @@ import Pending from 'core/pending';
  */
 export const init = filterRegionId => {
 
-    const filterSet = document.querySelector(`#${filterRegionId}`);
+    const filterSet = document.getElementById(filterRegionId);
 
     // Create and initialize filter.
     const coreFilter = new CoreFilter(filterSet,  function(filters, pendingPromise) {
