@@ -1,5 +1,11 @@
 This files describes API changes for code that uses the question API.
 
+=== 4.1 ===
+1) Question bank plugin actions are now implemented as a standalone feature, instead of passing the actions through get_question_columns(),
+   it will have to pass through get_question_actions() for all the plugins implementing actions. All the plugins will now have one point of
+   contact (menu_action_column_base) in order to implement an action. interface menuable_action in question/classes/local/bank/menuable_action.php
+   has been deleted as its not used in anywhere in core anymore.
+
 === 4.0 ===
 
 Moodle 4.0 included the results of a major project to re-work the question bank.

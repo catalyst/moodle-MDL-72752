@@ -276,7 +276,9 @@ class view {
         $plugins = \core_component::get_plugin_list_with_class('qbank', 'plugin_feature', 'plugin_feature.php');
         foreach ($plugins as $componentname => $plugin) {
             $pluginentrypointobject = new $plugin();
-            $plugincolumnobjects = $pluginentrypointobject->get_question_columns($this);
+            $plugincolumns = $pluginentrypointobject->get_question_columns($this);
+            $pluginactions = $pluginentrypointobject->get_question_actions($this);
+            $plugincolumnobjects = array_merge($plugincolumns, $pluginactions);
             // Don't need the plugins without column objects.
             if (empty($plugincolumnobjects)) {
                 unset($plugins[$componentname]);

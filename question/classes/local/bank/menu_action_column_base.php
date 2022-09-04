@@ -36,7 +36,55 @@ namespace core_question\local\bank;
  * @author    2021 Safat Shahin <safatshahin@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class menu_action_column_base extends action_column_base implements menuable_action {
+class menu_action_column_base extends column_base {
+
+    protected function display_content($question, $rowclasses): void {
+        [$url, $icon, $label] = $this->get_url_icon_and_label($question);
+        if ($url) {
+            $this->print_icon($icon, $label, $url);
+        }
+    }
+
+    public function get_action_menu_link(\stdClass $question): ?\action_menu_link {
+        // deprecate this one.
+        [$url, $icon, $label] = $this->get_url_icon_and_label($question);
+        if (!$url) {
+            return null;
+        }
+        return new \action_menu_link_secondary($url, new \pix_icon($icon, ''), $label);
+    }
+
+    public function get_name() {
+        return 'editmenu';
+    }
+
+    public function get_title(): string {
+        return '&#160;';
+    }
+
+    public function get_extra_classes(): array {
+        return ['iconcol'];
+    }
+
+    protected function print_icon($icon, $title, $url): void {
+        global $OUTPUT;
+        echo \html_writer::tag('a', $OUTPUT->pix_icon($icon, $title), ['title' => $title, 'href' => $url]);
+    }
+
+    public function get_extra_joins(): array {
+        return [
+            'qv' => 'JOIN {question_versions} qv ON qv.questionid = q.id',
+            'qbe' => 'JOIN {question_bank_entries} qbe on qbe.id = qv.questionbankentryid',
+            'qc' => 'JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid'
+        ];
+    }
+
+    public function get_required_fields(): array {
+        // Createdby is required for permission checks.
+        // Qtype so we can easily avoid applying actions to question types that
+        // are no longer installed.
+        return ['q.id', 'q.qtype', 'q.createdby', 'qc.contextid'];
+    }
 
     /**
      * Get the information required to display this action either as a menu item or a separate action column.
@@ -50,20 +98,8 @@ abstract class menu_action_column_base extends action_column_base implements men
      *      $icon - the icon for this action. E.g. 't/delete'.
      *      $label - text label to display in the UI (either in the menu, or as a tool-tip on the icon)
      */
-    abstract protected function get_url_icon_and_label(\stdClass $question);
-
-    protected function display_content($question, $rowclasses): void {
-        [$url, $icon, $label] = $this->get_url_icon_and_label($question);
-        if ($url) {
-            $this->print_icon($icon, $label, $url);
-        }
+    protected function get_url_icon_and_label(\stdClass $question): array {
+        return [null, null, null];
     }
 
-    public function get_action_menu_link(\stdClass $question): ?\action_menu_link {
-        [$url, $icon, $label] = $this->get_url_icon_and_label($question);
-        if (!$url) {
-            return null;
-        }
-        return new \action_menu_link_secondary($url, new \pix_icon($icon, ''), $label);
-    }
 }

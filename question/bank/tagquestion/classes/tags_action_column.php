@@ -16,8 +16,7 @@
 
 namespace qbank_tagquestion;
 
-use core_question\local\bank\action_column_base;
-use core_question\local\bank\menuable_action;
+use core_question\local\bank\menu_action_column_base;
 
 /**
  * Action to add and remove tags to questions.
@@ -27,7 +26,7 @@ use core_question\local\bank\menuable_action;
  * @author    2021 Safat Shahin <safatshahin@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tags_action_column extends action_column_base implements menuable_action {
+class tags_action_column extends menu_action_column_base {
 
     /**
      * @var string store this lang string for performance.
@@ -86,13 +85,15 @@ class tags_action_column extends action_column_base implements menuable_action {
     }
 
     public function get_action_menu_link(\stdClass $question): ?\action_menu_link {
+        // move to next.
         if (!\core_tag_tag::is_enabled('core_question', 'question') ||
                 !question_has_capability_on($question, 'view') || !$this->tagsenabled) {
             return null;
         }
 
         [$url, $attributes] = $this->get_link_url_and_attributes($question);
-        return new \action_menu_link_secondary($url, new \pix_icon('t/tags', ''),
+        return  new \action_menu_link_secondary($url, new \pix_icon('t/tags', ''),
                 $this->managetags, $attributes);
     }
+
 }

@@ -29,7 +29,7 @@ namespace core_question\local\bank;
  *
  * This question bank column, if added to the question bank, will
  * replace all of the other columns which implement the
- * {@see menuable_action} interface and replace them with a single
+ * {@see menu_action_column_base} interface and replace them with a single
  * column containing an Edit menu.
  *
  * @copyright 2019 The Open University
@@ -38,7 +38,7 @@ namespace core_question\local\bank;
  */
 class edit_menu_column extends column_base {
     /**
-     * @var menuable_action[]
+     * @var menu_action_column_base[]
      */
     protected $actions;
 
@@ -55,7 +55,7 @@ class edit_menu_column extends column_base {
     public function claim_menuable_columns($allcolumns): array {
         $remainingcolumns = [];
         foreach ($allcolumns as $key => $column) {
-            if ($column instanceof menuable_action) {
+            if ($column instanceof menu_action_column_base) {
                 $this->actions[$key] = $column;
             } else {
                 $remainingcolumns[$key] = $column;
@@ -100,7 +100,7 @@ class edit_menu_column extends column_base {
     /**
      * Get menuable actions.
      *
-     * @return menuable_action Menuable actions.
+     * @return menu_action_column_base Menuable actions.
      */
     public function get_actions(): array {
         return $this->actions;
