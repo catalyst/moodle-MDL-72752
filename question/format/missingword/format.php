@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\format\format_default;
 
 /**
  * Missing word question importer.
@@ -49,7 +50,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qformat_missingword extends qformat_default {
+class qformat_missingword extends format_default {
 
     public function provide_import() {
         return true;

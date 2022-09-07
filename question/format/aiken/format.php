@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\format\format_default;
 
 /**
  * Aiken format - a simple format for creating multiple choice questions (with
@@ -51,7 +52,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2003 Tom Robb <tom@robb.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qformat_aiken extends qformat_default {
+class qformat_aiken extends format_default {
 
     public function provide_import() {
         return true;

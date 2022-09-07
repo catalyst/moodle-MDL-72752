@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\format\format_default;
 
 /**
  * The GIFT import filter was designed as an easy to use method
@@ -59,7 +60,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2003 Paul Tsuchido Shew
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qformat_gift extends qformat_default {
+class qformat_gift extends format_default {
 
     public function provide_import() {
         return true;

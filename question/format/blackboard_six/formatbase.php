@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\format\xml_format_base;
+
 /**
  * Base class question import format for zip files with images
  *
@@ -31,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2012 Jean-Michel Vedrine
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qformat_blackboard_six_base extends qformat_based_on_xml {
+class qformat_blackboard_six_base extends xml_format_base {
     /** @var string path to path to root of image tree in unzipped archive. */
     public $filebase = '';
     /** @var string path to the temporary directory. */

@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\format\format_default;
 
 /**
  * XHTML question exporter.
@@ -34,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2005 Howard Miller
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qformat_xhtml extends qformat_default {
+class qformat_xhtml extends format_default {
 
     public function provide_export() {
         return true;

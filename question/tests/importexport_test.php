@@ -30,6 +30,7 @@ global $CFG;
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/format.php');
 
+use core_question\local\format\format_default;
 
 /**
  * Subclass to make it easier to test qformat_default.
@@ -37,7 +38,7 @@ require_once($CFG->dirroot . '/question/format.php');
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class testable_qformat extends qformat_default {
+class testable_qformat extends format_default {
     public function assemble_category_path($names) {
         return parent::assemble_category_path($names);
     }

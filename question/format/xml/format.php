@@ -26,15 +26,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/xmlize.php');
-if (!class_exists('qformat_default')) {
-    // This is ugly, but this class is also (ab)used by mod/lesson, which defines
-    // a different base class in mod/lesson/format.php. Thefore, we can only
-    // include the proper base class conditionally like this. (We have to include
-    // the base class like this, otherwise it breaks third-party question types.)
-    // This may be reviewd, and a better fix found one day.
-    require_once($CFG->dirroot . '/question/format.php');
-}
 
+use core_question\local\format\format_default;
 
 /**
  * Importer for Moodle XML question format.
@@ -44,7 +37,7 @@ if (!class_exists('qformat_default')) {
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qformat_xml extends qformat_default {
+class qformat_xml extends format_default {
 
     public function provide_import() {
         return true;
