@@ -70,7 +70,7 @@ class helper_test extends \advanced_testcase {
         $this->context = \context_module::instance($quiz->cmid);
         // Create a question in the default category.
         $contexts = new \core_question\local\bank\question_edit_contexts($this->context);
-        $cat = question_make_default_categories($contexts->all());
+        $cat = \core_question\question_categories_manager::question_make_default_categories($contexts->all());
         $question = $questiongenerator->create_question('numerical', null,
             ['name' => 'Example question', 'category' => $cat->id]);
         $this->questiondata = question_bank::load_question($question->id);

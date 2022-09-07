@@ -616,7 +616,7 @@ class qformat_default {
         // Now create any categories that need to be created.
         foreach ($catnames as $key => $catname) {
             if ($parent == 0) {
-                $category = question_get_top_category($context->id, true);
+                $category = \core_question\question_categories_manager::question_get_top_category($context->id, true);
                 $parent = $category->id;
             } else if ($category = $DB->get_record('question_categories',
                     array('name' => $catname, 'contextid' => $context->id, 'parent' => $parent))) {
@@ -925,7 +925,7 @@ class qformat_default {
         // Get the parents (from database) for this category.
         $parents = [];
         if ($this->category) {
-            $parents = question_categorylist_parents($this->category->id);
+            $parents = \core_question\question_categories_manager::question_categorylist_parents($this->category->id);
         }
 
         // get the questions (from database) in this category
@@ -981,7 +981,7 @@ class qformat_default {
                     $addnewcat = true;
                     $trackcategory = $question->category;
                 }
-                $trackcategoryparents = question_categorylist_parents($trackcategory);
+                $trackcategoryparents = \core_question\question_categories_manager::question_categorylist_parents($trackcategory);
                 // Check if we need to record empty parents categories.
                 foreach ($trackcategoryparents as $trackcategoryparent) {
                     // If parent wasn't written.

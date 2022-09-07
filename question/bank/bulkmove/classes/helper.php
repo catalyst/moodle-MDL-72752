@@ -47,7 +47,7 @@ class helper {
             foreach ($questions as $question) {
                 \core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'move');
             }
-            question_move_questions_to_category($questionids, $tocategory->id);
+            \core_question\question_categories_manager::question_move_questions_to_category($questionids, $tocategory->id);
         }
     }
 

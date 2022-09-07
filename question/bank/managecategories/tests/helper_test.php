@@ -118,7 +118,7 @@ class helper_test extends manage_category_test_base {
         $qcategory1 = $this->create_question_category_for_a_quiz($quiz);
 
         // Try to delete a top category.
-        $categorytop = question_get_top_category($qcategory1->id, true)->id;
+        $categorytop = \core_question\question_categories_manager::question_get_top_category($qcategory1->id, true)->id;
         $this->expectException('moodle_exception');
         $this->expectExceptionMessage(get_string('cannotdeletetopcat', 'question'));
         helper::question_can_delete_cat($categorytop);

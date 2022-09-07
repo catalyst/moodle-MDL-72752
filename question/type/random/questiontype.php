@@ -79,7 +79,7 @@ class qtype_random extends question_type {
             return false;
         }
         if ($question->questiontext) {
-            $categorylist = question_categorylist($question->category);
+            $categorylist = \core_question\question_categories_manager::question_categorylist($question->category);
         } else {
             $categorylist = array($question->category);
         }
@@ -263,7 +263,7 @@ class qtype_random extends question_type {
 
         $this->init_qtype_lists();
         if ($subcategories) {
-            $categoryids = question_categorylist($categoryid);
+            $categoryids = \core_question\question_categories_manager::question_categorylist($categoryid);
         } else {
             $categoryids = array($categoryid);
         }

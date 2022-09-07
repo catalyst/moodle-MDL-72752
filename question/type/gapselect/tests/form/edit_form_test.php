@@ -81,7 +81,7 @@ class edit_form_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $syscontext = \context_system::instance();
-        $category = question_make_default_categories(array($syscontext));
+        $category = \core_question\question_categories_manager::question_make_default_categories(array($syscontext));
         $fakequestion = new \stdClass();
         $fakequestion->qtype = 'gapselect'; // Does not actually matter if this is wrong.
         $fakequestion->contextid = $syscontext->id;

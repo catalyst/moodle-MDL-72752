@@ -97,7 +97,7 @@ class add_random_question extends external_api {
         // Create new category.
         if (!empty($newcategory)) {
             $contexts = new \core_question\local\bank\question_edit_contexts($thiscontext);
-            $defaultcategoryobj = question_make_default_categories($contexts->all());
+            $defaultcategoryobj = \core_question\question_categories_manager::question_make_default_categories($contexts->all());
             $defaultcategory = $defaultcategoryobj->id . ',' . $defaultcategoryobj->contextid;
             $qcobject = new \qbank_managecategories\question_category_object(
                 null,

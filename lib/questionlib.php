@@ -290,8 +290,11 @@ function question_category_delete_safe($category): void {
  * @param integer $categoryid a question category id.
  * @param boolean $recursive whether to check child categories too.
  * @return boolean whether any question in this category is in use.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_category_in_use($categoryid, $recursive = false): bool {
+    debugging('Function question_category_in_use() is deprecated, please use 
+    \core_question\question_categories_manager::question_category_in_use() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     // Look at each question in the category.
@@ -439,7 +442,7 @@ function question_delete_context($contextid): array {
     $fields = 'id, parent, name, contextid';
     if ($categories = $DB->get_records('question_categories', ['contextid' => $contextid], 'parent', $fields)) {
         // Sort categories following their tree (parent-child) relationships this will make the feedback more readable.
-        $categories = sort_categories_by_tree($categories);
+        $categories = \core_question\question_categories_manager::sort_categories_by_tree($categories);
         foreach ($categories as $category) {
             question_category_delete_safe($category);
         }
@@ -491,10 +494,10 @@ function question_delete_course_category($category, $newcategory, $notused=false
         }
 
         // Only move question categories if there is any question category at all!
-        if ($topcategory = question_get_top_category($context->id)) {
-            $newtopcategory = question_get_top_category($newcontext->id, true);
+        if ($topcategory = \core_question\question_categories_manager::question_get_top_category($context->id)) {
+            $newtopcategory = \core_question\question_categories_manager::question_get_top_category($newcontext->id, true);
 
-            question_move_category_to_context($topcategory->id, $context->id, $newcontext->id);
+            \core_question\question_categories_manager::question_move_category_to_context($topcategory->id, $context->id, $newcontext->id);
             $DB->set_field('question_categories', 'parent', $newtopcategory->id, ['parent' => $topcategory->id]);
             // Now delete the top category.
             $DB->delete_records('question_categories', ['id' => $topcategory->id]);
@@ -520,7 +523,7 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
     // Make a category in the parent context to move the questions to.
     if (is_null($newcategory)) {
         $newcategory = new stdClass();
-        $newcategory->parent = question_get_top_category($newcontextid, true)->id;
+        $newcategory->parent = \core_question\question_categories_manager::question_get_top_category($newcontextid, true)->id;
         $newcategory->contextid = $newcontextid;
         // Max length of column name in question_categories is 255.
         $newcategory->name = shorten_text(get_string('questionsrescuedfrom', 'question', $oldplace), 255);
@@ -531,7 +534,7 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
     }
 
     // Move any remaining questions to the 'saved' category.
-    if (!question_move_questions_to_category($questionids, $newcategory->id)) {
+    if (!\core_question\question_categories_manager::question_move_questions_to_category($questionids, $newcategory->id)) {
         return false;
     }
     return $newcategory;
@@ -672,8 +675,11 @@ function question_move_question_tags_to_new_context(array $questions, context $n
  * @param int $limitfrom
  * @param int $limitnum
  * @return array
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function idnumber_exist_in_question_category($questionidnumber, $categoryid, $limitfrom = 0, $limitnum = 1): array {
+    debugging('Function idnumber_exist_in_question_category() is deprecated, please use 
+    \core_question\question_categories_manager::idnumber_exist_in_question_category() instead.', DEBUG_DEVELOPER);
     global $DB;
     $response  = false;
     $record = [];
@@ -702,8 +708,11 @@ function idnumber_exist_in_question_category($questionidnumber, $categoryid, $li
  * @param array $questionids of question ids.
  * @param integer $newcategoryid the id of the category to move to.
  * @return bool
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_move_questions_to_category($questionids, $newcategoryid): bool {
+    debugging('Function question_move_questions_to_category() is deprecated, please use 
+    \core_question\question_categories_manager::question_move_questions_to_category() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $newcategorydata = $DB->get_record('question_categories', ['id' => $newcategoryid]);
@@ -735,7 +744,8 @@ function question_move_questions_to_category($questionids, $newcategoryid): bool
                     $question->id, $question->contextid, $newcategorydata->contextid);
         }
         // Check whether there could be a clash of idnumbers in the new category.
-        list($idnumberclash, $rec) = idnumber_exist_in_question_category($question->idnumber, $newcategoryid);
+        list($idnumberclash, $rec) = \core_question\question_categories_manager::
+        idnumber_exist_in_question_category($question->idnumber, $newcategoryid);
         if ($idnumberclash) {
             $unique = 1;
             if (count($rec)) {
@@ -819,8 +829,11 @@ function move_question_set_references(int $oldcategoryid, int $newcatgoryid,
  * @param integer $oldcontextid the old context id.
  * @param integer $newcontextid the new context id.
  * @param bool $purgecache if calling this function will purge question from the cache or not.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_move_category_to_context($categoryid, $oldcontextid, $newcontextid, $purgecache = true) {
+    debugging('Function question_move_category_to_context() is deprecated, please use 
+    \core_question\question_categories_manager::question_move_category_to_context() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $questions = [];
@@ -851,7 +864,7 @@ function question_move_category_to_context($categoryid, $oldcontextid, $newconte
     foreach ($subcatids as $subcatid => $notused) {
         $DB->set_field('question_categories', 'contextid', $newcontextid,
                 array('id' => $subcatid));
-        question_move_category_to_context($subcatid, $oldcontextid, $newcontextid, $purgecache);
+        \core_question\question_categories_manager::question_move_category_to_context($subcatid, $oldcontextid, $newcontextid, $purgecache);
     }
 }
 
@@ -1159,8 +1172,11 @@ function print_question_icon($question): string {
  * @param int $id
  * @param int $level
  * @return array
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
+    debugging('Function sort_categories_by_tree() is deprecated, please use 
+    \core_question\question_categories_manager::sort_categories_by_tree() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $children = [];
@@ -1170,7 +1186,7 @@ function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
         if (!isset($categories[$key]->processed) && $categories[$key]->parent == $id) {
             $children[$key] = $categories[$key];
             $categories[$key]->processed = true;
-            $children = $children + sort_categories_by_tree(
+            $children = $children + \core_question\question_categories_manager::sort_categories_by_tree(
                     $categories, $children[$key]->id, $level + 1);
         }
     }
@@ -1183,7 +1199,7 @@ function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
                             'id' => $categories[$key]->parent))) {
                 $children[$key] = $categories[$key];
                 $categories[$key]->processed = true;
-                $children = $children + sort_categories_by_tree(
+                $children = $children + \core_question\question_categories_manager::sort_categories_by_tree(
                         $categories, $children[$key]->id, $level + 1);
             }
         }
@@ -1196,8 +1212,11 @@ function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
  *
  * @param integer $contextid a context id.
  * @return object|bool the default question category for that context, or false if none.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_get_default_category($contextid) {
+    debugging('Function question_get_default_category() is deprecated, please use 
+    \core_question\question_categories_manager::question_get_default_category() instead.', DEBUG_DEVELOPER);
     global $DB;
     $category = $DB->get_records_select('question_categories', 'contextid = ? AND parent <> 0',
                                         [$contextid], 'id', '*', 0, 1);
@@ -1215,8 +1234,11 @@ function question_get_default_category($contextid) {
  * @param int $contextid A context id.
  * @param bool $create Whether create a top category if it doesn't exist.
  * @return bool|stdClass The top question category for that context, or false if none.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_get_top_category($contextid, $create = false) {
+    debugging('Function question_get_top_category() is deprecated, please use 
+    \core_question\question_categories_manager::question_get_top_category() instead.', DEBUG_DEVELOPER);
     global $DB;
     $category = $DB->get_record('question_categories', ['contextid' => $contextid, 'parent' => 0]);
 
@@ -1240,8 +1262,11 @@ function question_get_top_category($contextid, $create = false) {
  *
  * @param array $contextids List of context ids
  * @return array
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_get_top_categories_for_contexts($contextids): array {
+    debugging('Function question_get_top_categories_for_contexts() is deprecated, please use 
+    \core_question\question_categories_manager::question_get_top_categories_for_contexts() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $concatsql = $DB->sql_concat_join("','", ['id', 'contextid']);
@@ -1262,8 +1287,11 @@ function question_get_top_categories_for_contexts($contextids): array {
  *
  * @param array $contexts  The context objects for this context and all parent contexts.
  * @return object The default category - the category in the course context
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_make_default_categories($contexts): object {
+    debugging('Function question_make_default_categories() is deprecated, please use 
+    \core_question\question_categories_manager::question_make_default_categories() instead.', DEBUG_DEVELOPER);
     global $DB;
     static $preferredlevels = array(
         CONTEXT_COURSE => 4,
@@ -1276,7 +1304,7 @@ function question_make_default_categories($contexts): object {
     $preferredness = 0;
     // If it already exists, just return it.
     foreach ($contexts as $key => $context) {
-        $topcategory = question_get_top_category($context->id, true);
+        $topcategory = \core_question\question_categories_manager::question_get_top_category($context->id, true);
         if (!$exists = $DB->record_exists("question_categories",
                 array('contextid' => $context->id, 'parent' => $topcategory->id))) {
             // Otherwise, we need to make one.
@@ -1292,7 +1320,7 @@ function question_make_default_categories($contexts): object {
             $category->stamp = make_unique_id_code();
             $category->id = $DB->insert_record('question_categories', $category);
         } else {
-            $category = question_get_default_category($context->id);
+            $category = \core_question\question_categories_manager::question_get_default_category($context->id);
         }
         $thispreferredness = $preferredlevels[$context->contextlevel];
         if (has_any_capability(array('moodle/question:usemine', 'moodle/question:useall'), $context)) {
@@ -1315,8 +1343,11 @@ function question_make_default_categories($contexts): object {
  *
  * @param int $categoryid
  * @return array of question category ids of the category and all subcategories.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_categorylist($categoryid): array {
+    debugging('Function question_categorylist() is deprecated, please use 
+    \core_question\question_categories_manager::question_categorylist() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     // Final list of category IDs.
@@ -1347,8 +1378,11 @@ function question_categorylist($categoryid): array {
  * Get all parent categories of a given question category in decending order.
  * @param int $categoryid for which you want to find the parents.
  * @return array of question category ids of all parents categories.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_categorylist_parents(int $categoryid): array {
+    debugging('Function question_categorylist_parents() is deprecated, please use 
+    \core_question\question_categories_manager::question_categorylist_parents() instead.', DEBUG_DEVELOPER);
     global $DB;
     $parent = $DB->get_field('question_categories', 'parent', array('id' => $categoryid));
     if (!$parent) {
@@ -1527,7 +1561,7 @@ function question_edit_url($context) {
         return false;
     }
     $baseurl = $CFG->wwwroot . '/question/edit.php?';
-    $defaultcategory = question_get_default_category($context->id);
+    $defaultcategory = \core_question\question_categories_manager::question_get_default_category($context->id);
     if ($defaultcategory) {
         $baseurl .= 'cat=' . $defaultcategory->id . ',' . $context->id . '&amp;';
     }

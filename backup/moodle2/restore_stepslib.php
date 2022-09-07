@@ -4867,13 +4867,13 @@ class restore_create_categories_and_questions extends restore_structure_step {
             $before35 = true;
         }
         if (empty($mapping->info->parent) && $before35) {
-            $top = question_get_top_category($data->contextid, true);
+            $top = \core_question\question_categories_manager::question_get_top_category($data->contextid, true);
             $data->parent = $top->id;
         }
 
         if (empty($data->parent)) {
-            if (!$top = question_get_top_category($data->contextid)) {
-                $top = question_get_top_category($data->contextid, true);
+            if (!$top = \core_question\question_categories_manager::question_get_top_category($data->contextid)) {
+                $top = \core_question\question_categories_manager::question_get_top_category($data->contextid, true);
                 $this->set_mapping('question_category_created', $oldid, $top->id, false, null, $data->contextid);
             }
             $this->set_mapping('question_category', $oldid, $top->id);
@@ -5205,7 +5205,7 @@ class restore_create_categories_and_questions extends restore_structure_step {
             }
             // Here with $newparent empty, problem with contexts or remapping, set it to top cat
             if (!$newparent && $dbcat->parent) {
-                $topcat = question_get_top_category($dbcat->contextid, true);
+                $topcat = \core_question\question_categories_manager::question_get_top_category($dbcat->contextid, true);
                 if ($dbcat->parent != $topcat->id) {
                     $DB->set_field('question_categories', 'parent', $topcat->id, array('id' => $dbcat->id));
                 }
@@ -5359,7 +5359,7 @@ class restore_move_module_questions_categories extends restore_execution_step {
                                              WHERE backupid = ?
                                                AND itemname = 'question_category'
                                                AND parentitemid = ?", array($this->get_restoreid(), $contextid));
-        $top = question_get_top_category($newcontextid, true);
+        $top = \core_question\question_categories_manager::question_get_top_category($newcontextid, true);
         $oldtopid = 0;
         foreach ($questioncats as $questioncat) {
             // Before 3.5, question categories could be created at top level.

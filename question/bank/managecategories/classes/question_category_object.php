@@ -537,7 +537,7 @@ class question_category_object {
      */
     public function move_questions(int $oldcat, int $newcat): void {
         $questionids = $this->get_real_question_ids_in_category($oldcat);
-        question_move_questions_to_category($questionids, $newcat);
+        \core_question\question_categories_manager::question_move_questions_to_category($questionids, $newcat);
     }
 
     /**
@@ -711,7 +711,7 @@ class question_category_object {
 
         if ($oldcat->contextid != $tocontextid) {
             // Moving to a new context. Must move files belonging to questions.
-            question_move_category_to_context($cat->id, $oldcat->contextid, $tocontextid);
+            \core_question\question_categories_manager::question_move_category_to_context($cat->id, $oldcat->contextid, $tocontextid);
         }
 
         // Cat param depends on the context id, so update it.

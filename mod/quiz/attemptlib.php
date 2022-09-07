@@ -565,7 +565,7 @@ class quiz {
             $categoriestolook = array();
             foreach ($qcategories as $cat => $includesubcats) {
                 if ($includesubcats) {
-                    $categoriestolook = array_merge($categoriestolook, question_categorylist($cat));
+                    $categoriestolook = array_merge($categoriestolook, \core_question\question_categories_manager::question_categorylist($cat));
                 } else {
                     $categoriestolook[] = $cat;
                 }

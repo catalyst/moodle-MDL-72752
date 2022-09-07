@@ -511,7 +511,7 @@ class helper {
             $DB->set_field('question_categories', 'contextid', $insertaftercategory->contextid,
                 ['id' => $origincategory->id]);
             // Make change to sub categories.
-            question_move_category_to_context($origincategory->id,
+            \core_question\question_categories_manager::question_move_category_to_context($origincategory->id,
                 $origincategory->contextid, $insertaftercategory->contextid);
         }
 

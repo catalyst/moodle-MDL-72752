@@ -1400,7 +1400,7 @@ class question_type {
         $form->generalfeedback = "Well done";
 
         $context = context_course::instance($courseid);
-        $newcategory = question_make_default_categories(array($context));
+        $newcategory = \core_question\question_categories_manager::question_make_default_categories(array($context));
         $form->category = $newcategory->id . ',1';
 
         $question = new stdClass();

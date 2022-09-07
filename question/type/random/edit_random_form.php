@@ -53,7 +53,8 @@ class qtype_random_edit_form extends question_edit_form {
         $mform->addElement('advcheckbox', 'questiontext[text]',
                 get_string('includingsubcategories', 'qtype_random'), null, null, array(0, 1));
 
-        $tops = question_get_top_categories_for_contexts(array_column($this->contexts->all(), 'id'));
+        $tops = \core_question\question_categories_manager::
+        question_get_top_categories_for_contexts(array_column($this->contexts->all(), 'id'));
         $mform->hideIf('questiontext[text]', 'category', 'in', $tops);
 
         $mform->addElement('hidden', 'qtype');

@@ -423,7 +423,7 @@ class question_capability_test extends \advanced_testcase {
         $question = $questiongenerator->create_question($qtype, null, $overrides);
 
         // Move the question.
-        question_move_questions_to_category([$question->id], $newquestioncat->id);
+        \core_question\question_categories_manager::question_move_questions_to_category([$question->id], $newquestioncat->id);
 
         // Test that the capability is correct after the question has been moved.
         $this->setUser($user);
