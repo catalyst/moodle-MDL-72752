@@ -69,7 +69,7 @@ class helper {
 
         $quba = question_engine::load_questions_usage_by_activity($qubaid);
 
-        if (!question_has_capability_on($quba->get_question($slot, false), 'use')) {
+        if (!\core_question\local\bank\question_edit_contexts::question_has_capability_on($quba->get_question($slot, false), 'use')) {
             send_file_not_found();
         }
 

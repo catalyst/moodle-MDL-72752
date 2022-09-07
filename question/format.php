@@ -1012,7 +1012,7 @@ class qformat_default {
             }
 
             // Add the question to result.
-            if (!$checkcapabilities || question_has_capability_on($question, 'view')) {
+            if (!$checkcapabilities || core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
                 $expquestion = $this->writequestion($question, $contextid);
                 // Don't add anything if witequestion returned nothing.
                 // This will permit qformat plugins to exclude some questions.

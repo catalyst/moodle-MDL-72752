@@ -84,7 +84,7 @@ class update_question_version_status extends \external_api {
         $question = question_bank::load_question($params['questionid']);
         $editingcontext = \context::instance_by_id($question->contextid);
         self::validate_context($editingcontext);
-        $canedit = question_has_capability_on($question, 'edit');
+        $canedit = \core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit');
         if ($canedit) {
             $versionrecord = $DB->get_record('question_versions', ['questionid' => $params['questionid']]);
             $versionrecord->status = $params['status'];

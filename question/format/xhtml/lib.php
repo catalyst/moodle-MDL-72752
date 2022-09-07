@@ -45,7 +45,7 @@ function qformat_xhtml_question_preview_pluginfile($previewcontext, $questionid,
     list($context, $course, $cm) = get_context_info_array($previewcontext->id);
     require_login($course, false, $cm);
 
-    question_require_capability_on($questionid, 'view');
+    core_question\local\bank\question_edit_contexts::question_require_capability_on($questionid, 'view');
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);

@@ -1418,12 +1418,12 @@ function quiz_question_edit_button($cmid, $question, $returnurl, $contentafteric
     // What sort of icon should we show?
     $action = '';
     if (!empty($question->id) &&
-            (question_has_capability_on($question, 'edit') ||
-                    question_has_capability_on($question, 'move'))) {
+            (core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit') ||
+                core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'move'))) {
         $action = $stredit;
         $icon = 't/edit';
     } else if (!empty($question->id) &&
-            question_has_capability_on($question, 'view')) {
+        core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
         $action = $strview;
         $icon = 'i/info';
     }
@@ -1476,7 +1476,7 @@ function quiz_question_preview_url($quiz, $question, $variant = null) {
  */
 function quiz_question_preview_button($quiz, $question, $label = false, $variant = null, $random = null) {
     global $PAGE;
-    if (!question_has_capability_on($question, 'use')) {
+    if (!core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use')) {
         return '';
     }
     return $PAGE->get_renderer('mod_quiz', 'edit')->question_preview_icon($quiz, $question, $label, $variant, null);
@@ -2264,7 +2264,7 @@ function quiz_question_tostring($question, $showicon = false, $showquestiontext 
 function quiz_require_question_use($questionid) {
     global $DB;
     $question = $DB->get_record('question', array('id' => $questionid), '*', MUST_EXIST);
-    question_require_capability_on($question, 'use');
+    core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'use');
 }
 
 /**
@@ -2292,7 +2292,7 @@ function quiz_has_question_use($quiz, $slot) {
     if (!$question) {
         return false;
     }
-    return question_has_capability_on($question, 'use');
+    return core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use');
 }
 
 /**

@@ -64,7 +64,7 @@ class tags_action_column extends action_column_base implements menuable_action {
         global $OUTPUT;
 
         if (\core_tag_tag::is_enabled('core_question', 'question') &&
-                question_has_capability_on($question, 'view') && $this->tagsenabled) {
+            \core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view') && $this->tagsenabled) {
 
             [$url, $attributes] = $this->get_link_url_and_attributes($question);
             echo \html_writer::link($url, $OUTPUT->pix_icon('t/tags',
@@ -77,7 +77,7 @@ class tags_action_column extends action_column_base implements menuable_action {
 
         $attributes = [
                 'data-action' => 'edittags',
-                'data-cantag' => question_has_capability_on($question, 'tag'),
+                'data-cantag' => \core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'tag'),
                 'data-contextid' => $this->qbank->get_most_specific_context()->id,
                 'data-questionid' => $question->id
         ];
@@ -87,7 +87,7 @@ class tags_action_column extends action_column_base implements menuable_action {
 
     public function get_action_menu_link(\stdClass $question): ?\action_menu_link {
         if (!\core_tag_tag::is_enabled('core_question', 'question') ||
-                !question_has_capability_on($question, 'view') || !$this->tagsenabled) {
+                !\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view') || !$this->tagsenabled) {
             return null;
         }
 

@@ -82,8 +82,9 @@ class copy_action_column extends menu_action_column_base {
         // To copy a question, you need permission to add a question in the same
         // category as the existing question, and ability to access the details of
         // the question being copied.
-        if (question_has_capability_on($question, 'add') &&
-                (question_has_capability_on($question, 'edit') || question_has_capability_on($question, 'view'))) {
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'add') &&
+                (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit') ||
+                    \core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view'))) {
             return [$this->duplicate_question_moodle_url($question->id), 't/copy', $this->strcopy];
         }
         return [null, null, null];

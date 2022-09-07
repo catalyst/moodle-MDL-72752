@@ -1702,7 +1702,7 @@ function quiz_supports($feature) {
 function quiz_get_extra_capabilities() {
     global $CFG;
     require_once($CFG->libdir . '/questionlib.php');
-    return question_get_all_capabilities();
+    return core_question\local\bank\question_edit_contexts::question_get_all_capabilities();
 }
 
 /**

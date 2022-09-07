@@ -54,7 +54,7 @@ $contexts = new core_question\local\bank\question_edit_contexts($thiscontext);
 $questiondata = question_bank::load_question_data($questionid);
 
 // Check permissions.
-question_require_capability_on($questiondata, 'view');
+core_question\local\bank\question_edit_contexts::question_require_capability_on($questiondata, 'view');
 
 // Initialise $PAGE. Nothing is output, so this does not really matter. Just avoids notices.
 $nexturl = new moodle_url('/question/type/stack/questiontestrun.php', $urlparams);

@@ -370,7 +370,7 @@ abstract class question_edit_form extends question_wizard_form {
     protected function add_tag_fields($mform) {
         global $CFG, $DB;
 
-        $hastagcapability = question_has_capability_on($this->question, 'tag');
+        $hastagcapability = core_question\local\bank\question_edit_contexts::question_has_capability_on($this->question, 'tag');
         // Is the question category in a course context?
         $qcontext = $this->categorycontext;
         $qcoursecontext = $qcontext->get_course_context(false);

@@ -42,6 +42,11 @@ information provided here is intended especially for developers.
   implemented by adhoc tasks. For backwards compatibility, a default implementation has been added to `\core\task\adhoc_task` to
   return the class name.
 * The function get_module_metadata() has been finally deprecated and can not be used anymore.
+* The following methods related to question capabilities are moved to a specialized class and deprecated in questionlib:
+  question_get_question_capabilities() -> core_question\local\bank\question_edit_contexts::question_get_question_capabilities()
+  question_get_all_capabilities() -> core_question\local\bank\question_edit_contexts::question_get_all_capabilities()
+  question_require_capability_on() -> core_question\local\bank\question_edit_contexts::question_require_capability_on()
+  question_has_capability_on() -> core_question\local\bank\question_edit_contexts::question_has_capability_on()
 
 === 4.0 ===
 

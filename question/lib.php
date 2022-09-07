@@ -90,7 +90,7 @@ function core_question_output_fragment_tags_form($args) {
             'coursetags' => $sortedtagobjects->coursetags ?? [],
         ];
 
-        $cantag = question_has_capability_on($question, 'tag');
+        $cantag = core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'tag');
         $mform = new \qbank_tagquestion\form\tags_form(null, $formoptions, 'post', '', null, $cantag, $data);
         $mform->set_data($data);
 

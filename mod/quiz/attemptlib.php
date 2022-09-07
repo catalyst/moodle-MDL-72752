@@ -1193,7 +1193,7 @@ class quiz_attempt {
         }
 
         $question = $this->quba->get_question($slot, false);
-        if (!question_has_capability_on($question, 'edit', $question->category)) {
+        if (!core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit', $question->category)) {
             return $options;
         }
 

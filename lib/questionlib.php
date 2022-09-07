@@ -1437,6 +1437,8 @@ function question_default_export_filename($course, $category): string {
  * @return bool this user has the capability $cap for this question $question?
  */
 function question_has_capability_on($questionorid, $cap, $notused = -1): bool {
+    debugging('Function question_has_capability_on() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_has_capability_on() instead.', DEBUG_DEVELOPER);
     global $USER, $DB;
 
     if (is_numeric($questionorid)) {
@@ -1505,7 +1507,9 @@ function question_has_capability_on($questionorid, $cap, $notused = -1): bool {
  * @return bool
  */
 function question_require_capability_on($question, $cap): bool {
-    if (!question_has_capability_on($question, $cap)) {
+    debugging('Function question_require_capability_on() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_require_capability_on() instead.', DEBUG_DEVELOPER);
+    if (!core_question\local\bank\question_edit_contexts::question_has_capability_on($question, $cap)) {
         throw new moodle_exception('nopermissions', '', '', $cap);
     }
     return true;
@@ -1519,7 +1523,7 @@ function question_require_capability_on($question, $cap): bool {
  */
 function question_edit_url($context) {
     global $CFG, $SITE;
-    if (!has_any_capability(question_get_question_capabilities(), $context)) {
+    if (!has_any_capability(core_question\local\bank\question_edit_contexts::question_get_question_capabilities(), $context)) {
         return false;
     }
     $baseurl = $CFG->wwwroot . '/question/edit.php?';
@@ -1670,6 +1674,8 @@ function question_extend_settings_navigation(navigation_node $navigationnode, $c
  * @return array all the capabilities that relate to accessing particular questions.
  */
 function question_get_question_capabilities(): array {
+    debugging('Function question_get_question_capabilities() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_get_question_capabilities() instead.', DEBUG_DEVELOPER);
     return [
         'moodle/question:add',
         'moodle/question:editmine',
@@ -1693,7 +1699,9 @@ function question_get_question_capabilities(): array {
  * @return array all the question bank capabilities.
  */
 function question_get_all_capabilities(): array {
-    $caps = question_get_question_capabilities();
+    debugging('Function question_get_all_capabilities() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_get_all_capabilities() instead.', DEBUG_DEVELOPER);
+    $caps = core_question\local\bank\question_edit_contexts::question_get_question_capabilities();
     $caps[] = 'moodle/question:managecategory';
     $caps[] = 'moodle/question:flag';
     return $caps;
@@ -1940,7 +1948,7 @@ function core_question_question_preview_pluginfile($previewcontext, $questionid,
     list($context, $course, $cm) = get_context_info_array($previewcontext->id);
     require_login($course, false, $cm);
 
-    question_require_capability_on($question, 'use');
+    core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'use');
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);

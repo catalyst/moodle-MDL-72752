@@ -40,7 +40,7 @@ class question_status_column extends column_base {
     protected function display_content($question, $rowclasses): void {
         global $PAGE;
         $attributes = [];
-        if (question_has_capability_on($question, 'edit')
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit')
             && $question->status !== question_version_status::QUESTION_STATUS_HIDDEN) {
             $options = [];
             $options['questionid'] = $question->id;

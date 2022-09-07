@@ -48,7 +48,7 @@ class export_xml_action_column extends menu_action_column_base {
             return [null, null, null];
         }
 
-        if (!question_has_capability_on($question, 'view')) {
+        if (!\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
             return [null, null, null];
         }
 

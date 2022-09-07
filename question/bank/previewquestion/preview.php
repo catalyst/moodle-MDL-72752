@@ -74,7 +74,7 @@ if ($cmid = optional_param('cmid', 0, PARAM_INT)) {
     $PAGE->set_context($context);
     // Note that in the other cases, require_login will set the correct page context.
 }
-question_require_capability_on($question, 'use');
+core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'use');
 $PAGE->set_pagelayout('popup');
 
 // Get and validate display options.

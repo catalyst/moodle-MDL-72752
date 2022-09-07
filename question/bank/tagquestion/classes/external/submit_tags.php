@@ -87,7 +87,7 @@ class submit_tags extends external_api {
             throw new \moodle_exception('questiondoesnotexist', 'question');
         }
 
-        $cantag = question_has_capability_on($question, 'tag');
+        $cantag = \core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'tag');
         $questioncontext = \context::instance_by_id($question->contextid);
         $contexts = new \core_question\local\bank\question_edit_contexts($editingcontext);
 

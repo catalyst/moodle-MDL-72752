@@ -165,14 +165,14 @@ $question->contextid = $category->contextid;
 $addpermission = has_capability('moodle/question:add', $categorycontext);
 
 if ($id) {
-    $question->formoptions->canedit = question_has_capability_on($question, 'edit');
-    $question->formoptions->canmove = $addpermission && question_has_capability_on($question, 'move');
+    $question->formoptions->canedit = core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit');
+    $question->formoptions->canmove = $addpermission && core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'move');
     $question->formoptions->cansaveasnew = $addpermission &&
-            (question_has_capability_on($question, 'view') || $question->formoptions->canedit);
+            (core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view') || $question->formoptions->canedit);
     $question->formoptions->repeatelements = $question->formoptions->canedit || $question->formoptions->cansaveasnew;
     $formeditable = $question->formoptions->canedit || $question->formoptions->cansaveasnew || $question->formoptions->canmove;
     if (!$formeditable) {
-        question_require_capability_on($question, 'view');
+        core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'view');
     }
     $question->beingcopied = false;
     if ($makecopy) {
@@ -184,8 +184,8 @@ if ($id) {
     }
 
 } else { // Creating a new question.
-    $question->formoptions->canedit = question_has_capability_on($question, 'edit');
-    $question->formoptions->canmove = (question_has_capability_on($question, 'move') && $addpermission);
+    $question->formoptions->canedit = core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit');
+    $question->formoptions->canmove = (core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'move') && $addpermission);
     $question->formoptions->cansaveasnew = false;
     $question->formoptions->repeatelements = true;
     $formeditable = true;
@@ -269,7 +269,7 @@ if ($mform->is_cancelled()) {
     list($newcatid, $newcontextid) = explode(',', $fromform->category);
     if (!empty($question->id) && $newcatid != $question->categoryobject->id) {
         $contextid = $newcontextid;
-        question_require_capability_on($question, 'move');
+        core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'move');
     } else {
         $contextid = $category->contextid;
     }
@@ -279,7 +279,7 @@ if ($mform->is_cancelled()) {
 
     // We are actually saving the question.
     if (!empty($question->id)) {
-        question_require_capability_on($question, 'edit');
+        core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'edit');
     } else {
         require_capability('moodle/question:add', context::instance_by_id($contextid));
         if (!empty($fromform->makecopy) && !$question->formoptions->cansaveasnew) {

@@ -50,7 +50,7 @@ class preview_action_column extends menu_action_column_base {
             return [null, null, null];
         }
 
-        if (question_has_capability_on($question, 'use')) {
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use')) {
             $context = $this->qbank->get_most_specific_context();
             $url = helper::question_preview_url($question->id, null, null,
                                                     null, null, $context, $this->qbank->returnurl);
