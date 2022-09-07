@@ -23,8 +23,10 @@
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\output\bank;
 
+use plugin_renderer_base;
+use question_bank;
 
 /**
  * This renderer outputs parts of the question bank.
@@ -32,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2011 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_question_bank_renderer extends plugin_renderer_base {
+class renderer extends plugin_renderer_base {
 
     /**
      * Display additional navigation if needed.
