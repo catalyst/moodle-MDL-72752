@@ -24,8 +24,17 @@
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\local\behaviour;
 
+use core_question_renderer;
+use html_writer;
+use moodle_url;
+use popup_action;
+use plugin_renderer_base;
+use question_attempt;
+use question_display_options;
+use question_utils;
+use stdClass;
 
 /**
  * Renderer base class for question behaviours.
@@ -36,7 +45,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class qbehaviour_renderer_deprecated extends plugin_renderer_base {
+abstract class behaviour_renderer_base extends plugin_renderer_base {
     /**
      * Generate some HTML (which may be blank) that appears in the question
      * formulation area, afer the question type generated output.

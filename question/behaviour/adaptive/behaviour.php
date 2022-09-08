@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_with_multiple_tries;
 
 /**
  * Question behaviour for adaptive mode.
@@ -35,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_adaptive extends question_behaviour_with_multiple_tries {
+class qbehaviour_adaptive extends behaviour_with_multiple_tries {
     const IS_ARCHETYPAL = true;
 
     public function is_compatible_question(question_definition $question) {

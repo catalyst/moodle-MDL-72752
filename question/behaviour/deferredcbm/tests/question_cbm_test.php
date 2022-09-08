@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once(__DIR__ . '/../../../engine/lib.php');
 
+use core_question\local\behaviour\question_cbm;
 
 /**
  * Unit tests for the deferred feedback with certainty base marking behaviour.

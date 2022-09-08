@@ -887,7 +887,7 @@ class question_attempt {
 
     /**
      * Get the {@link core_question_renderer}, in collaboration with appropriate
-     * {@link qbehaviour_renderer} and {@link qtype_renderer} subclasses, to generate the
+     * {@link behaviour_renderer_base} and {@link qtype_renderer} subclasses, to generate the
      * HTML to display this question attempt in its current state.
      *
      * @param question_display_options $options controls how the question is rendered.

@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../deferredfeedback/behaviour.php');
 
+use core_question\local\behaviour\question_cbm;
 
 /**
  * Question behaviour for deferred feedback with certainty based marking.

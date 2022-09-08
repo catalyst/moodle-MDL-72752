@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../immediatefeedback/behaviour.php');
 
+use core_question\local\behaviour\question_cbm;
 
 /**
  * Question behaviour for immediate feedback with CBM.

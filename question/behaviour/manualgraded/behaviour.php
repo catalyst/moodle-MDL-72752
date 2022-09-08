@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_with_save;
 
 /**
  * Question behaviour for questions that can only be graded manually.
@@ -37,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_manualgraded extends question_behaviour_with_save {
+class qbehaviour_manualgraded extends behaviour_with_save {
 
     public function is_compatible_question(question_definition $question) {
         return $question instanceof question_with_responses;

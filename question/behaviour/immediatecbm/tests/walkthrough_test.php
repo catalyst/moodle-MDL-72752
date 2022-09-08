@@ -16,7 +16,7 @@
 
 namespace qbehaviour_immediatecbm;
 
-use question_cbm;
+use core_question\local\behaviour\question_cbm;
 use question_state;
 
 defined('MOODLE_INTERNAL') || die();

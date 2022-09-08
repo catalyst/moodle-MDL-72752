@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../deferredfeedback/behaviourtype.php');
 
+use core_question\local\behaviour\question_cbm;
 
 /**
  * Question behaviour type information for deferred feedback with CBM behaviour.

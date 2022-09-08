@@ -27,6 +27,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_with_multiple_tries;
 
 /**
  * Question behaviour for the interactive model.
@@ -39,7 +40,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_interactive extends question_behaviour_with_multiple_tries {
+class qbehaviour_interactive extends behaviour_with_multiple_tries {
     /**
      * Constant used only in {@link adjust_display_options()} below and
      * {@link (qbehaviour_interactive_renderer}.
