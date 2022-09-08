@@ -15,24 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the renderer for the deferred feedback behaviour.
+ * Defines the question behaviour base class
  *
- * @package    qbehaviour
- * @subpackage deferredfeedback
+ * @package    moodlecore
+ * @subpackage questionbehaviours
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\local\behaviour;
 
-use core_question\local\behaviour\behaviour_renderer_base;
-/**
- * Renderer for outputting parts of a question belonging to the deferred
- * feedback behaviour.
- *
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class qbehaviour_deferredfeedback_renderer extends behaviour_renderer_base {
+use question_state;
+
+abstract class behaviour_with_multiple_tries extends behaviour_with_save {
+    public function step_has_a_submitted_response($step) {
+        return $step->has_behaviour_var('submit') && $step->get_state() != question_state::$invalid;
+    }
 }

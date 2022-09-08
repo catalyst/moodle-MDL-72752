@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_renderer_base;
 
 /**
  * Renderer for outputting parts of a question belonging to the information
@@ -32,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2009 The Open University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_informationitem_renderer extends qbehaviour_renderer {
+class qbehaviour_informationitem_renderer extends behaviour_renderer_base {
     public function controls(question_attempt $qa, question_display_options $options) {
         if ($options->readonly || $qa->get_state() != question_state::$todo) {
             return '';

@@ -24,7 +24,20 @@
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\local\behaviour;
+
+use coding_exception;
+use core_question_renderer;
+use moodle_page;
+use qtype_renderer;
+use question_attempt;
+use question_attempt_pending_step;
+use question_attempt_step;
+use question_definition;
+use question_display_options;
+use question_state;
+use question_utils;
+use stdClass;
 
 
 /**
@@ -39,7 +52,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class question_behaviour_deprecated {
+abstract class behaviour_base {
 
     /** @var question_attempt the question attempt we are managing. */
     protected $qa;
@@ -591,248 +604,5 @@ abstract class question_behaviour_deprecated {
      */
     public function step_has_a_submitted_response($step) {
         return false;
-    }
-}
-
-
-/**
- * A subclass of {@link question_behaviour} that implements a save
- * action that is suitable for most questions that implement the
- * {@link question_manually_gradable} interface.
- *
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-abstract class question_behaviour_with_save_deprecated extends question_behaviour {
-    public function required_question_definition_type() {
-        return 'question_manually_gradable';
-    }
-
-    public function apply_attempt_state(question_attempt_step $step) {
-        parent::apply_attempt_state($step);
-        if ($this->question->is_complete_response($step->get_qt_data())) {
-            $step->set_state(question_state::$complete);
-        }
-    }
-
-    /**
-     * Work out whether the response in $pendingstep are significantly different
-     * from the last set of responses we have stored.
-     * @param question_attempt_step $pendingstep contains the new responses.
-     * @return bool whether the new response is the same as we already have.
-     */
-    protected function is_same_response(question_attempt_step $pendingstep) {
-        return $this->question->is_same_response(
-                $this->qa->get_last_step()->get_qt_data(), $pendingstep->get_qt_data());
-    }
-
-    /**
-     * Work out whether the response in $pendingstep represent a complete answer
-     * to the question. Normally this will call
-     * {@link question_manually_gradable::is_complete_response}, but some
-     * behaviours, for example the CBM ones, have their own parts to the
-     * response.
-     * @param question_attempt_step $pendingstep contains the new responses.
-     * @return bool whether the new response is complete.
-     */
-    protected function is_complete_response(question_attempt_step $pendingstep) {
-        return $this->question->is_complete_response($pendingstep->get_qt_data());
-    }
-
-    public function process_autosave(question_attempt_pending_step $pendingstep) {
-        // If already finished. Nothing to do.
-        if ($this->qa->get_state()->is_finished()) {
-            return question_attempt::DISCARD;
-        }
-
-        // If the new data is the same as we already have, then we don't need it.
-        if ($this->is_same_response($pendingstep)) {
-            return question_attempt::DISCARD;
-        }
-
-        // Repeat that test discarding any existing autosaved data.
-        if ($this->qa->has_autosaved_step()) {
-            $this->qa->discard_autosaved_step();
-            if ($this->is_same_response($pendingstep)) {
-                return question_attempt::DISCARD;
-            }
-        }
-
-        // OK, we need to save.
-        return $this->process_save($pendingstep);
-    }
-
-    /**
-     * Implementation of processing a save action that should be suitable for
-     * most subclasses.
-     * @param question_attempt_pending_step $pendingstep a partially initialised step
-     *      containing all the information about the action that is being peformed.
-     * @return bool either {@link question_attempt::KEEP} or {@link question_attempt::DISCARD}
-     */
-    public function process_save(question_attempt_pending_step $pendingstep) {
-        if ($this->qa->get_state()->is_finished()) {
-            return question_attempt::DISCARD;
-        } else if (!$this->qa->get_state()->is_active()) {
-            throw new coding_exception('Question is not active, cannot process_actions.');
-        }
-
-        if ($this->is_same_response($pendingstep)) {
-            return question_attempt::DISCARD;
-        }
-
-        if ($this->is_complete_response($pendingstep)) {
-            $pendingstep->set_state(question_state::$complete);
-        } else {
-            $pendingstep->set_state(question_state::$todo);
-        }
-        return question_attempt::KEEP;
-    }
-
-    public function summarise_submit(question_attempt_step $step) {
-        return get_string('submitted', 'question',
-                $this->question->summarise_response($step->get_qt_data()));
-    }
-
-    public function summarise_save(question_attempt_step $step) {
-        $data = $step->get_submitted_data();
-        if (empty($data)) {
-            return $this->summarise_start($step);
-        }
-        return get_string('saved', 'question',
-                $this->question->summarise_response($step->get_qt_data()));
-    }
-
-
-    public function summarise_finish($step) {
-        $data = $step->get_qt_data();
-        if ($data) {
-            return get_string('attemptfinishedsubmitting', 'question',
-                    $this->question->summarise_response($data));
-        }
-        return get_string('attemptfinished', 'question');
-    }
-}
-
-abstract class question_behaviour_with_multiple_tries_deprecated extends question_behaviour_with_save {
-    public function step_has_a_submitted_response($step) {
-        return $step->has_behaviour_var('submit') && $step->get_state() != question_state::$invalid;
-    }
-}
-
-/**
- * This helper class contains the constants and methods required for
- * manipulating scores for certainty based marking.
- *
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-abstract class question_cbm_deprecated {
-    /**#@+ @var integer named constants for the certainty levels. */
-    const LOW = 1;
-    const MED = 2;
-    const HIGH = 3;
-    /**#@-*/
-
-    /** @var array list of all the certainty levels. */
-    public static $certainties = array(self::LOW, self::MED, self::HIGH);
-
-    /**#@+ @var array coefficients used to adjust the fraction based on certainty. */
-    protected static $rightscore = array(
-        self::LOW  => 1,
-        self::MED  => 2,
-        self::HIGH => 3,
-    );
-    protected static $wrongscore = array(
-        self::LOW  =>  0,
-        self::MED  => -2,
-        self::HIGH => -6,
-    );
-    /**#@-*/
-
-    /**#@+ @var array upper and lower limits of the optimal window. */
-    protected static $lowlimit = array(
-        self::LOW  => 0,
-        self::MED  => 0.666666666666667,
-        self::HIGH => 0.8,
-    );
-    protected static $highlimit = array(
-        self::LOW  => 0.666666666666667,
-        self::MED  => 0.8,
-        self::HIGH => 1,
-    );
-    /**#@-*/
-
-    /**
-     * @return int the default certaintly level that should be assuemd if
-     * the student does not choose one.
-     */
-    public static function default_certainty() {
-        return self::LOW;
-    }
-
-    /**
-     * Given a fraction, and a certainty, compute the adjusted fraction.
-     * @param number $fraction the raw fraction for this question.
-     * @param int $certainty one of the certainty level constants.
-     * @return number the adjusted fraction taking the certainty into account.
-     */
-    public static function adjust_fraction($fraction, $certainty) {
-        if ($certainty == -1) {
-            // Certainty -1 has never been used in standard Moodle, but is
-            // used in Tony-Gardiner Medwin's patches to mean 'No idea' which
-            // we intend to implement: MDL-42077. In the mean time, avoid
-            // errors for people who have used TGM's patches.
-            return 0;
-        }
-        if ($fraction <= question_utils::MARK_TOLERANCE) {
-            return self::$wrongscore[$certainty];
-        } else {
-            return self::$rightscore[$certainty] * $fraction;
-        }
-    }
-
-    /**
-     * @param int $certainty one of the LOW/MED/HIGH constants.
-     * @return string a textual description of this certainty.
-     */
-    public static function get_string($certainty) {
-        return get_string('certainty' . $certainty, 'qbehaviour_deferredcbm');
-    }
-
-    /**
-     * @param int $certainty one of the LOW/MED/HIGH constants.
-     * @return string a short textual description of this certainty.
-     */
-    public static function get_short_string($certainty) {
-        return get_string('certaintyshort' . $certainty, 'qbehaviour_deferredcbm');
-    }
-
-    /**
-     * Add information about certainty to a response summary.
-     * @param string $summary the response summary.
-     * @param int $certainty the level of certainty to add.
-     * @return string the summary with information about the certainty added.
-     */
-    public static function summary_with_certainty($summary, $certainty) {
-        if (is_null($certainty)) {
-            return $summary;
-        }
-        return $summary . ' [' . self::get_short_string($certainty) . ']';
-    }
-
-    /**
-     * @param int $certainty one of the LOW/MED/HIGH constants.
-     * @return float the lower limit of the optimal probability range for this certainty.
-     */
-    public static function optimal_probablility_low($certainty) {
-        return self::$lowlimit[$certainty];
-    }
-
-    /**
-     * @param int $certainty one of the LOW/MED/HIGH constants.
-     * @return float the upper limit of the optimal probability range for this certainty.
-     */
-    public static function optimal_probablility_high($certainty) {
-        return self::$highlimit[$certainty];
     }
 }

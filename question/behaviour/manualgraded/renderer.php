@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_renderer_base;
 
 /**
  * Renderer for outputting parts of a question belonging to the manual
@@ -34,5 +35,5 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_manualgraded_renderer extends qbehaviour_renderer {
+class qbehaviour_manualgraded_renderer extends behaviour_renderer_base {
 }

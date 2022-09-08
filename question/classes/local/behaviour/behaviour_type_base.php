@@ -24,8 +24,10 @@
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\local\behaviour;
 
+use question_display_options;
+use question_usage_by_activity;
 
 /**
  * This class represents the type of behaviour, rather than the instance of the
@@ -34,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2012 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class question_behaviour_type_deprecated {
+abstract class behaviour_type_base {
     /**
      * Certain behaviours are definitive of a way that questions can behave when
      * attempted. For example deferredfeedback model, interactive model, etc.
@@ -110,54 +112,5 @@ abstract class question_behaviour_type_deprecated {
      */
     public function allows_multiple_submitted_responses() {
         return false;
-    }
-}
-
-
-/**
- * This class exists to allow behaviours that worked in Moodle 2.3 to continue
- * to work. It implements the question_behaviour_type API for the other behaviour
- * as much as possible in a backwards-compatible way.
- *
- * @copyright  2012 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class question_behaviour_type_fallback_deprecated extends question_behaviour_type_deprecated {
-
-    /** @var string the behaviour class name. */
-    protected $behaviourclass;
-
-    /**
-     * @param string $behaviourtype the type of behaviour we are providing a fallback for.
-     */
-    public function __construct($behaviour) {
-        question_engine::load_behaviour_class($behaviour);
-        $this->behaviourclass = 'qbehaviour_' . $behaviour;
-    }
-
-    public function is_archetypal() {
-        return constant($this->behaviourclass . '::IS_ARCHETYPAL');
-    }
-
-    /**
-     * Override this method if there are some display options that do not make
-     * sense 'during the attempt'.
-     * @return array of {@link question_display_options} field names, that are
-     * not relevant to this behaviour before a 'finish' action.
-     */
-    public function get_unused_display_options() {
-        return call_user_func(array($this->behaviourclass, 'get_unused_display_options'));
-    }
-
-    /**
-     * Adjust a random guess score for a question using this model. You have to
-     * do this without knowing details of the specific question, or which usage
-     * it is in.
-     * @param number $fraction the random guess score from the question type.
-     * @return number the adjusted fraction.
-     */
-    public function adjust_random_guess_score($fraction) {
-        return call_user_func(array($this->behaviourclass, 'adjust_random_guess_score'),
-                $fraction);
     }
 }

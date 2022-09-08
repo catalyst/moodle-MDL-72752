@@ -37,11 +37,12 @@ require_once(__DIR__ . '/bank.php');
 require_once(__DIR__ . '/../type/questiontypebase.php');
 require_once(__DIR__ . '/../type/questionbase.php');
 require_once(__DIR__ . '/../type/rendererbase.php');
-require_once(__DIR__ . '/../behaviour/behaviourtypebase.php');
-require_once(__DIR__ . '/../behaviour/behaviourbase.php');
+//require_once(__DIR__ . '/../behaviour/behaviourtypebase.php');
+//require_once(__DIR__ . '/../behaviour/behaviourbase.php');
 require_once(__DIR__ . '/../behaviour/rendererbase.php');
 require_once($CFG->libdir . '/questionlib.php');
 
+use core_question\local\behaviour\behaviour_type_fallback;
 
 /**
  * This static class provides access to the other question engine classes.
@@ -289,7 +290,7 @@ abstract class question_engine {
         } else {
             debugging('Question behaviour ' . $behaviour .
                     ' does not define the required class ' . $class . '.', DEBUG_DEVELOPER);
-            self::$behaviourtypes[$behaviour] = new question_behaviour_type_fallback($behaviour);
+            self::$behaviourtypes[$behaviour] = new behaviour_type_fallback($behaviour);
         }
 
         return self::$behaviourtypes[$behaviour];

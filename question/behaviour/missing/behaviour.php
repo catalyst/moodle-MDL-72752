@@ -27,6 +27,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_base;
 
 /**
  * Fake question behaviour that is used when the actual behaviour
@@ -44,7 +45,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_missing extends question_behaviour {
+class qbehaviour_missing extends behaviour_base {
 
     public function is_compatible_question(question_definition $question) {
         return true;

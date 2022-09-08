@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_type_base;
 
 /**
  * Question behaviour type information for adaptive behaviour.
@@ -32,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2012 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_adaptive_type extends question_behaviour_type {
+class qbehaviour_adaptive_type extends behaviour_type_base {
     public function is_archetypal() {
         return true;
     }

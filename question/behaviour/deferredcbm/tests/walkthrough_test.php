@@ -16,7 +16,7 @@
 
 namespace qbehaviour_deferredcbm;
 
-use question_cbm;
+use core_question\local\behaviour\question_cbm;
 use question_state;
 
 defined('MOODLE_INTERNAL') || die();
@@ -24,7 +24,6 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once(__DIR__ . '/../../../engine/lib.php');
 require_once(__DIR__ . '/../../../engine/tests/helpers.php');
-
 
 /**
  * Unit tests for the deferred feedback with certainty base marking behaviour.

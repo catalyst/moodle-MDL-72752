@@ -16,7 +16,7 @@
 
 namespace qbehaviour_deferredcbm;
 
-use question_cbm;
+use core_question\local\behaviour\question_cbm;
 
 defined('MOODLE_INTERNAL') || die();
 

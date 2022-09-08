@@ -26,6 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_type_base;
+
 
 /**
  * Fake question behaviour type information that is used when the actual
@@ -34,5 +36,5 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2012 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_missing_type extends question_behaviour_type {
+class qbehaviour_missing_type extends behaviour_type_base {
 }

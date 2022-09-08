@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\behaviour_base;
 
 /**
  * Question behaviour informaiton items.
@@ -37,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_informationitem extends question_behaviour {
+class qbehaviour_informationitem extends behaviour_base {
 
     public function is_compatible_question(question_definition $question) {
         return true;

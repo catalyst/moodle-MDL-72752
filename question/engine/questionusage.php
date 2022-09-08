@@ -448,7 +448,7 @@ class question_usage_by_activity {
 
     /**
      * Get the {@link core_question_renderer}, in collaboration with appropriate
-     * {@link qbehaviour_renderer} and {@link qtype_renderer} subclasses, to generate the
+     * {@link behaviour_renderer_base} and {@link qtype_renderer} subclasses, to generate the
      * HTML to display this question.
      * @param int $slot the number used to identify this question within this usage.
      * @param question_display_options $options controls how the question is rendered.

@@ -30,6 +30,7 @@ global $CFG;
 require_once(__DIR__ . '/../lib.php');
 require_once($CFG->dirroot . '/lib/phpunit/lib.php');
 
+use core_question\local\behaviour\behaviour_base;
 
 /**
  * Makes some protected methods of question_attempt public to facilitate testing.
@@ -47,7 +48,7 @@ class testable_question_attempt extends question_attempt {
     public function set_max_fraction($fraction) {
         $this->maxfraction = $fraction;
     }
-    public function set_behaviour(question_behaviour $behaviour) {
+    public function set_behaviour(behaviour_base $behaviour) {
         $this->behaviour = $behaviour;
     }
 }

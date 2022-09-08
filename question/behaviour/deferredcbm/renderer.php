@@ -27,6 +27,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\behaviour\question_cbm;
+use core_question\local\behaviour\behaviour_renderer_base;
 
 /**
  * Renderer for outputting parts of a question belonging to the deferred
@@ -35,7 +37,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qbehaviour_deferredcbm_renderer extends qbehaviour_renderer {
+class qbehaviour_deferredcbm_renderer extends behaviour_renderer_base {
     protected function certainty_choices($controlname, $selected, $readonly) {
         $attributes = array(
             'type' => 'radio',

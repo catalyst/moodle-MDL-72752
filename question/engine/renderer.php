@@ -26,10 +26,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
+use core_question\local\behaviour\behaviour_renderer_base;
 /**
  * This renderer controls the overall output of questions. It works with a
- * {@link qbehaviour_renderer} and a {@link qtype_renderer} to output the
+ * {@link behaviour_renderer_base} and a {@link qtype_renderer} to output the
  * type-specific bits. The main entry point is the {@link question()} method.
  *
  * @copyright  2009 The Open University
@@ -68,7 +68,7 @@ class core_question_renderer extends plugin_renderer_base {
      * call this method with appropriate arguments.
      *
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the renderer to output the behaviour
+     * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
      * @param qtype_renderer $qtoutput the renderer to output the question type
      *      specific parts.
@@ -77,7 +77,7 @@ class core_question_renderer extends plugin_renderer_base {
      *      value that gets displayed as Information. Null means no number is displayed.
      * @return string HTML representation of the question.
      */
-    public function question(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    public function question(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options, $number) {
 
         $output = '';
@@ -122,7 +122,7 @@ class core_question_renderer extends plugin_renderer_base {
      * Generate the information bit of the question display that contains the
      * metadata like the question number, current state, and mark.
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the renderer to output the behaviour
+     * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
      * @param qtype_renderer $qtoutput the renderer to output the question type
      *      specific parts.
@@ -131,7 +131,7 @@ class core_question_renderer extends plugin_renderer_base {
      *      value that gets displayed as Information. Null means no number is displayed.
      * @return HTML fragment.
      */
-    protected function info(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    protected function info(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options, $number) {
         $output = '';
         $output .= $this->number($number);
@@ -180,12 +180,12 @@ class core_question_renderer extends plugin_renderer_base {
      * Generate the display of the status line that gives the current state of
      * the question.
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the renderer to output the behaviour
+     * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
-    protected function status(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    protected function status(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             question_display_options $options) {
         return html_writer::tag('div', $qa->get_state_string($options->correctness),
                 array('class' => 'state'));
@@ -194,11 +194,11 @@ class core_question_renderer extends plugin_renderer_base {
     /**
      * Generate the display of the marks for this question.
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the behaviour renderer, which can generate a custom display.
+     * @param behaviour_renderer_base $behaviouroutput the behaviour renderer, which can generate a custom display.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
-    protected function mark_summary(question_attempt $qa, qbehaviour_renderer $behaviouroutput, question_display_options $options) {
+    protected function mark_summary(question_attempt $qa, behaviour_renderer_base $behaviouroutput, question_display_options $options) {
         return html_writer::nonempty_tag('div',
                 $behaviouroutput->mark_summary($qa, $this, $options),
                 array('class' => 'grade'));
@@ -210,7 +210,7 @@ class core_question_renderer extends plugin_renderer_base {
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
-    public function standard_mark_summary(question_attempt $qa, qbehaviour_renderer $behaviouroutput, question_display_options $options) {
+    public function standard_mark_summary(question_attempt $qa, behaviour_renderer_base $behaviouroutput, question_display_options $options) {
         if (!$options->marks) {
             return '';
 
@@ -361,14 +361,14 @@ class core_question_renderer extends plugin_renderer_base {
      * example ticks and crosses, in this area.
      *
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the renderer to output the behaviour
+     * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
      * @param qtype_renderer $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
-    protected function formulation(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    protected function formulation(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options) {
         $output = '';
         $output .= html_writer::empty_tag('input', array(
@@ -389,14 +389,14 @@ class core_question_renderer extends plugin_renderer_base {
      * area that contains the various forms of feedback.
      *
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the renderer to output the behaviour
+     * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
      * @param qtype_renderer $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
-    protected function outcome(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    protected function outcome(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options) {
         $output = '';
         $output .= html_writer::nonempty_tag('div',
@@ -408,7 +408,7 @@ class core_question_renderer extends plugin_renderer_base {
         return $output;
     }
 
-    protected function manual_comment(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    protected function manual_comment(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options) {
         return $qtoutput->manual_comment($qa, $options) .
                 $behaviouroutput->manual_comment($qa, $options);
@@ -419,14 +419,14 @@ class core_question_renderer extends plugin_renderer_base {
      * is the table showing all the steps the question has been through.
      *
      * @param question_attempt $qa the question attempt to display.
-     * @param qbehaviour_renderer $behaviouroutput the renderer to output the behaviour
+     * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
      * @param qtype_renderer $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
-    protected function response_history(question_attempt $qa, qbehaviour_renderer $behaviouroutput,
+    protected function response_history(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
             qtype_renderer $qtoutput, question_display_options $options) {
 
         if (!$options->history) {
