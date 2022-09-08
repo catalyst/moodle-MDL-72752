@@ -84,7 +84,7 @@ foreach ($categories as $category) {
         echo "Cleaning...";
         // One transaction per category.
         $transaction = $DB->start_delegated_transaction();
-        question_category_delete_safe($category);
+        \core_question\question_categories_manager::question_category_delete_safe($category);
         $transaction->allow_commit();
         echo "  Done!\n";
     }

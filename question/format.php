@@ -377,7 +377,7 @@ class qformat_default {
                 $fractions = $question->fraction;
                 $invalidfractions = array();
                 foreach ($fractions as $key => $fraction) {
-                    $newfraction = match_grade_options($gradeoptionsfull, $fraction,
+                    $newfraction = \core_question\local\bank\question_options_manager::match_grade_options($gradeoptionsfull, $fraction,
                             $this->matchgrades);
                     if ($newfraction === false) {
                         $invalidfractions[] = $fraction;

@@ -68,7 +68,7 @@ function qbank_tagquestion_output_fragment_tags_form($args) {
             $tagobjectsbyquestion = core_tag_tag::get_items_tags('core_question', 'question', [$question->id]);
             if (!empty($tagobjectsbyquestion[$question->id])) {
                 $tagobjects = $tagobjectsbyquestion[$question->id];
-                $sortedtagobjects = question_sort_tags($tagobjects,
+                $sortedtagobjects = core_question\local\bank\question_tags_manager::question_sort_tags($tagobjects,
                         context::instance_by_id($category->contextid), $filtercourses);
             }
         }

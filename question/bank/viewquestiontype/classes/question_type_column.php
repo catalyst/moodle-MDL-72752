@@ -41,7 +41,7 @@ class question_type_column extends column_base {
     }
 
     protected function display_content($question, $rowclasses): void {
-        echo print_question_icon($question);
+        echo \core_question\question_manager::print_question_icon($question);
     }
 
     public function get_required_fields(): array {

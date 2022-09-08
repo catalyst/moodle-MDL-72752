@@ -275,7 +275,7 @@ class question_categories_manager {
         }
 
         $newcontext = \context::instance_by_id($newcontextid);
-        question_move_question_tags_to_new_context($questions, $newcontext);
+        \core_question\local\bank\question_tags_manager::question_move_question_tags_to_new_context($questions, $newcontext);
 
         $subcatids = $DB->get_records_menu('question_categories', ['parent' => $categoryid], '', 'id,1');
         foreach ($subcatids as $subcatid => $notused) {
@@ -358,7 +358,7 @@ class question_categories_manager {
         }
 
         $newcontext = \context::instance_by_id($newcategorydata->contextid);
-        question_move_question_tags_to_new_context($questions, $newcontext);
+        \core_question\local\bank\question_tags_manager::question_move_question_tags_to_new_context($questions, $newcontext);
 
         // Purge these questions from the cache.
         foreach ($questions as $question) {
@@ -409,7 +409,7 @@ class question_categories_manager {
         // Look at each question in the category.
         $questionids = \question_bank::get_finder()->get_questions_from_categories([$categoryid], null);
         if ($questionids) {
-            if (questions_in_use(array_keys($questionids))) {
+            if (\core_question\question_manager::questions_in_use(array_keys($questionids))) {
                 return true;
             }
         }
@@ -428,6 +428,71 @@ class question_categories_manager {
         }
 
         return false;
+    }
+
+    /**
+     * Category is about to be deleted,
+     * 1/ All questions are deleted for this question category.
+     * 2/ Any questions that can't be deleted are moved to a new category
+     * NOTE: this function is called from lib/db/upgrade.php
+     *
+     * @param object|\core_course_category $category course category object
+     */
+    public static function question_category_delete_safe($category): void {
+        global $DB;
+        $criteria = ['questioncategoryid' => $category->id];
+        $rescue = null; // See the code around the call to question_save_from_deletion.
+
+        // Deal with any questions in the category.
+        if ($questionentries = $DB->get_records('question_bank_entries', $criteria, '', 'id')) {
+
+            foreach ($questionentries as $questionentry) {
+                $questionids = $DB->get_records('question_versions',
+                    ['questionbankentryid' => $questionentry->id], '', 'questionid');
+
+                // Try to delete each question.
+                foreach ($questionids as $questionid) {
+                    \core_question\question_manager::delete_question($questionid->questionid);
+                }
+            }
+
+            // Check to see if there were any questions that were kept because
+            // they are still in use somehow, even though quizzes in courses
+            // in this category will already have been deleted. This could
+            // happen, for example, if questions are added to a course,
+            // and then that course is moved to another category (MDL-14802).
+            $questionids = [];
+            foreach ($questionentries as $questionentry) {
+                $versions = $DB->get_records('question_versions', ['questionbankentryid' => $questionentry->id], '', 'questionid');
+                foreach ($versions as $key => $version) {
+                    $questionids[$key] = $version;
+                }
+            }
+            if (!empty($questionids)) {
+                $moduletouse = null;
+                $systemqbankmodules = get_coursemodules_in_course('qbank', 1);
+                if (!empty($systemqbankmodules)) {
+                    foreach ($systemqbankmodules as $systemqbankmodule) {
+                        if ($systemqbankmodule->name === 'Question bank to save from deletion') {
+                            $moduletouse = $systemqbankmodule;
+                            $parentcontextid = \context_module::instance($moduletouse->id)->id;
+                        }
+                    }
+                }
+                if (empty($moduletouse)) {
+                    $qbankname = 'Question bank to save from deletion';
+                    $course = get_course(SITEID);
+                    $moduletouse = \mod_qbank\helper::create_qbank_instance($qbankname, $course);
+                    $parentcontextid = \context_module::instance($moduletouse->coursemodule)->id;
+                }
+                $name = $category->contextid;
+                \core_question\local\bank\delete_question_manager::
+                question_save_from_deletion(array_keys($questionids), $parentcontextid, $name, $rescue);
+            }
+        }
+
+        // Now delete the category.
+        $DB->delete_records('question_categories', ['id' => $category->id]);
     }
 
 }

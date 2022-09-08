@@ -166,7 +166,7 @@ class question_history_view extends view {
         $historydata = [
             'questionname' => $latestquestiondata->name,
             'returnurl' => $this->basereturnurl,
-            'questionicon' => print_question_icon($latestquestiondata)
+            'questionicon' => \core_question\question_manager::print_question_icon($latestquestiondata)
         ];
         // Header for the page before the actual form from the api.
         echo $PAGE->get_renderer('qbank_history')->render_history_header($historydata);

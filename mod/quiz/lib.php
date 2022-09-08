@@ -1757,6 +1757,7 @@ function quiz_extend_settings_navigation(settings_navigation $settings, navigati
         $previewnode->set_show_in_secondary_navigation(false);
     }
 
+    core_question\local\bank\question_navigation_manager::
     question_extend_settings_navigation($quiznode, $settings->get_page()->cm->context)->trim_if_empty();
 
     if (has_any_capability(array('mod/quiz:viewreports', 'mod/quiz:grade'), $settings->get_page()->cm->context)) {

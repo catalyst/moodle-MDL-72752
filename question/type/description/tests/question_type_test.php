@@ -87,7 +87,7 @@ class question_type_test extends \advanced_testcase {
         $fromform = $form->get_data();
 
         $returnedfromsave = $this->qtype->save_question($questiondata, $fromform);
-        $actualquestionsdata = question_load_questions(array($returnedfromsave->id));
+        $actualquestionsdata = \core_question\question_manager::question_load_questions(array($returnedfromsave->id));
         $actualquestiondata = end($actualquestionsdata);
 
         foreach ($questiondata as $property => $value) {

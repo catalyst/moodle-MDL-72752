@@ -131,8 +131,8 @@ class backup_test extends \advanced_testcase {
 
         // Now delete almost everything.
         delete_course($course, false);
-        question_delete_question($question1->id);
-        question_delete_question($question2->id);
+        \core_question\question_manager::delete_question($question1->id);
+        \core_question\question_manager::delete_question($question2->id);
 
         // Restore the backup we had made earlier into a new course.
         $courseid2 = $this->restore_course($backupid1, $coursefullname, $courseshortname . '_2', $category1->id);
@@ -175,7 +175,7 @@ class backup_test extends \advanced_testcase {
         // Now, again, delete everything including the course category.
         delete_course($courseid2, false);
         foreach ($questions as $question) {
-            question_delete_question($question->id);
+            \core_question\question_manager::delete_question($question->id);
         }
         $category1->delete_full(false);
 
@@ -256,7 +256,7 @@ class backup_test extends \advanced_testcase {
 
         // Delete the original course and related question.
         delete_course($course, false);
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
 
         // Restore the course.
         $restoredcourseid = \restore_dbops::create_new_course($course->fullname, $course->shortname . '_1', $category->id);
@@ -313,7 +313,7 @@ class backup_test extends \advanced_testcase {
 
         // Delete the original course and related question.
         delete_course($course, false);
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
 
         // Restore the course.
         $restoredcourseid = \restore_dbops::create_new_course($course->fullname, $course->shortname . '_1', $category->id);
@@ -370,7 +370,7 @@ class backup_test extends \advanced_testcase {
 
         // Delete the original course and related question.
         delete_course($course, false);
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
 
         // Emulate restoring to a different site.
         set_config('siteidentifier', random_string(32) . 'not the same site');

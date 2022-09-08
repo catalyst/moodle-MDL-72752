@@ -57,7 +57,7 @@ class question_import_form extends moodleform {
         // Choice of import format, with help icons.
         $mform->addElement('header', 'fileformat', get_string('fileformat', 'question'));
 
-        $fileformatnames = get_import_export_formats('import');
+        $fileformatnames = \core_question\local\bank\question_import_export_manager::get_import_export_formats('import');
         $radioarray = [];
         $separators = [];
         foreach ($fileformatnames as $shortname => $fileformatname) {

@@ -76,7 +76,7 @@ class helper {
         $questions = $DB->get_records_sql($sql, $params);
         foreach ($questions as $question) {
             // The function question_delete_question does not delete questions in use.
-            question_delete_question($question->id);
+            \core_question\question_manager::delete_question($question->id);
         }
     }
 

@@ -310,8 +310,8 @@ class question_attempt_step {
      * @return string the rewritten text.
      */
     public function rewrite_response_pluginfile_urls($text, $contextid, $name, $extras) {
-        return question_rewrite_question_urls($text, 'pluginfile.php', $contextid,
-                'question', 'response_' . $name, $extras, $this->id);
+        return core_question\local\bank\question_navigation_manager::question_rewrite_question_urls($text, 'pluginfile.php',
+            $contextid, 'question', 'response_' . $name, $extras, $this->id);
     }
 
     /**

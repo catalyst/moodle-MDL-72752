@@ -359,9 +359,9 @@ class quiz_statistics_report extends quiz_default_report {
     protected function render_question_text($question) {
         global $OUTPUT;
 
-        $text = question_rewrite_question_preview_urls($question->questiontext, $question->id,
-                $question->contextid, 'question', 'questiontext', $question->id,
-                $this->context->id, 'quiz_statistics');
+        $text = core_question\local\bank\question_navigation_manager::question_rewrite_question_preview_urls(
+            $question->questiontext, $question->id, $question->contextid, 'question', 'questiontext', $question->id,
+            $this->context->id, 'quiz_statistics');
 
         return $OUTPUT->box(format_text($text, $question->questiontextformat,
                 array('noclean' => true, 'para' => false, 'overflowdiv' => true)),
@@ -849,7 +849,7 @@ class quiz_statistics_report extends quiz_default_report {
             }
             $questionids[] = $question->id;
         }
-        $fullquestions = question_load_questions($questionids);
+        $fullquestions = \core_question\question_manager::question_load_questions($questionids);
         foreach ($questions as $qno => $question) {
             $q = $fullquestions[$question->id];
             $q->maxmark = $question->maxmark;

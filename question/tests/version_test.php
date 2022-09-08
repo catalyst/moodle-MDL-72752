@@ -124,7 +124,7 @@ class version_test extends \advanced_testcase {
         $this->assertCount(1, $questionobject);
 
         // Try to delete new version.
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
 
         // The version record should not exist.
         $sql = "SELECT qv.*
@@ -141,7 +141,7 @@ class version_test extends \advanced_testcase {
         $this->assertCount(1, $questionbankentry);
 
         // Now remove the first version.
-        question_delete_question($questionfirstversionid);
+        \core_question\question_manager::delete_question($questionfirstversionid);
         $sql = "SELECT qbe.*
                   FROM {question_bank_entries} qbe
                  WHERE qbe.id = ?";
@@ -169,9 +169,9 @@ class version_test extends \advanced_testcase {
         quiz_add_quiz_question($question->id, $this->quiz);
 
         // Try to delete new version.
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
         // Try to delete old version.
-        question_delete_question($questionfirstversionid);
+        \core_question\question_manager::delete_question($questionfirstversionid);
 
         // The questions should exist even after trying to remove it.
         $questionversion1 = question_bank::load_question($question->id);
