@@ -179,7 +179,7 @@ class quiz {
                 $questionstoprocess[$question->questionid] = $question;
             }
         }
-        get_question_options($questionstoprocess);
+        core_question\question_manager::get_question_options($questionstoprocess);
     }
 
     /**

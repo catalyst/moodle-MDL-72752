@@ -105,7 +105,7 @@ abstract class question_edit_form extends question_wizard_form {
 
         // Get the question category id.
         if (isset($question->id)) {
-            $qcategory = $question->categoryobject->id ?? get_question_bank_entry($question->id)->questioncategoryid;
+            $qcategory = $question->categoryobject->id ?? core_question\question_manager::get_question_bank_entry($question->id)->questioncategoryid;
         } else {
             $qcategory = $question->category;
         }

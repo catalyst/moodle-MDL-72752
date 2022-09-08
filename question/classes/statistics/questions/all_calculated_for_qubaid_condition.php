@@ -205,7 +205,7 @@ class all_calculated_for_qubaid_condition {
                 $questionids[] = $fromdb->questionid;
             }
         }
-        $this->subquestions = question_load_questions($questionids);
+        $this->subquestions = \core_question\question_manager::question_load_questions($questionids);
         foreach ($questionstatrecs as $fromdb) {
             if (is_null($fromdb->variant)) {
                 if ($fromdb->slot) {

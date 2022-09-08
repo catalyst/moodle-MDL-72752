@@ -865,7 +865,7 @@ class qformat_gift extends qformat_default {
 
             if (!empty($tagobjects)) {
                 $context = context::instance_by_id($questiondata->contextid);
-                $sortedtagobjects = question_sort_tags($tagobjects, $context, [$this->course]);
+                $sortedtagobjects = core_question\local\bank\question_tags_manager::question_sort_tags($tagobjects, $context, [$this->course]);
 
                 // Currently we ignore course tags. This should probably be fixed in future.
 

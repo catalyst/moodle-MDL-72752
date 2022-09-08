@@ -83,11 +83,11 @@ if ($deleteselected && ($confirm = optional_param('confirm', '', PARAM_ALPHANUM)
             foreach ($questionlist as $questionid) {
                 $questionid = (int)$questionid;
                 core_question\local\bank\question_edit_contexts::question_require_capability_on($questionid, 'edit');
-                if (questions_in_use(array($questionid))) {
+                if (\core_question\question_manager::questions_in_use(array($questionid))) {
                     $DB->set_field('question_versions', 'status',
                         \core_question\local\bank\question_version_status::QUESTION_STATUS_HIDDEN, ['questionid' => $questionid]);
                 } else {
-                    question_delete_question($questionid);
+                    \core_question\question_manager::delete_question($questionid);
                 }
             }
         }
@@ -110,7 +110,7 @@ if ($deleteselected) {
             $key = $matches[1];
             $questionlist .= $key.',';
             core_question\local\bank\question_edit_contexts::question_require_capability_on((int)$key, 'edit');
-            if (questions_in_use(array($key))) {
+            if (\core_question\question_manager::questions_in_use(array($key))) {
                 $questionnames .= '* ';
                 $inuse = true;
             }

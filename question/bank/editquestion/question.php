@@ -122,7 +122,7 @@ if ($id) {
     // We can use $COURSE here because it's been initialised as part of the
     // require_login above. Passing it as the third parameter tells the function
     // to filter the course tags by that course.
-    get_question_options($question, true, [$COURSE]);
+    core_question\question_manager::get_question_options($question, true, [$COURSE]);
 
 } else if ($categoryid && $qtype) { // Only for creating new questions.
     $question = new stdClass();
@@ -179,7 +179,7 @@ if ($id) {
         // If we are duplicating a question, add some indication to the question name.
         $question->name = get_string('questionnamecopy', 'question', $question->name);
         $question->idnumber = isset($question->idnumber) ?
-            core_question_find_next_unused_idnumber($question->idnumber, $category->id) : '';
+            core_question\question_manager::core_question_find_next_unused_idnumber($question->idnumber, $category->id) : '';
         $question->beingcopied = true;
     }
 
@@ -221,7 +221,7 @@ if (!empty($question->id)) {
     $toform->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 }
 if ($makecopy) {
-    $toform->idnumber = core_question_find_next_unused_idnumber($toform->idnumber, $category->id);
+    $toform->idnumber = core_question\question_manager::core_question_find_next_unused_idnumber($toform->idnumber, $category->id);
 }
 if ($cm !== null) {
     $toform->cmid = $cm->id;

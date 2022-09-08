@@ -421,14 +421,14 @@ class question_type {
             $oldparent = $question->id;
             if (!empty($question->id)) {
                 // Get the bank entry record where the question is referenced.
-                $questionbankentry = get_question_bank_entry($question->id);
+                $questionbankentry = core_question\question_manager::get_question_bank_entry($question->id);
             }
         }
 
         // Get the bank entry old id (this is when there are questions related with a parent, e.g.: qtype_multianswers).
         if (isset($question->oldid)) {
             if (!empty($question->oldid)) {
-                $questionbankentry = get_question_bank_entry($question->oldid);
+                $questionbankentry = core_question\question_manager::get_question_bank_entry($question->oldid);
             }
         }
 
@@ -494,10 +494,10 @@ class question_type {
             // Get the status field. It comes from the form, but for testing we can.
             $status = $form->status ?? $question->status ??
                 \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
-            $questionversion->version = get_next_version($questionbankentry->id);
+            $questionversion->version = core_question\question_manager::get_next_version($questionbankentry->id);
             $questionversion->status = $status;
         } else {
-            $parentversion = get_question_version($form->parent);
+            $parentversion = core_question\question_manager::get_question_version($form->parent);
             $questionversion->version = $parentversion[array_key_first($parentversion)]->version;
             $questionversion->status = $parentversion[array_key_first($parentversion)]->status;
         }

@@ -2220,7 +2220,7 @@ function quiz_question_tostring($question, $showicon = false, $showquestiontext 
     // Question name.
     $name = shorten_text(format_string($question->name), 200);
     if ($showicon) {
-        $name .= print_question_icon($question) . ' ' . $name;
+        $name .= core_question\question_manager::print_question_icon($question) . ' ' . $name;
     }
     $result .= html_writer::span($name, 'questionname');
 
@@ -2337,7 +2337,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
 
     $questionslots = $DB->get_records_sql($sql, [$quiz->id, 'mod_quiz', 'slot']);
 
-    $currententry = get_question_bank_entry($questionid);
+    $currententry = core_question\question_manager::get_question_bank_entry($questionid);
 
     if (array_key_exists($currententry->id, $questionslots)) {
         $trans->allow_commit();
@@ -2424,7 +2424,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
         $questionreferences->component = 'mod_quiz';
         $questionreferences->questionarea = 'slot';
         $questionreferences->itemid = $slotid;
-        $questionreferences->questionbankentryid = get_question_bank_entry($questionid)->id;
+        $questionreferences->questionbankentryid = core_question\question_manager::get_question_bank_entry($questionid)->id;
         $questionreferences->version = null; // Always latest.
         $DB->insert_record('question_references', $questionreferences);
 
@@ -2440,7 +2440,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
         $questionreferences->component = 'mod_quiz';
         $questionreferences->questionarea = 'slot';
         $questionreferences->itemid = $slotid;
-        $questionreferences->questionbankentryid = get_question_bank_entry($questionid)->id;
+        $questionreferences->questionbankentryid = core_question\question_manager::get_question_bank_entry($questionid)->id;
         $questionreferences->version = null; // Always latest.
         $DB->insert_record('question_references', $questionreferences);
     }

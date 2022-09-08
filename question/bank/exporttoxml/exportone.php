@@ -64,7 +64,7 @@ $PAGE->set_pagelayout('admin');
 
 // Set up the export format.
 $qformat = new qformat_xml();
-$filename = question_default_export_filename($COURSE, $questiondata) .
+$filename = \core_question\local\bank\question_import_export_manager::question_default_export_filename($COURSE, $questiondata) .
         $qformat->export_file_extension();
 $qformat->setContexts($contexts->having_one_edit_tab_cap('export'));
 $qformat->setCourse($COURSE);

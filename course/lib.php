@@ -902,7 +902,7 @@ function course_delete_module($cmid, $async = false) {
             "Cannot delete the module $modulename (instance).");
     }
 
-    question_delete_activity($cm);
+    \core_question\question_manager::question_delete_activity($cm);
 
     // Remove all module files in case modules forget to do that.
     $fs = get_file_storage();

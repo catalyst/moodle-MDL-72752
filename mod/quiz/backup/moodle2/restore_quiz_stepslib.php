@@ -343,7 +343,7 @@ class restore_quiz_activity_structure_step extends restore_questions_activity_st
             $questionsetreference->filtercondition = json_encode($filtercondition);
             $DB->insert_record('question_set_references', $questionsetreference);
             // Cleanup leftover random qtype data from question table.
-            question_delete_question($question->questionid);
+            \core_question\question_manager::delete_question($question->questionid);
         } else {
             // Reference data.
             $questionreference = new \stdClass();

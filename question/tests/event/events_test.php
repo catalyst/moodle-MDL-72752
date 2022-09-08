@@ -188,7 +188,7 @@ class events_test extends \advanced_testcase {
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
         $events = $sink->get_events();
         $event = reset($events);
 

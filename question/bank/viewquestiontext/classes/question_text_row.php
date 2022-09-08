@@ -52,9 +52,10 @@ class question_text_row extends row_base {
         // Access 'showtext' filter from pagevars.
         $display = $this->qbank->get_pagevars('filters')['showtext'] ?? null;
         if (isset($display) && (int)$display['values'][0] === 1) {
-            $text = question_rewrite_question_preview_urls($question->questiontext, $question->id,
-                    $question->contextid, 'question', 'questiontext', $question->id,
-                    $question->contextid, 'core_question');
+            $text = \core_question\local\bank\question_navigation_manager::
+            question_rewrite_question_preview_urls($question->questiontext, $question->id,
+                $question->contextid, 'question', 'questiontext', $question->id,
+                $question->contextid, 'core_question');
             $text = format_text($text, $question->questiontextformat,
                     $this->formatoptions);
             if ($text == '') {
