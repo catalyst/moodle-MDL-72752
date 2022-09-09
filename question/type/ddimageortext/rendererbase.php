@@ -25,13 +25,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\type\type_with_combined_feedback_renderer;
+
 /**
  * Generates the output for drag-and-drop onto image questions.
  *
  * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_ddtoimage_renderer_base extends qtype_with_combined_feedback_renderer {
+class qtype_ddtoimage_renderer_base extends type_with_combined_feedback_renderer {
 
     public function clear_wrong(question_attempt $qa) {
         $question = $qa->get_question();

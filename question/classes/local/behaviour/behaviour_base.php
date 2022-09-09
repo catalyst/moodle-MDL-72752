@@ -29,7 +29,7 @@ namespace core_question\local\behaviour;
 use coding_exception;
 use core_question_renderer;
 use moodle_page;
-use qtype_renderer;
+use core_question\local\type\type_renderer_base;
 use question_attempt;
 use question_attempt_pending_step;
 use question_attempt_step;
@@ -115,11 +115,11 @@ abstract class behaviour_base {
      * @param question_display_options $options controls what should and should not be displayed.
      * @param string|null $number the question number to display.
      * @param core_question_renderer $qoutput the question renderer that will coordinate everything.
-     * @param qtype_renderer $qtoutput the question type renderer that will be helping.
+     * @param type_renderer_base $qtoutput the question type renderer that will be helping.
      * @return string HTML fragment.
      */
     public function render(question_display_options $options, $number,
-            core_question_renderer $qoutput, qtype_renderer $qtoutput) {
+            core_question_renderer $qoutput, type_renderer_base $qtoutput) {
         $behaviouroutput = $this->get_renderer($qoutput->get_page());
         $options = clone($options);
         $this->adjust_display_options($options);

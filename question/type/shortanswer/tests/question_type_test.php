@@ -18,7 +18,7 @@ namespace qtype_shortanswer;
 
 use qtype_shortanswer;
 use qtype_shortanswer_edit_form;
-use question_possible_response;
+use core_question\local\type\question_possible_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -27,6 +27,7 @@ require_once($CFG->dirroot . '/question/type/shortanswer/questiontype.php');
 require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
 require_once($CFG->dirroot . '/question/type/edit_question_form.php');
 require_once($CFG->dirroot . '/question/type/shortanswer/edit_shortanswer_form.php');
+
 
 /**
  * Unit tests for the shortanswer question type class.

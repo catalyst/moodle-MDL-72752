@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\type\type_renderer_base;
 
 /**
  * This question renderer class is used when the actual question type of this
@@ -34,5 +35,5 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_missingtype_renderer extends qtype_renderer {
+class qtype_missingtype_renderer extends type_renderer_base {
 }

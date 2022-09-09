@@ -30,13 +30,15 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 require_once($CFG->dirroot . '/question/type/multichoice/question.php');
 require_once($CFG->dirroot . '/question/type/numerical/questiontype.php');
 
+use core_question\local\type\type_base;
+
 /**
  * The multi-answer question type class.
  *
  * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_multianswer extends question_type {
+class qtype_multianswer extends type_base {
 
     /**
      * Generate a subquestion replacement question class.

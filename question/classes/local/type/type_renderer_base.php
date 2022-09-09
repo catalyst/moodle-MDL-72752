@@ -24,8 +24,15 @@
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\local\type;
 
+use html_writer;
+use plugin_renderer_base;
+use question_attempt;
+use question_display_options;
+use question_hint;
+use question_state;
+use stdClass;
 
 /**
  * Renderer base classes for question types.
@@ -33,7 +40,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class qtype_renderer_deprecated extends plugin_renderer_base {
+abstract class type_renderer_base extends plugin_renderer_base {
     /**
      * Generate the display of the formulation part of the question. This is the
      * area that contains the quetsion text, and the controls for students to
@@ -45,7 +52,7 @@ abstract class qtype_renderer_deprecated extends plugin_renderer_base {
      * @return string HTML fragment.
      */
     public function formulation_and_controls(question_attempt $qa,
-            question_display_options $options) {
+                                             question_display_options $options) {
         return $qa->get_question()->format_questiontext($qa);
     }
 
@@ -103,13 +110,13 @@ abstract class qtype_renderer_deprecated extends plugin_renderer_base {
 
         if ($options->feedback) {
             $output .= html_writer::nonempty_tag('div', $this->specific_feedback($qa),
-                    array('class' => 'specificfeedback'));
+                array('class' => 'specificfeedback'));
             $hint = $qa->get_applicable_hint();
         }
 
         if ($options->numpartscorrect) {
             $output .= html_writer::nonempty_tag('div', $this->num_parts_correct($qa),
-                    array('class' => 'numpartscorrect'));
+                array('class' => 'numpartscorrect'));
         }
 
         if ($hint) {
@@ -118,12 +125,12 @@ abstract class qtype_renderer_deprecated extends plugin_renderer_base {
 
         if ($options->generalfeedback) {
             $output .= html_writer::nonempty_tag('div', $this->general_feedback($qa),
-                    array('class' => 'generalfeedback'));
+                array('class' => 'generalfeedback'));
         }
 
         if ($options->rightanswer) {
             $output .= html_writer::nonempty_tag('div', $this->correct_response($qa),
-                    array('class' => 'rightanswer'));
+                array('class' => 'rightanswer'));
         }
 
         return $output;
@@ -148,7 +155,7 @@ abstract class qtype_renderer_deprecated extends plugin_renderer_base {
     protected function num_parts_correct(question_attempt $qa) {
         $a = new stdClass();
         list($a->num, $a->outof) = $qa->get_question()->get_num_parts_right(
-                $qa->get_last_qt_data());
+            $qa->get_last_qt_data());
         if (is_null($a->outof)) {
             return '';
         } else {
@@ -164,7 +171,7 @@ abstract class qtype_renderer_deprecated extends plugin_renderer_base {
      */
     protected function hint(question_attempt $qa, question_hint $hint) {
         return html_writer::nonempty_tag('div',
-                $qa->get_question()->format_hint($hint, $qa), array('class' => 'hint'));
+            $qa->get_question()->format_hint($hint, $qa), array('class' => 'hint'));
     }
 
     /**
@@ -229,37 +236,5 @@ abstract class qtype_renderer_deprecated extends plugin_renderer_base {
         $feedbackclass = question_state::graded_state_for_fraction($fraction)->get_feedback_class();
 
         return $this->output->pix_icon('i/grade_' . $feedbackclass, get_string($feedbackclass, 'question'));
-    }
-}
-
-/**
- * Renderer base classes for question types.
- *
- * @copyright  2010 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-abstract class qtype_with_combined_feedback_renderer_deprecated extends qtype_renderer_deprecated {
-    protected function combined_feedback(question_attempt $qa) {
-        $question = $qa->get_question();
-
-        $state = $qa->get_state();
-
-        if (!$state->is_finished()) {
-            $response = $qa->get_last_qt_data();
-            if (!$qa->get_question()->is_gradable_response($response)) {
-                return '';
-            }
-            list($notused, $state) = $qa->get_question()->grade_response($response);
-        }
-
-        $feedback = '';
-        $field = $state->get_feedback_class() . 'feedback';
-        $format = $state->get_feedback_class() . 'feedbackformat';
-        if ($question->$field) {
-            $feedback .= $question->format_text($question->$field, $question->$format,
-                    $qa, 'question', $field, $question->id);
-        }
-
-        return $feedback;
     }
 }

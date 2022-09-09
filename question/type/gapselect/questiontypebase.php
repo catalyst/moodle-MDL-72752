@@ -28,6 +28,8 @@ require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/engine/lib.php');
 require_once($CFG->dirroot . '/question/format/xml/format.php');
 
+use core_question\local\type\type_base;
+use core_question\local\type\question_possible_response;
 
 /**
  * The embedded element in question text question type class.
@@ -35,7 +37,7 @@ require_once($CFG->dirroot . '/question/format/xml/format.php');
  * @copyright  2011 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class qtype_gapselect_base extends question_type {
+abstract class qtype_gapselect_base extends type_base {
     /**
      * Choices are stored in the question_answers table, and any options need to
      * be put into the feedback field somehow. This method is responsible for

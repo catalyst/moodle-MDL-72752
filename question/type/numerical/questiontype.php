@@ -30,7 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/type/numerical/question.php');
 
-
+use core_question\local\type\type_base;
+use core_question\local\type\question_possible_response;
 /**
  * The numerical question type class.
  *
@@ -40,7 +41,7 @@ require_once($CFG->dirroot . '/question/type/numerical/question.php');
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_numerical extends question_type {
+class qtype_numerical extends type_base {
     const UNITINPUT = 0;
     const UNITRADIO = 1;
     const UNITSELECT = 2;

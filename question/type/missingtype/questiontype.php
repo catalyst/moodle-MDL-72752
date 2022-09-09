@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 
+use core_question\local\type\type_base;
+
 /**
  * Missing question type class
  *
@@ -38,7 +40,7 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
  * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_missingtype extends question_type {
+class qtype_missingtype extends type_base {
     public function menu_name() {
         return false;
     }

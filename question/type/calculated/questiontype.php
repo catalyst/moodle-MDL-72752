@@ -30,6 +30,8 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 require_once($CFG->dirroot . '/question/type/questionbase.php');
 require_once($CFG->dirroot . '/question/type/numerical/question.php');
 
+use core_question\local\type\type_base;
+use core_question\local\type\question_possible_response;
 
 /**
  * The calculated question type.
@@ -37,7 +39,7 @@ require_once($CFG->dirroot . '/question/type/numerical/question.php');
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_calculated extends question_type {
+class qtype_calculated extends type_base {
     /**
      * @const string a placeholder is a letter, followed by almost any characters. (This should probably be restricted more.)
      */

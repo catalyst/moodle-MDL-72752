@@ -23,6 +23,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core_question\local\type\type_renderer_base;
 
 /**
  * Generates the output for short answer questions.
@@ -30,7 +31,7 @@
  * @copyright 2009 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_numerical_renderer extends qtype_renderer {
+class qtype_numerical_renderer extends type_renderer_base {
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
 

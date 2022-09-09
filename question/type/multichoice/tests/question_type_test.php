@@ -18,7 +18,7 @@ namespace qtype_multichoice;
 
 use qtype_multichoice;
 use qtype_multichoice_edit_form;
-use question_possible_response;
+use core_question\local\type\question_possible_response;
 
 defined('MOODLE_INTERNAL') || die();
 
