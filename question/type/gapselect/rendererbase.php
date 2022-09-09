@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\type\type_with_combined_feedback_renderer;
 
 /**
  * Renders question types where the question includes embedded interactive elements.
@@ -33,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class qtype_elements_embedded_in_question_text_renderer
-        extends qtype_with_combined_feedback_renderer {
+        extends type_with_combined_feedback_renderer {
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
 

@@ -27,9 +27,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 use core_question\local\behaviour\behaviour_renderer_base;
+use core_question\local\type\type_renderer_base;
 /**
  * This renderer controls the overall output of questions. It works with a
- * {@link behaviour_renderer_base} and a {@link qtype_renderer} to output the
+ * {@link behaviour_renderer_base} and a {@link type_renderer_base} to output the
  * type-specific bits. The main entry point is the {@link question()} method.
  *
  * @copyright  2009 The Open University
@@ -70,7 +71,7 @@ class core_question_renderer extends plugin_renderer_base {
      * @param question_attempt $qa the question attempt to display.
      * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
-     * @param qtype_renderer $qtoutput the renderer to output the question type
+     * @param type_renderer_base $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @param string|null $number The question number to display. 'i' is a special
@@ -78,7 +79,7 @@ class core_question_renderer extends plugin_renderer_base {
      * @return string HTML representation of the question.
      */
     public function question(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
-            qtype_renderer $qtoutput, question_display_options $options, $number) {
+                             type_renderer_base $qtoutput, question_display_options $options, $number) {
 
         $output = '';
         $output .= html_writer::start_tag('div', array(
@@ -124,7 +125,7 @@ class core_question_renderer extends plugin_renderer_base {
      * @param question_attempt $qa the question attempt to display.
      * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
-     * @param qtype_renderer $qtoutput the renderer to output the question type
+     * @param type_renderer_base $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @param string|null $number The question number to display. 'i' is a special
@@ -132,7 +133,7 @@ class core_question_renderer extends plugin_renderer_base {
      * @return HTML fragment.
      */
     protected function info(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
-            qtype_renderer $qtoutput, question_display_options $options, $number) {
+                            type_renderer_base $qtoutput, question_display_options $options, $number) {
         $output = '';
         $output .= $this->number($number);
         $output .= $this->status($qa, $behaviouroutput, $options);
@@ -363,13 +364,13 @@ class core_question_renderer extends plugin_renderer_base {
      * @param question_attempt $qa the question attempt to display.
      * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
-     * @param qtype_renderer $qtoutput the renderer to output the question type
+     * @param type_renderer_base $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
     protected function formulation(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
-            qtype_renderer $qtoutput, question_display_options $options) {
+                                   type_renderer_base $qtoutput, question_display_options $options) {
         $output = '';
         $output .= html_writer::empty_tag('input', array(
                 'type' => 'hidden',
@@ -391,13 +392,13 @@ class core_question_renderer extends plugin_renderer_base {
      * @param question_attempt $qa the question attempt to display.
      * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
-     * @param qtype_renderer $qtoutput the renderer to output the question type
+     * @param type_renderer_base $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
     protected function outcome(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
-            qtype_renderer $qtoutput, question_display_options $options) {
+                               type_renderer_base $qtoutput, question_display_options $options) {
         $output = '';
         $output .= html_writer::nonempty_tag('div',
                 $qtoutput->feedback($qa, $options), array('class' => 'feedback'));
@@ -409,7 +410,7 @@ class core_question_renderer extends plugin_renderer_base {
     }
 
     protected function manual_comment(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
-            qtype_renderer $qtoutput, question_display_options $options) {
+                                      type_renderer_base $qtoutput, question_display_options $options) {
         return $qtoutput->manual_comment($qa, $options) .
                 $behaviouroutput->manual_comment($qa, $options);
     }
@@ -421,13 +422,13 @@ class core_question_renderer extends plugin_renderer_base {
      * @param question_attempt $qa the question attempt to display.
      * @param behaviour_renderer_base $behaviouroutput the renderer to output the behaviour
      *      specific parts.
-     * @param qtype_renderer $qtoutput the renderer to output the question type
+     * @param type_renderer_base $qtoutput the renderer to output the question type
      *      specific parts.
      * @param question_display_options $options controls what should and should not be displayed.
      * @return HTML fragment.
      */
     protected function response_history(question_attempt $qa, behaviour_renderer_base $behaviouroutput,
-            qtype_renderer $qtoutput, question_display_options $options) {
+                                        type_renderer_base $qtoutput, question_display_options $options) {
 
         if (!$options->history) {
             return '';

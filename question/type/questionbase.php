@@ -331,7 +331,7 @@ abstract class question_definition {
 
     /**
      * @param moodle_page the page we are outputting to.
-     * @return qtype_renderer the renderer to use for outputting this question.
+     * @return type_renderer_base the renderer to use for outputting this question.
      */
     public function get_renderer(moodle_page $page) {
         return $page->get_renderer($this->qtype->plugin_name());

@@ -27,6 +27,7 @@
 
 require_once($CFG->dirroot . '/question/type/shortanswer/renderer.php');
 
+use core_question\local\type\type_renderer_base;
 
 /**
  * Base class for generating the bits of output common to multianswer
@@ -38,7 +39,7 @@ require_once($CFG->dirroot . '/question/type/shortanswer/renderer.php');
  * @copyright 2010 Pierre Pichet
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_multianswer_renderer extends qtype_renderer {
+class qtype_multianswer_renderer extends type_renderer_base {
 
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
@@ -145,7 +146,7 @@ class qtype_multianswer_renderer extends qtype_renderer {
  * @copyright 2011 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class qtype_multianswer_subq_renderer_base extends qtype_renderer {
+abstract class qtype_multianswer_subq_renderer_base extends type_renderer_base {
 
     abstract public function subquestion(question_attempt $qa,
             question_display_options $options, $index,

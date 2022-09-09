@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\type\type_with_combined_feedback_renderer;
 
 /**
  * Base class for generating the bits of output common to multiple choice
@@ -34,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedback_renderer {
+abstract class qtype_multichoice_renderer_base extends type_with_combined_feedback_renderer {
 
     /**
      * Method to generating the bits of output after question choices.

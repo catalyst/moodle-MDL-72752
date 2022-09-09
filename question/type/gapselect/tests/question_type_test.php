@@ -19,7 +19,7 @@ namespace qtype_gapselect;
 use question_answer;
 use question_bank;
 use question_hint_with_parts;
-use question_possible_response;
+use core_question\local\type\question_possible_response;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;

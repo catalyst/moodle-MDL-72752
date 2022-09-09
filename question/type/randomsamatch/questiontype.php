@@ -29,6 +29,8 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 require_once($CFG->dirroot . '/question/type/questionbase.php');
 require_once($CFG->dirroot . '/question/type/numerical/question.php');
 
+use core_question\local\type\type_base;
+
 /**
  * The randomsamatch question type class.
  *
@@ -38,7 +40,7 @@ require_once($CFG->dirroot . '/question/type/numerical/question.php');
  * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_randomsamatch extends question_type {
+class qtype_randomsamatch extends type_base {
     /**
      * Cache of available shortanswer question ids from a particular category.
      * @var array two-dimensional array. The first key is a category id, the

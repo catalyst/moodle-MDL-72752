@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/questionlib.php');
 
+use core_question\local\type\type_base;
 
 /**
  * The essay question type.
@@ -35,7 +36,7 @@ require_once($CFG->libdir . '/questionlib.php');
  * @copyright  2005 Mark Nielsen
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_essay extends question_type {
+class qtype_essay extends type_base {
     public function is_manual_graded() {
         return true;
     }

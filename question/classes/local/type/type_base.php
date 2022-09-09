@@ -24,11 +24,18 @@
  */
 
 
-defined('MOODLE_INTERNAL') || die();
+namespace core_question\local\type;
 
 require_once($CFG->dirroot . '/question/engine/lib.php');
 require_once($CFG->libdir . '/questionlib.php');
 
+use coding_exception;
+use context;
+use stdClass;
+use qformat_xml;
+use question_answer;
+use question_bank;
+use question_definition;
 
 /**
  * This is the base class for Moodle question types.
@@ -46,7 +53,7 @@ require_once($CFG->libdir . '/questionlib.php');
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_type_deprecated {
+class type_base {
     protected $fileoptions = array(
         'subdirs' => true,
         'maxfiles' => -1,
@@ -1623,40 +1630,5 @@ class question_type_deprecated {
             default:
                 return base64_decode($file->content);
         }
-    }
-}
-
-
-/**
- * This class is used in the return value from
- * {@link question_type::get_possible_responses()}.
- *
- * @copyright  2010 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class question_possible_response_deprecated {
-    /**
-     * @var string the classification of this response the student gave to this
-     * part of the question. Must match one of the responseclasses returned by
-     * {@link question_type::get_possible_responses()}.
-     */
-    public $responseclass;
-
-    /** @var string the (partial) credit awarded for this responses. */
-    public $fraction;
-
-    /**
-     * Constructor, just an easy way to set the fields.
-     * @param string $responseclassid see the field descriptions above.
-     * @param string $response see the field descriptions above.
-     * @param number $fraction see the field descriptions above.
-     */
-    public function __construct($responseclass, $fraction) {
-        $this->responseclass = $responseclass;
-        $this->fraction = $fraction;
-    }
-
-    public static function no_response() {
-        return new question_possible_response(get_string('noresponse', 'question'), 0);
     }
 }

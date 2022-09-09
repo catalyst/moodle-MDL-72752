@@ -30,13 +30,15 @@ require_once($CFG->dirroot . '/question/engine/lib.php');
 require_once($CFG->dirroot . '/question/format/xml/format.php');
 require_once($CFG->dirroot . '/question/type/gapselect/questiontypebase.php');
 
+use core_question\local\type\type_base;
+
 /**
  * The drag-and-drop onto image question type class.
  *
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_ddtoimage_base extends question_type {
+class qtype_ddtoimage_base extends type_base {
     /**
      * Returns the choice group key.
      *
