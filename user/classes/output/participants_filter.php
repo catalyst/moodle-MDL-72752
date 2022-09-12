@@ -33,7 +33,7 @@ use stdClass;
  * @copyright  2020 Michael Hawkins <michaelh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class participants_filter extends \core\output\filter {
+class participants_filter extends \core\output\datafilter {
 
     /**
      * Get data for all filter types.
@@ -320,7 +320,7 @@ class participants_filter extends \core\output\filter {
             get_string('country'),
             false,
             true,
-            'core/local/filter/filtertypes/country',
+            'core/datafilter/filtertypes/country',
             array_map(function(string $code, string $name): stdClass {
                 return (object) [
                     'value' => $code,
@@ -341,7 +341,7 @@ class participants_filter extends \core\output\filter {
             get_string('filterbykeyword', 'core_user'),
             true,
             true,
-            'core/local/filter/filtertypes/keyword',
+            'core/datafilter/filtertypes/keyword',
             [],
             true
         );

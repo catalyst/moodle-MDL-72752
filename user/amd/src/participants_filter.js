@@ -23,7 +23,7 @@
 
 import CoreFilter from 'core/filter';
 import * as DynamicTable from 'core_table/dynamic';
-import Selectors from 'core/local/filter/selectors';
+import Selectors from 'core/datafilter/selectors';
 import Notification from 'core/notification';
 import Pending from 'core/pending';
 
