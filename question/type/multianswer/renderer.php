@@ -28,6 +28,7 @@
 require_once($CFG->dirroot . '/question/type/shortanswer/renderer.php');
 
 use core_question\local\type\type_renderer_base;
+use core_question\local\entities\question_graded_automatically;
 
 /**
  * Base class for generating the bits of output common to multianswer

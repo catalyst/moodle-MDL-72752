@@ -26,7 +26,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/questionbase.php');
+use core_question\local\entities\question_graded_by_strategy;
+use core_question\local\entities\question_response_answer_comparer;
+use core_question\local\entities\question_first_matching_answer_grading_strategy;
+use core_question\local\entities\question_answer;
 
 /**
  * Represents a short answer question.

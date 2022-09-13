@@ -17,7 +17,7 @@
 namespace qtype_ddwtos;
 
 use question_display_options;
-use question_hint_with_parts;
+use core_question\local\entities\question_hint_with_parts;
 use question_state;
 
 defined('MOODLE_INTERNAL') || die();

@@ -23,7 +23,7 @@
  */
 
 use core_question\local\bank\question_version_status;
-
+use core_question\local\entities\question_with_responses;
 /**
  * Class core_question_generator for generating question data.
  *

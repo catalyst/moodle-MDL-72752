@@ -28,6 +28,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 use core_question\local\behaviour\behaviour_base;
+use core_question\local\entities\question_definition;
 
 /**
  * Fake question behaviour that is used when the actual behaviour

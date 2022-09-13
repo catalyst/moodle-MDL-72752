@@ -28,6 +28,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 use core_question\local\behaviour\behaviour_with_multiple_tries;
+use core_question\local\entities\question_definition;
 
 /**
  * Question behaviour for the interactive model.

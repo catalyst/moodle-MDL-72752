@@ -56,7 +56,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class question_definition {
+abstract class question_definition_deprecated {
     /** @var integer id of the question in the datase, or null if this question
      * is not in the database. */
     public $id;
@@ -222,7 +222,7 @@ abstract class question_definition {
      * @param question_definition $otherversion a different version of the question to use in the regrade.
      * @return string|null null if the regrade can proceed, else a reason why not.
      */
-    public function validate_can_regrade_with_other_version(question_definition $otherversion): ?string {
+    public function validate_can_regrade_with_other_version(question_definition_deprecated $otherversion): ?string {
         if (get_class($otherversion) !== get_class($this)) {
             return get_string('cannotregradedifferentqtype', 'question');
         }
@@ -249,7 +249,7 @@ abstract class question_definition {
      * @throws coding_exception if this can't be done.
      */
     public function update_attempt_state_data_for_new_version(
-            question_attempt_step $oldstep, question_definition $oldquestion) {
+            question_attempt_step $oldstep, question_definition_deprecated $oldquestion) {
         $message = $this->validate_can_regrade_with_other_version($oldquestion);
         if ($message) {
             throw new coding_exception($message);
@@ -520,7 +520,7 @@ abstract class question_definition {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_information_item extends question_definition {
+class question_information_item_deprecated extends question_definition_deprecated {
     public function __construct() {
         parent::__construct();
         $this->defaultmark = 0;
@@ -553,7 +553,7 @@ class question_information_item extends question_definition {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface question_manually_gradable {
+interface question_manually_gradable_deprecated {
     /**
      * Use by many of the behaviours to determine whether the student
      * has provided enough of an answer for the question to be graded automatically,
@@ -624,7 +624,7 @@ interface question_manually_gradable {
  * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_classified_response {
+class question_classified_response_deprecated {
     /**
      * @var string the classification of this response the student gave to this
      * part of the question. Must match one of the responseclasses returned by
@@ -660,7 +660,7 @@ class question_classified_response {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface question_automatically_gradable extends question_manually_gradable {
+interface question_automatically_gradable_deprecated extends question_manually_gradable_deprecated {
     /**
      * In situations where is_gradable_response() returns false, this method
      * should generate a description of what the problem is.
@@ -706,7 +706,7 @@ interface question_automatically_gradable extends question_manually_gradable {
  * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface question_automatically_gradable_with_countback extends question_automatically_gradable {
+interface question_automatically_gradable_with_countback_deprecated extends question_automatically_gradable_deprecated {
     /**
      * Work out a final grade for this attempt, taking into account all the
      * tries the student made.
@@ -728,8 +728,8 @@ interface question_automatically_gradable_with_countback extends question_automa
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class question_with_responses extends question_definition
-        implements question_manually_gradable {
+abstract class question_with_responses_deprecated extends question_definition_deprecated
+        implements question_manually_gradable_deprecated {
     public function classify_response(array $response) {
         return array();
     }
@@ -751,8 +751,8 @@ abstract class question_with_responses extends question_definition
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class question_graded_automatically extends question_with_responses
-        implements question_automatically_gradable {
+abstract class question_graded_automatically_deprecated extends question_with_responses_deprecated
+        implements question_automatically_gradable_deprecated {
     /** @var Some question types have the option to show the number of sub-parts correct. */
     public $shownumcorrect = false;
 
@@ -831,8 +831,8 @@ abstract class question_graded_automatically extends question_with_responses
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class question_graded_automatically_with_countback
-        extends question_graded_automatically
-        implements question_automatically_gradable_with_countback {
+        extends question_graded_automatically_deprecated
+        implements question_automatically_gradable_with_countback_deprecated {
 
     public function make_behaviour(question_attempt $qa, $preferredbehaviour) {
         if ($preferredbehaviour == 'interactive') {
@@ -851,7 +851,7 @@ abstract class question_graded_automatically_with_countback
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class question_graded_by_strategy extends question_graded_automatically {
+abstract class question_graded_by_strategy_deprecated extends question_graded_automatically_deprecated {
     /** @var question_grading_strategy the strategy to use for grading. */
     protected $gradingstrategy;
 
@@ -922,7 +922,7 @@ abstract class question_graded_by_strategy extends question_graded_automatically
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_answer {
+class question_answer_deprecated {
     /** @var integer the answer id. */
     public $id;
 
@@ -966,7 +966,7 @@ class question_answer {
  * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_hint {
+class question_hint_deprecated {
     /** @var integer The hint id. */
     public $id;
     /** @var string The feedback hint to be shown. */
@@ -1013,7 +1013,7 @@ class question_hint {
  * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_hint_with_parts extends question_hint {
+class question_hint_with_parts_deprecated extends question_hint_deprecated {
     /** @var boolean option to show the number of sub-parts of the question that were right. */
     public $shownumcorrect;
 
@@ -1061,7 +1061,7 @@ class question_hint_with_parts extends question_hint {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface question_grading_strategy {
+interface question_grading_strategy_deprecated {
     /**
      * Return a question answer that describes the outcome (fraction and feeback)
      * for a particular respons.
@@ -1086,7 +1086,7 @@ interface question_grading_strategy {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface question_response_answer_comparer {
+interface question_response_answer_comparer_deprecated {
     /** @return array of {@link question_answers}. */
     public function get_answers();
 
@@ -1108,7 +1108,7 @@ interface question_response_answer_comparer {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class question_first_matching_answer_grading_strategy implements question_grading_strategy {
+class question_first_matching_answer_grading_strategy_deprecated implements question_grading_strategy_deprecated {
     /**
      * @var question_response_answer_comparer (presumably also a
      * {@link question_definition}) the question we are doing the grading for.

@@ -14,25 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Description 'question' definition class.
- *
- * @package    qtype
- * @subpackage description
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core_question\local\entities;
 
-
-defined('MOODLE_INTERNAL') || die();
-
-use core_question\local\entities\question_information_item;
+use question_attempt;
 
 /**
- * Represents a description 'question'.
+ * This class represents a question that can be graded automatically with
+ * countback grading in interactive mode.
  *
- * @copyright  2009 The Open University
+ * @copyright  2010 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_description_question extends question_information_item {
+abstract class question_graded_automatically_with_countback
+    extends question_graded_automatically
+    implements question_automatically_gradable_with_countback {
+
+    public function make_behaviour(question_attempt $qa, $preferredbehaviour) {
+        if ($preferredbehaviour == 'interactive') {
+            return question_engine::make_behaviour('interactivecountback',
+                $qa, $preferredbehaviour);
+        }
+        return question_engine::make_archetypal_behaviour($preferredbehaviour, $qa);
+    }
 }

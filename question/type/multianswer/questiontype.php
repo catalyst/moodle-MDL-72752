@@ -30,6 +30,9 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 require_once($CFG->dirroot . '/question/type/multichoice/question.php');
 require_once($CFG->dirroot . '/question/type/numerical/questiontype.php');
 
+use core_question\local\entities\question_definition;
+use core_question\local\entities\question_automatically_gradable;
+use core_question\local\entities\question_hint_with_parts;
 use core_question\local\type\type_base;
 
 /**

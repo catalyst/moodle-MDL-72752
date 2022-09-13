@@ -14,25 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Description 'question' definition class.
- *
- * @package    qtype
- * @subpackage description
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-use core_question\local\entities\question_information_item;
+namespace core_question\local\entities;
 
 /**
- * Represents a description 'question'.
+ * This interface defines the methods that a {@link question_definition} must
+ * implement if it is to be graded by the
+ * {@link question_first_matching_answer_grading_strategy}.
  *
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_description_question extends question_information_item {
+interface question_response_answer_comparer {
+    /** @return array of {@link question_answers}. */
+    public function get_answers();
+
+    /**
+     * @param array $response the response.
+     * @param question_answer $answer an answer.
+     * @return bool whether the response matches the answer.
+     */
+    public function compare_response_with_answer(array $response, question_answer $answer);
 }

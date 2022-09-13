@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/questionbase.php');
+use core_question\local\entities\question_with_responses;
 
 /**
  * Represents an essay question.

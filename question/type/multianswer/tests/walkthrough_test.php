@@ -19,7 +19,7 @@ namespace qtype_multianswer;
 use qtype_multianswer;
 use question_bank;
 use question_display_options;
-use question_hint_with_parts;
+use core_question\local\entities\question_hint_with_parts;
 use question_state;
 use test_question_maker;
 

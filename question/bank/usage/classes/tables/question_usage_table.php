@@ -24,6 +24,7 @@ use html_writer;
 use moodle_url;
 use qbank_usage\helper;
 use table_sql;
+use core_question\local\entities\question_definition;
 
 /**
  * Class question_usage_table.
@@ -55,9 +56,9 @@ class question_usage_table extends table_sql {
      * Sets the SQL for the table and the pagination.
      *
      * @param string $uniqueid
-     * @param \question_definition $question
+     * @param question_definition $question
      */
-    public function __construct(string $uniqueid, \question_definition $question) {
+    public function __construct(string $uniqueid, question_definition $question) {
         global $PAGE;
         parent::__construct($uniqueid);
         $this->question = $question;

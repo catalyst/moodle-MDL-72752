@@ -28,8 +28,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/questionlib.php');
 
-use core_question\local\type\type_base;
 use core_question\local\type\question_possible_response;
+use core_question\local\type\type_base;
+use core_question\local\entities\question_definition;
 
 /**
  * The true-false question type class.

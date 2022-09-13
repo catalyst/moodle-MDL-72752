@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/question/format/xml/format.php');
 require_once($CFG->dirroot . '/question/type/gapselect/questiontypebase.php');
 
 use core_question\local\type\type_base;
-
+use core_question\local\entities\question_definition;
 /**
  * The drag-and-drop onto image question type class.
  *

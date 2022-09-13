@@ -34,16 +34,16 @@ require_once(__DIR__ . '/states.php');
 require_once(__DIR__ . '/datalib.php');
 require_once(__DIR__ . '/renderer.php');
 require_once(__DIR__ . '/bank.php');
-require_once(__DIR__ . '/../type/questiontypebase.php');
-require_once(__DIR__ . '/../type/questionbase.php');
-require_once(__DIR__ . '/../type/rendererbase.php');
+//require_once(__DIR__ . '/../type/questiontypebase.php');
+//require_once(__DIR__ . '/../type/questionbase.php');
+//require_once(__DIR__ . '/../type/rendererbase.php');
 //require_once(__DIR__ . '/../behaviour/behaviourtypebase.php');
 //require_once(__DIR__ . '/../behaviour/behaviourbase.php');
-require_once(__DIR__ . '/../behaviour/rendererbase.php');
+//require_once(__DIR__ . '/../behaviour/rendererbase.php');
 require_once($CFG->libdir . '/questionlib.php');
 
 use core_question\local\behaviour\behaviour_type_fallback;
-
+use core_question\local\entities\question_definition;
 /**
  * This static class provides access to the other question engine classes.
  *

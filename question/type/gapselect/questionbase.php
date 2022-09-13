@@ -29,6 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/question/type/questionbase.php');
 
+use core_question\local\entities\question_definition;
+use core_question\local\entities\question_graded_automatically_with_countback;
+
 /**
  * Represents embedded element in question text question.
  *

@@ -29,8 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/questionlib.php');
 
-use core_question\local\type\type_base;
+use core_question\local\entities\question_definition;
 use core_question\local\type\question_possible_response;
+use core_question\local\type\type_base;
 
 /**
  * The multiple choice question type.

@@ -14,25 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Description 'question' definition class.
- *
- * @package    qtype
- * @subpackage description
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-use core_question\local\entities\question_information_item;
+namespace core_question\local\entities;
 
 /**
- * Represents a description 'question'.
+ * This class represents a real question. That is, one that is not a
+ * {@link question_information_item}.
  *
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_description_question extends question_information_item {
+abstract class question_with_responses extends question_definition
+    implements question_manually_gradable {
+    public function classify_response(array $response) {
+        return array();
+    }
+
+    public function is_gradable_response(array $response) {
+        return $this->is_complete_response($response);
+    }
+
+    public function un_summarise_response(string $summary) {
+        throw new coding_exception('This question type (' . get_class($this) .
+            ' does not implement the un_summarise_response testing method.');
+    }
 }

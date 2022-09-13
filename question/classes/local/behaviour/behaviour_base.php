@@ -27,13 +27,13 @@
 namespace core_question\local\behaviour;
 
 use coding_exception;
+use core_question\local\type\type_renderer_base;
 use core_question_renderer;
 use moodle_page;
-use core_question\local\type\type_renderer_base;
 use question_attempt;
 use question_attempt_pending_step;
 use question_attempt_step;
-use question_definition;
+use core_question\local\entities\question_definition;
 use question_display_options;
 use question_state;
 use question_utils;

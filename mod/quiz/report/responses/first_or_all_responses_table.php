@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\entities\question_manually_gradable;
+
 /**
  * This is a table subclass for displaying the quiz responses report, showing first or all tries.
  *

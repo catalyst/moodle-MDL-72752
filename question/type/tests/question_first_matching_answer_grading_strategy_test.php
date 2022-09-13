@@ -25,7 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/question/type/questiontypebase.php');
+use core_question\local\entities\question_first_matching_answer_grading_strategy;
+use core_question\local\entities\question_response_answer_comparer;
+use core_question\local\entities\question_answer;
 
 
 /**

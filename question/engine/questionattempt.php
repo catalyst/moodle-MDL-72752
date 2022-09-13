@@ -26,6 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\entities\question_definition;
 
 /**
  * Tracks an attempt at one particular question in a {@link question_usage_by_activity}.

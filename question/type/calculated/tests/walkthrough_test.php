@@ -16,7 +16,7 @@
 
 namespace qtype_calculated;
 
-use question_hint;
+use core_question\local\entities\question_hint;
 use question_state;
 
 defined('MOODLE_INTERNAL') || die();

@@ -17,7 +17,7 @@
 namespace qtype_match;
 
 use question_attempt_step;
-use question_classified_response;
+use core_question\local\entities\question_classified_response;
 use question_display_options;
 use question_state;
 

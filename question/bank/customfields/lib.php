@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\entities\question_definition;
+
 /**
  * Comment content for callbacks.
  *

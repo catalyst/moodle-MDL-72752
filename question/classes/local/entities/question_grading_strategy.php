@@ -14,25 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Description 'question' definition class.
- *
- * @package    qtype
- * @subpackage description
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-use core_question\local\entities\question_information_item;
+namespace core_question\local\entities;
 
 /**
- * Represents a description 'question'.
+ * This question_grading_strategy interface. Used to share grading code between
+ * questions that that subclass {@link question_graded_by_strategy}.
  *
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_description_question extends question_information_item {
+interface question_grading_strategy {
+    /**
+     * Return a question answer that describes the outcome (fraction and feeback)
+     * for a particular respons.
+     * @param array $response the response.
+     * @return question_answer the answer describing the outcome.
+     */
+    public function grade(array $response);
+
+    /**
+     * @return question_answer an answer that contains the a response that would
+     *      get full marks.
+     */
+    public function get_correct_answer();
 }

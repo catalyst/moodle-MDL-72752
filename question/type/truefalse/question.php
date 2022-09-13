@@ -26,7 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/questionbase.php');
+use core_question\local\entities\question_graded_automatically;
+use core_question\local\entities\question_classified_response;
 
 /**
  * Represents a true-false question.

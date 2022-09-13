@@ -30,6 +30,7 @@ require_once($CFG->dirroot . '/question/type/multichoice/questiontype.php');
 require_once($CFG->dirroot . '/question/type/calculated/questiontype.php');
 
 use core_question\local\type\question_possible_response;
+use core_question\local\entities\question_definition;
 
 /**
  * The calculated multiple-choice question type.

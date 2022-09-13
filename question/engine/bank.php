@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../type/questiontypebase.php');
 
-
+use core_question\local\entities\question_definition;
 /**
  * This static class provides access to the other question bank.
  *

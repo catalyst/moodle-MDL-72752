@@ -26,7 +26,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/questionbase.php');
+
+use core_question\local\entities\question_definition;
+use core_question\local\entities\question_automatically_gradable;
 
 /**
  * This question definition class is used when the actual question type of this

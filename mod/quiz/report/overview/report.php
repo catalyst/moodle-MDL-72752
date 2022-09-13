@@ -23,6 +23,7 @@
  */
 
 use mod_quiz\question\bank\qbank_helper;
+use core_question\local\entities\question_definition;
 
 defined('MOODLE_INTERNAL') || die();
 

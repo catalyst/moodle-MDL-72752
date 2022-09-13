@@ -26,6 +26,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_question\local\entities\question_definition;
+use core_question\local\entities\question_hint_with_parts;
+
 require_once($CFG->dirroot . '/question/type/ddimageortext/questiontypebase.php');
 
 /**

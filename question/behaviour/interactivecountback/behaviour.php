@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../interactive/behaviour.php');
 
-
+use core_question\local\entities\question_definition;
 /**
  * Question behaviour for interactive mode with count-back scoring.
  *

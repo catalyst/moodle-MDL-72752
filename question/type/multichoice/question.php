@@ -26,7 +26,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/questionbase.php');
+use core_question\local\entities\question_graded_automatically;
+use core_question\local\entities\question_definition;
+
 
 /**
  * Base class for multiple choice questions. The parts that are common to

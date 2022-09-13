@@ -30,6 +30,7 @@ require_once($CFG->dirroot . '/question/type/questionbase.php');
 require_once($CFG->dirroot . '/question/type/numerical/question.php');
 
 use core_question\local\type\type_base;
+use core_question\local\entities\question_definition;
 
 /**
  * The randomsamatch question type class.
