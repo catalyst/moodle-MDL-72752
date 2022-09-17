@@ -43,7 +43,7 @@ abstract class datafilter implements renderable, templatable {
     /**
      * Filter constructor.
      *
-     * @param context $context The context where the filters are being rendered.
+     * @param context $context The context where the filters are being rendered
      * @param ?string $tableregionid Container of the table which will be updated by this filter
      */
     public function __construct(context $context, ?string $tableregionid = null) {

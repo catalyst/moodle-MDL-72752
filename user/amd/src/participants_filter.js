@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import CoreFilter from 'core/filter';
+import CoreFilter from 'core/datafilter';
 import * as DynamicTable from 'core_table/dynamic';
 import Selectors from 'core/datafilter/selectors';
 import Notification from 'core/notification';
@@ -37,7 +37,7 @@ export const init = filterRegionId => {
     const filterSet = document.getElementById(filterRegionId);
 
     // Create and initialize filter.
-    const coreFilter = new CoreFilter(filterSet,  function(filters, pendingPromise) {
+    const coreFilter = new CoreFilter(filterSet, function(filters, pendingPromise) {
         DynamicTable.setFilters(
             DynamicTable.getTableFromId(filterSet.dataset.tableRegion),
             {

@@ -22,9 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['clearfilterrow'] = 'Remove filter row';
-$string['clearfilters'] = 'Clear filters';
-$string['clearfilterselection'] = 'Remove "{$a}" from filter';
 $string['countparticipantsfound'] = '{$a} participants found';
 $string['moodlenetprofile'] = 'MoodleNet profile ID';
 $string['moodlenetprofile_help'] = 'Your MoodleNet profile ID links your MoodleNet profile with this site.';
@@ -158,3 +155,4 @@ $string['match'] = 'Match';
 $string['matchofthefollowing'] = 'of the following:';
 $string['selectfiltertype'] = 'Select';
 $string['placeholdertypeorselect'] = 'Type or select...';
+$string['clearfilterselection'] = 'Remove "{$a}" from filter';
