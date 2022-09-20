@@ -221,6 +221,7 @@ class view {
 
         // Create the url of the new question page to forward to.
         $this->returnurl = $pageurl->out_as_local_url(false);
+        // TODO MDL-73146 get rid of this part.
         $this->editquestionurl = new \moodle_url('/question/bank/editquestion/question.php', ['returnurl' => $this->returnurl]);
         if ($this->cm !== null) {
             $this->editquestionurl->param('cmid', $this->cm->id);
@@ -298,6 +299,9 @@ class view {
      * @return array
      */
     protected function get_class_for_columns(): array {
+        // TODO MDL-73146 get rid of this part. Add a default sort according to this in the columnsortorder plugin install and upgrade
+        // by checking if the config entry is present in db or not, this part was done to maintain the defaulr sort of the columns
+        // and actions.
         $this->corequestionbankcolumns = [
             'checkbox_column',
             'question_type_column',
@@ -375,6 +379,7 @@ class view {
             $questionbankclasscolumns[$key] = $newpluginclasscolumn;
         }
 
+        // TODO MDL-73146 move this part in the question_bank api.
         // Check if qbank_columnsortorder is enabled.
         if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
             $columnorder = new column_manager();
@@ -427,6 +432,7 @@ class view {
      * @return string Column name for the heading
      */
     protected function heading_column(): string {
+        // TODO MDL-73146 get rid of this part.
         return 'qbank_viewquestionname\viewquestionname_column_helper';
     }
 
@@ -584,6 +590,7 @@ class view {
      * @return int[]
      */
     protected function default_sort(): array {
+        // TODO MDL-73146 get rid of this part.
         $defaultsort = [];
         if (class_exists('\\qbank_viewquestiontype\\question_type_column')) {
             $sort = 'qbank_viewquestiontype\question_type_column';
@@ -741,6 +748,7 @@ class view {
      * @return \moodle_url the URL, HTML-escaped.
      */
     public function edit_question_moodle_url($questionid) {
+        // TODO MDL-73146 get rid of this part.
         return new \moodle_url($this->editquestionurl, ['id' => $questionid]);
     }
 
@@ -751,6 +759,7 @@ class view {
      * @return string the URL, HTML-escaped.
      */
     public function edit_question_url($questionid) {
+        // TODO MDL-73146 get rid of this part.
         return $this->edit_question_moodle_url($questionid)->out();
     }
 
@@ -761,6 +770,7 @@ class view {
      * @return \moodle_url the URL.
      */
     public function copy_question_moodle_url($questionid) {
+        // TODO MDL-73146 get rid of this part.
         return new \moodle_url($this->editquestionurl, ['id' => $questionid, 'makecopy' => 1]);
     }
 
@@ -770,6 +780,7 @@ class view {
      * @return string the URL, HTML-escaped.
      */
     public function copy_question_url($questionid) {
+        // TODO MDL-73146 get rid of this part.
         return $this->copy_question_moodle_url($questionid)->out();
     }
 
