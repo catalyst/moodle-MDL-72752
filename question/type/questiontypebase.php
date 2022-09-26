@@ -484,6 +484,8 @@ class question_type {
             $questionbankentryold->idnumber = $question->idnumber;
             $DB->update_record('question_bank_entries', $questionbankentryold);
         }
+        $question->questionbankentryid = $questionbankentry->id;
+        $question->ownerid = $questionbankentry->ownerid;
 
         // Create question_versions records.
         $questionversion = new \stdClass();
@@ -502,6 +504,9 @@ class question_type {
             $questionversion->status = $parentversion[array_key_first($parentversion)]->status;
         }
         $questionversion->id = $DB->insert_record('question_versions', $questionversion);
+
+        $question->version = $questionversion->version;
+        $question->status = $questionversion->status;
 
         // Now, whether we are updating a existing question, or creating a new
         // one, we have to do the files processing and update the record.

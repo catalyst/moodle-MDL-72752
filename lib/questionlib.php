@@ -344,9 +344,13 @@ function question_delete_question($questionid): void {
 
     $sql = 'SELECT qv.id as versionid,
                    qv.version,
+                   qv.status,
+                   qbe.ownerid,
                    qbe.id as entryid,
                    qc.id as categoryid,
-                   qc.contextid as contextid
+                   qc.contextid as contextid,
+                   q.createdby,
+                   q.modifiedby,
               FROM {question} q
               LEFT JOIN {question_versions} qv ON qv.questionid = q.id
               LEFT JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
@@ -415,6 +419,12 @@ function question_delete_question($questionid): void {
     // Log the deletion of this question.
     $question->category = $questiondata->categoryid;
     $question->contextid = $questiondata->contextid;
+    $question->ownerid = $questiondata ->ownerid;
+    $question->questionbankentryid = $questiondata->entryid;
+    $question->version = $questiondata->version;
+    $question->status = $questiondata->status;
+    $question->createdby = $questiondata->createdby;
+    $question->modifiedby = $questiondata->modifiedby;
     $event = \core\event\question_deleted::create_from_question_instance($question);
     $event->add_record_snapshot('question', $question);
     $event->trigger();
