@@ -419,13 +419,16 @@ function question_delete_question($questionid): void {
     // Log the deletion of this question.
     $question->category = $questiondata->categoryid;
     $question->contextid = $questiondata->contextid;
-    $question->ownerid = $questiondata ->ownerid;
-    $question->questionbankentryid = $questiondata->entryid;
-    $question->version = $questiondata->version;
-    $question->status = $questiondata->status;
-    $question->createdby = $questiondata->createdby;
-    $question->modifiedby = $questiondata->modifiedby;
-    $event = \core\event\question_deleted::create_from_question_instance($question);
+    $other = [
+        'categoryid' => $question->category,
+        'ownerid' => $questiondata->ownerid,
+        'createdby' => $questiondata->createdby,
+        'modifiedby' => $questiondata->modifiedby,
+        'version' => $questiondata->version,
+        'status' => $questiondata->status,
+        'questionbankentryid' => $questiondata->questionbankentryid
+    ];
+    $event = \core\event\question_deleted::create_from_question_instance($question, null, $other);
     $event->add_record_snapshot('question', $question);
     $event->trigger();
 }

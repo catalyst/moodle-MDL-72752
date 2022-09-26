@@ -110,18 +110,7 @@ abstract class question_base extends base {
      */
     public static function create_from_question_instance($question, $context = null, $other = null) {
 
-        $params = [
-            'objectid' => $question->id,
-            'other' => [
-                'categoryid' => $question->category,
-                'ownerid' => $question->ownerid,
-                'createdby' => $question->createdby,
-                'modifiedby' => $question->modifiedby,
-                'version' => $question->version,
-                'status' => $question->status,
-                'questionbankentryid' => $question->questionbankentryid,
-            ]
-        ];
+        $params = ['objectid' => $question->id,'other' => ['categoryid' => $question->category]];
 
         if (!empty($question->contextid)) {
             $params['contextid'] = $question->contextid;
