@@ -38,6 +38,8 @@ require_once($CFG->dirroot . '/question/editlib.php');
 class quiz_question_bank_view_testcase extends advanced_testcase {
 
     public function test_viewing_question_bank_should_not_load_individual_questions() {
+        // TODO: Moved to behat test MDL-72321.
+        $this->markTestSkipped('This test should be moved to behat test');
         $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
@@ -60,22 +62,23 @@ class quiz_question_bank_view_testcase extends advanced_testcase {
         $cache = cache::make('core', 'questiondata');
         $cache->delete($questiondata->id);
 
-        // Generate the view.
-        $view = new mod_quiz\question\bank\custom_view($contexts, new moodle_url('/'), $course, $cm, $quiz);
-        ob_start();
         $pagevars = [
             'qpage' => 0,
-            'qperpage' => 20,
-            'cat' => $cat->id . ',' . $context->id,
-            'recurse' => false,
-            'showhidden' => false,
-            'qbshowtext' => false
+            'qperpage' => DEFAULT_QUESTIONS_PER_PAGE,
+            'cat' => $cat->id . ',' . $cat->contextid,
+            'tabname' => 'questions'
         ];
-        $view->display($pagevars, 'editq');
+        // Generate the view.
+        $viewclass = mod_quiz\question\bank\custom_view::class;
+        $extraparams['view'] = $viewclass;
+        $extraparams['cmid'] = $cm->id;
+        $view = new $viewclass($contexts, new \moodle_url('/'), $course, $cm, $pagevars, $extraparams);
+        ob_start();
+        $view->display();
         $html = ob_get_clean();
 
-        // Verify the output includes the expected question.
-        $this->assertStringContainsString('Example question', $html);
+        // Verify the output includes the expected category, but not question as loaded by ajax.
+        $this->assertStringContainsString($cat->name, $html);
 
         // Verify the question has not been loaded into the cache.
         $this->assertFalse($cache->has($questiondata->id));
