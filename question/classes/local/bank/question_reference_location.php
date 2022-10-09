@@ -54,15 +54,11 @@ class question_reference_location {
      * @param string $questionarea where the question is used in the component eg slot
      * @param int $itemid id of the question area
      */
-    public function __construct($usingcontext, $component, $questionarea, $itemid) {
+    public function __construct(int $usingcontext, string $component, string $questionarea, int $itemid) {
         $this->usingcontext = $usingcontext;
         $this->component = $component;
         $this->questionarea = $questionarea;
         $this->itemid = $itemid;
-    }
-
-    public function __toString() {
-        return str_replace(self::TO_ESCAPE, self::ESCAPED, $this->categoryidnumber);
     }
 
     /**
