@@ -2416,14 +2416,15 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
 
     if (!$qreferenceitem) {
         // Create a new reference record for questions created already.
-        $questionreferences = new \StdClass();
-        $questionreferences->usingcontextid = context_module::instance($quiz->cmid)->id;
-        $questionreferences->component = 'mod_quiz';
-        $questionreferences->questionarea = 'slot';
-        $questionreferences->itemid = $slotid;
-        $questionreferences->questionbankentryid = get_question_bank_entry($questionid)->id;
-        $questionreferences->version = null; // Always latest.
-        $DB->insert_record('question_references', $questionreferences);
+        //$questionreferences = new \StdClass();
+        //$questionreferences->usingcontextid = context_module::instance($quiz->cmid)->id;
+        //$questionreferences->component = 'mod_quiz';
+        //$questionreferences->questionarea = 'slot';
+        //$questionreferences->itemid = $slotid;
+        //$questionreferences->questionbankentryid = get_question_bank_entry($questionid)->id;
+        //$questionreferences->version = null; // Always latest.
+        //$DB->insert_record('question_references', $questionreferences);
+        \core_question\question_manager::create_question_reference(context_module::instance($quiz->cmid)->id, 'mod_quiz', 'slot', $slotid, $questionid);
 
     } else if ($qreferenceitem->itemid === 0 || $qreferenceitem->itemid === null) {
         $questionreferences = new \StdClass();
