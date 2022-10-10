@@ -185,8 +185,8 @@ class backup_test extends \advanced_testcase {
 
         // Now delete everything.
         delete_course($this->course, false);
-        question_delete_question($question1->id);
-        question_delete_question($question2->id);
+        \core_question\question_manager::delete_question($question1->id);
+        \core_question\question_manager::delete_question($question2->id);
 
         // Check the comment data for the questions has also gone.
         $DB->record_exists('comments', ['id' => $comment1->id]);

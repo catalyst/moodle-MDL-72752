@@ -80,7 +80,7 @@ class delete_action_column extends menu_action_column_base {
     }
 
     protected function get_url_icon_and_label(\stdClass $question): array {
-        if (!question_has_capability_on($question, 'edit')) {
+        if (!\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit')) {
             return [null, null, null];
         }
         if ($question->status === question_version_status::QUESTION_STATUS_HIDDEN) {

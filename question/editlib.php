@@ -71,7 +71,7 @@ function get_questions_category(object $category, bool $noparent, bool $recurse 
 
     // Get list of categories.
     if ($recurse) {
-        $categorylist = question_categorylist($category->id);
+        $categorylist = \core_question\question_categories_manager::question_categorylist($category->id);
     } else {
         $categorylist = [$category->id];
     }
@@ -362,7 +362,7 @@ function question_build_edit_resources($edittab, $baseurl, $params,
         $pagevars['qperpage'] = $qperpage ?? $defaultquestionsperpage;
     }
 
-    $defaultcategory = question_make_default_categories([$thiscontext]);
+    $defaultcategory = \core_question\question_categories_manager::question_make_default_categories([$thiscontext]);
 
     $contextlistarr = [];
     foreach ($contexts->having_one_edit_tab_cap($edittab) as $context){

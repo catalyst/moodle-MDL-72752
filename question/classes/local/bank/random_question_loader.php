@@ -248,7 +248,7 @@ class random_question_loader {
 
         // Load the available questions from the question bank.
         if ($includesubcategories) {
-            $categoryids = question_categorylist($categoryid);
+            $categoryids = \core_question\question_categories_manager::question_categorylist($categoryid);
         } else {
             $categoryids = [$categoryid];
         }

@@ -74,7 +74,7 @@ if ($cmid = optional_param('cmid', 0, PARAM_INT)) {
     $PAGE->set_context($context);
     // Note that in the other cases, require_login will set the correct page context.
 }
-question_require_capability_on($question, 'use');
+core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'use');
 $PAGE->set_pagelayout('popup');
 
 // Get and validate display options.
@@ -254,10 +254,10 @@ echo $OUTPUT->header();
 
 $previewdata = [];
 
-$previewdata['questionicon'] = print_question_icon($question);
+$previewdata['questionicon'] = core_question\question_manager::print_question_icon($question);
 $previewdata['questionidumber'] = $question->idnumber;
 $previewdata['questiontitle'] = $question->name;
-$islatestversion = is_latest($question->version, $question->questionbankentryid);
+$islatestversion = core_question\question_manager::is_latest($question->version, $question->questionbankentryid);
 if ($islatestversion) {
     $previewdata['versiontitle'] = get_string('versiontitlelatest', 'qbank_previewquestion', $question->version);
 } else {

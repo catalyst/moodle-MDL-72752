@@ -122,7 +122,7 @@ if ($id) {
     // We can use $COURSE here because it's been initialised as part of the
     // require_login above. Passing it as the third parameter tells the function
     // to filter the course tags by that course.
-    get_question_options($question, true, [$COURSE]);
+    core_question\question_manager::get_question_options($question, true, [$COURSE]);
 
 } else if ($categoryid && $qtype) { // Only for creating new questions.
     $question = new stdClass();
@@ -165,27 +165,27 @@ $question->contextid = $category->contextid;
 $addpermission = has_capability('moodle/question:add', $categorycontext);
 
 if ($id) {
-    $question->formoptions->canedit = question_has_capability_on($question, 'edit');
-    $question->formoptions->canmove = $addpermission && question_has_capability_on($question, 'move');
+    $question->formoptions->canedit = core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit');
+    $question->formoptions->canmove = $addpermission && core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'move');
     $question->formoptions->cansaveasnew = $addpermission &&
-            (question_has_capability_on($question, 'view') || $question->formoptions->canedit);
+            (core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view') || $question->formoptions->canedit);
     $question->formoptions->repeatelements = $question->formoptions->canedit || $question->formoptions->cansaveasnew;
     $formeditable = $question->formoptions->canedit || $question->formoptions->cansaveasnew || $question->formoptions->canmove;
     if (!$formeditable) {
-        question_require_capability_on($question, 'view');
+        core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'view');
     }
     $question->beingcopied = false;
     if ($makecopy) {
         // If we are duplicating a question, add some indication to the question name.
         $question->name = get_string('questionnamecopy', 'question', $question->name);
         $question->idnumber = isset($question->idnumber) ?
-            core_question_find_next_unused_idnumber($question->idnumber, $category->id) : '';
+            core_question\question_manager::core_question_find_next_unused_idnumber($question->idnumber, $category->id) : '';
         $question->beingcopied = true;
     }
 
 } else { // Creating a new question.
-    $question->formoptions->canedit = question_has_capability_on($question, 'edit');
-    $question->formoptions->canmove = (question_has_capability_on($question, 'move') && $addpermission);
+    $question->formoptions->canedit = core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit');
+    $question->formoptions->canmove = (core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'move') && $addpermission);
     $question->formoptions->cansaveasnew = false;
     $question->formoptions->repeatelements = true;
     $formeditable = true;
@@ -221,7 +221,7 @@ if (!empty($question->id)) {
     $toform->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 }
 if ($makecopy) {
-    $toform->idnumber = core_question_find_next_unused_idnumber($toform->idnumber, $category->id);
+    $toform->idnumber = core_question\question_manager::core_question_find_next_unused_idnumber($toform->idnumber, $category->id);
 }
 if ($cm !== null) {
     $toform->cmid = $cm->id;
@@ -269,7 +269,7 @@ if ($mform->is_cancelled()) {
     list($newcatid, $newcontextid) = explode(',', $fromform->category);
     if (!empty($question->id) && $newcatid != $question->categoryobject->id) {
         $contextid = $newcontextid;
-        question_require_capability_on($question, 'move');
+        core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'move');
     } else {
         $contextid = $category->contextid;
     }
@@ -279,7 +279,7 @@ if ($mform->is_cancelled()) {
 
     // We are actually saving the question.
     if (!empty($question->id)) {
-        question_require_capability_on($question, 'edit');
+        core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'edit');
     } else {
         require_capability('moodle/question:add', context::instance_by_id($contextid));
         if (!empty($fromform->makecopy) && !$question->formoptions->cansaveasnew) {

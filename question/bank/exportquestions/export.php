@@ -76,7 +76,7 @@ if ($fromform = $exportform->get_data()) {
 
     $classname = 'qformat_' . $fromform->format;
     $qformat = new $classname();
-    $filename = question_default_export_filename($COURSE, $category) .
+    $filename = \core_question\local\bank\question_import_export_manager::question_default_export_filename($COURSE, $category) .
             $qformat->export_file_extension();
     $exporturl = exportquestions_helper::question_make_export_url($thiscontext->id, $category->id,
             $fromform->format, $withcategories, $withcontexts, $filename);

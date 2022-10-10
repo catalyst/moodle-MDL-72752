@@ -179,7 +179,7 @@ class quiz {
                 $questionstoprocess[$question->questionid] = $question;
             }
         }
-        get_question_options($questionstoprocess);
+        core_question\question_manager::get_question_options($questionstoprocess);
     }
 
     /**
@@ -565,7 +565,7 @@ class quiz {
             $categoriestolook = array();
             foreach ($qcategories as $cat => $includesubcats) {
                 if ($includesubcats) {
-                    $categoriestolook = array_merge($categoriestolook, question_categorylist($cat));
+                    $categoriestolook = array_merge($categoriestolook, \core_question\question_categories_manager::question_categorylist($cat));
                 } else {
                     $categoriestolook[] = $cat;
                 }
@@ -1193,7 +1193,7 @@ class quiz_attempt {
         }
 
         $question = $this->quba->get_question($slot, false);
-        if (!question_has_capability_on($question, 'edit', $question->category)) {
+        if (!core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit', $question->category)) {
             return $options;
         }
 

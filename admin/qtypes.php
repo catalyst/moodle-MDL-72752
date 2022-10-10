@@ -135,8 +135,8 @@ if (($up = optional_param('up', '', PARAM_PLUGIN)) && confirm_sesskey()) {
         throw new \moodle_exception('unknownquestiontype', 'question', $thispageurl, $up);
     }
 
-    $neworder = question_reorder_qtypes($sortedqtypes, $up, -1);
-    question_save_qtype_order($neworder, $config);
+    $neworder = \core_question\local\bank\question_options_manager::question_reorder_qtypes($sortedqtypes, $up, -1);
+    \core_question\local\bank\question_options_manager::question_save_qtype_order($neworder, $config);
     redirect($thispageurl);
 }
 
@@ -146,8 +146,8 @@ if (($down = optional_param('down', '', PARAM_PLUGIN)) && confirm_sesskey()) {
         throw new \moodle_exception('unknownquestiontype', 'question', $thispageurl, $down);
     }
 
-    $neworder = question_reorder_qtypes($sortedqtypes, $down, +1);
-    question_save_qtype_order($neworder, $config);
+    $neworder = \core_question\local\bank\question_options_manager::question_reorder_qtypes($sortedqtypes, $down, +1);
+    \core_question\local\bank\question_options_manager::question_save_qtype_order($neworder, $config);
     redirect($thispageurl);
 }
 
@@ -178,7 +178,7 @@ foreach ($sortedqtypes as $qtypename => $localname) {
     // Question icon and name.
     $fakequestion = new stdClass;
     $fakequestion->qtype = $qtypename;
-    $icon = print_question_icon($fakequestion, true);
+    $icon = core_question\question_manager::print_question_icon($fakequestion, true);
     $row[] = $icon . ' ' . $localname;
 
     // Number of questions of this type.

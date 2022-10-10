@@ -148,7 +148,7 @@ class qtype_randomsamatch extends question_type {
         }
 
         if ($subcategories) {
-            $categoryids = question_categorylist($categoryid);
+            $categoryids = \core_question\question_categories_manager::question_categorylist($categoryid);
         } else {
             $categoryids = array($categoryid);
         }

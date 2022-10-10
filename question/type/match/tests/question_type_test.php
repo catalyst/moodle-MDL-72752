@@ -183,7 +183,7 @@ class question_type_test extends \advanced_testcase {
         // Create a new question version with the form submission.
         unset($questiondata->id);
         $returnedfromsave = $this->qtype->save_question($questiondata, $fromform);
-        $actualquestionsdata = question_load_questions([$returnedfromsave->id], 'qbe.idnumber');
+        $actualquestionsdata = \core_question\question_manager::question_load_questions([$returnedfromsave->id], 'qbe.idnumber');
         $actualquestiondata = end($actualquestionsdata);
 
         foreach ($questiondata as $property => $value) {

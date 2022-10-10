@@ -152,7 +152,7 @@ class calculator {
                 $this->randomselectors[$key] = implode(',', $this->randomselectors[$key]);
             }
 
-            $this->stats->subquestions = question_load_questions($this->stats->get_all_subq_ids());
+            $this->stats->subquestions = \core_question\question_manager::question_load_questions($this->stats->get_all_subq_ids());
             // Compute the statistics for sub questions, if there are any.
             $this->progress->start_progress('', count($this->stats->subquestions), 1);
             foreach ($this->stats->subquestions as $qid => $subquestion) {

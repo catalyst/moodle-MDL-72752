@@ -68,8 +68,11 @@ define("QUESTION_NUMANS_ADD", 3);
  * @return array an array $index => $qtype, with $index from 0 to n in order, and
  *      the $qtypes in the same order as $sortedqtypes, except that $tomove will
  *      have been moved one place.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function question_reorder_qtypes($sortedqtypes, $tomove, $direction): array {
+    debugging('Function question_save_qtype_order() is deprecated, please use 
+    \core_question\local\bank\question_options_manager::question_save_qtype_order() instead.', DEBUG_DEVELOPER);
     $neworder = array_keys($sortedqtypes);
     // Find the element to move.
     $key = array_search($tomove, $neworder);
@@ -93,8 +96,11 @@ function question_reorder_qtypes($sortedqtypes, $tomove, $direction): array {
  *
  * @param array $neworder An arra $index => $qtype. Indices should start at 0 and be in order.
  * @param object $config get_config('question'), if you happen to have it around, to save one DB query.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function question_save_qtype_order($neworder, $config = null): void {
+    debugging('Function question_save_qtype_order() is deprecated, please use 
+    \core_question\local\bank\question_options_manager::question_save_qtype_order() instead.', DEBUG_DEVELOPER);
     if (is_null($config)) {
         $config = get_config('question');
     }
@@ -114,8 +120,11 @@ function question_save_qtype_order($neworder, $config = null): void {
  *
  * @param array $questionids of question ids.
  * @return boolean whether any of these questions are being used by any part of Moodle.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function questions_in_use($questionids): bool {
+    debugging('Function questions_in_use() is deprecated, please use 
+    \core_question\question_manager::questions_in_use() instead.', DEBUG_DEVELOPER);
 
     // Are they used by the core question system?
     if (question_engine::questions_in_use($questionids)) {
@@ -160,8 +169,11 @@ function questions_in_use($questionids): bool {
  * @param mixed $context either a context object, or a context id.
  * @return boolean whether any of the question categories beloning to this context have
  *         any questions in them.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_context_has_any_questions($context): bool {
+    debugging('Function questions_in_use() is deprecated, please use 
+    \core_question\question_manager::questions_in_use() instead.', DEBUG_DEVELOPER);
     global $DB;
     if (is_object($context)) {
         $contextid = $context->id;
@@ -186,8 +198,11 @@ function question_context_has_any_questions($context): bool {
  * @param int $grade grade to be tested
  * @param string $matchgrades 'error' or 'nearest'
  * @return false|int|string either 'fixed' value or false if error.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function match_grade_options($gradeoptionsfull, $grade, $matchgrades = 'error') {
+    debugging('Function question_save_qtype_order() is deprecated, please use 
+    \core_question\local\bank\question_options_manager::question_save_qtype_order() instead.', DEBUG_DEVELOPER);
 
     if ($matchgrades == 'error') {
         // ...(Almost) exact match, or an error.
@@ -227,8 +242,11 @@ function match_grade_options($gradeoptionsfull, $grade, $matchgrades = 'error') 
  * NOTE: this function is called from lib/db/upgrade.php
  *
  * @param object|core_course_category $category course category object
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_category_delete_safe($category): void {
+    debugging('Function question_category_delete_safe() is deprecated, please use 
+    \core_question\question_categories_manager::question_category_delete_safe() instead.', DEBUG_DEVELOPER);
     global $DB;
     $criteria = ['questioncategoryid' => $category->id];
     $rescue = null; // See the code around the call to question_save_from_deletion.
@@ -242,7 +260,7 @@ function question_category_delete_safe($category): void {
 
             // Try to delete each question.
             foreach ($questionids as $questionid) {
-                question_delete_question($questionid->questionid);
+                \core_question\question_manager::delete_question($questionid->questionid);
             }
         }
 
@@ -276,7 +294,7 @@ function question_category_delete_safe($category): void {
                 $parentcontextid = context_module::instance($moduletouse->coursemodule)->id;
             }
             $name = $category->contextid;
-            question_save_from_deletion(array_keys($questionids), $parentcontextid, $name, $rescue);
+            \core_question\local\bank\delete_question_manager::question_save_from_deletion(array_keys($questionids), $parentcontextid, $name, $rescue);
         }
     }
 
@@ -290,14 +308,17 @@ function question_category_delete_safe($category): void {
  * @param integer $categoryid a question category id.
  * @param boolean $recursive whether to check child categories too.
  * @return boolean whether any question in this category is in use.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_category_in_use($categoryid, $recursive = false): bool {
+    debugging('Function question_category_in_use() is deprecated, please use 
+    \core_question\question_categories_manager::question_category_in_use() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     // Look at each question in the category.
     $questionids = question_bank::get_finder()->get_questions_from_categories([$categoryid], null);
     if ($questionids) {
-        if (questions_in_use(array_keys($questionids))) {
+        if (\core_question\question_manager::questions_in_use(array_keys($questionids))) {
             return true;
         }
     }
@@ -309,7 +330,7 @@ function question_category_in_use($categoryid, $recursive = false): bool {
     if ($children = $DB->get_records('question_categories',
             ['parent' => $categoryid], '', 'id, 1')) {
         foreach ($children as $child) {
-            if (question_category_in_use($child->id, $recursive)) {
+            if (\core_question\question_categories_manager::question_category_in_use($child->id, $recursive)) {
                 return true;
             }
         }
@@ -323,8 +344,11 @@ function question_category_in_use($categoryid, $recursive = false): bool {
  * If not delete the entry.
  *
  * @param int $entryid
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function delete_question_bank_entry($entryid): void {
+    debugging('Function delete_question_bank_entry() is deprecated, please use 
+    \core_question\local\bank\delete_question_manager::delete_question_bank_entry() instead.', DEBUG_DEVELOPER);
     global $DB;
     if (!$DB->record_exists('question_versions', ['questionbankentryid' => $entryid])) {
         $DB->delete_records('question_bank_entries', ['id' => $entryid]);
@@ -337,8 +361,11 @@ function delete_question_bank_entry($entryid): void {
  * It will not delete a question if it is used somewhere, instead it will just delete the reference.
  *
  * @param int $questionid The id of the question being deleted
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_delete_question($questionid): void {
+    debugging('Function question_delete_question() is deprecated, please use 
+    \core_question\question_manager::delete_question() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $question = $DB->get_record('question', ['id' => $questionid]);
@@ -368,7 +395,7 @@ function question_delete_question($questionid): void {
     }
 
     // Do not delete a question if it is used by an activity module
-    if (questions_in_use($questionstocheck)) {
+    if (\core_question\question_manager::questions_in_use($questionstocheck)) {
         return;
     }
 
@@ -400,7 +427,7 @@ function question_delete_question($questionid): void {
             array('parent' => $questionid), '', 'id, qtype')) {
         foreach ($children as $child) {
             if ($child->id != $questionid) {
-                question_delete_question($child->id);
+                \core_question\question_manager::delete_question($child->id);
             }
         }
     }
@@ -416,7 +443,7 @@ function question_delete_question($questionid): void {
             'version' => $questiondata->version,
             'questionbankentryid' => $questiondata->entryid,
         ]);
-    delete_question_bank_entry($questiondata->entryid);
+    \core_question\local\bank\delete_question_manager::delete_question_bank_entry($questiondata->entryid);
     question_bank::notify_question_edited($question->id);
 
     // Log the deletion of this question.
@@ -432,16 +459,19 @@ function question_delete_question($questionid): void {
  *
  * @param int $contextid The contextid to delete question categories from
  * @return array only returns an empty array for backwards compatibility.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_delete_context($contextid): array {
+    debugging('Function question_delete_context() is deprecated, please use 
+    \core_question\local\bank\delete_question_manager::question_delete_context() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $fields = 'id, parent, name, contextid';
     if ($categories = $DB->get_records('question_categories', ['contextid' => $contextid], 'parent', $fields)) {
         // Sort categories following their tree (parent-child) relationships this will make the feedback more readable.
-        $categories = sort_categories_by_tree($categories);
+        $categories = \core_question\question_categories_manager::sort_categories_by_tree($categories);
         foreach ($categories as $category) {
-            question_category_delete_safe($category);
+            \core_question\question_categories_manager::question_category_delete_safe($category);
         }
     }
     return [];
@@ -459,7 +489,7 @@ function question_delete_course($course, $notused = false) {
     debugging('Function question_delete_course() is deprecated, without replacement.
     Question banks in a course context feature has been removed.', DEBUG_DEVELOPER);
     $coursecontext = context_course::instance($course->id);
-    question_delete_context($coursecontext->id);
+    \core_question\local\bank\delete_question_manager::question_delete_context($coursecontext->id);
     return true;
 }
 
@@ -482,7 +512,7 @@ function question_delete_course_category($category, $newcategory, $notused=false
 
     $context = context_coursecat::instance($category->id);
     if (empty($newcategory)) {
-        question_delete_context($context->id);
+        \core_question\local\bank\delete_question_manager::question_delete_context($context->id);
 
     } else {
         // Move question categories to the new context.
@@ -491,10 +521,10 @@ function question_delete_course_category($category, $newcategory, $notused=false
         }
 
         // Only move question categories if there is any question category at all!
-        if ($topcategory = question_get_top_category($context->id)) {
-            $newtopcategory = question_get_top_category($newcontext->id, true);
+        if ($topcategory = \core_question\question_categories_manager::question_get_top_category($context->id)) {
+            $newtopcategory = \core_question\question_categories_manager::question_get_top_category($newcontext->id, true);
 
-            question_move_category_to_context($topcategory->id, $context->id, $newcontext->id);
+            \core_question\question_categories_manager::question_move_category_to_context($topcategory->id, $context->id, $newcontext->id);
             $DB->set_field('question_categories', 'parent', $newtopcategory->id, ['parent' => $topcategory->id]);
             // Now delete the top category.
             $DB->delete_records('question_categories', ['id' => $topcategory->id]);
@@ -513,14 +543,17 @@ function question_delete_course_category($category, $newcategory, $notused=false
  *      e.g. from get_context_name
  * @param object $newcategory
  * @return mixed false on
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_save_from_deletion($questionids, $newcontextid, $oldplace, $newcategory = null) {
+    debugging('Function question_save_from_deletion() is deprecated, please use 
+    \core_question\local\bank\delete_question_manager::question_save_from_deletion() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     // Make a category in the parent context to move the questions to.
     if (is_null($newcategory)) {
         $newcategory = new stdClass();
-        $newcategory->parent = question_get_top_category($newcontextid, true)->id;
+        $newcategory->parent = \core_question\question_categories_manager::question_get_top_category($newcontextid, true)->id;
         $newcategory->contextid = $newcontextid;
         // Max length of column name in question_categories is 255.
         $newcategory->name = shorten_text(get_string('questionsrescuedfrom', 'question', $oldplace), 255);
@@ -531,7 +564,7 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
     }
 
     // Move any remaining questions to the 'saved' category.
-    if (!question_move_questions_to_category($questionids, $newcategory->id)) {
+    if (!\core_question\question_categories_manager::question_move_questions_to_category($questionids, $newcategory->id)) {
         return false;
     }
     return $newcategory;
@@ -543,10 +576,13 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
  * @param object $cm the course module object representing the activity
  * @param bool $notused the argument is not used any more. Kept for backwards compatibility.
  * @return boolean
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_delete_activity($cm, $notused = false): bool {
+    debugging('Function question_delete_activity() is deprecated, please use 
+    \core_question\question_manager::question_delete_activity() instead.', DEBUG_DEVELOPER);
     $modcontext = context_module::instance($cm->id);
-    question_delete_context($modcontext->id);
+    \core_question\local\bank\delete_question_manager::question_delete_context($modcontext->id);
     return true;
 }
 
@@ -574,8 +610,11 @@ function question_delete_activity($cm, $notused = false): bool {
  * @param stdClass[] $questions The list of question being moved (must include
  *                              the id and contextid)
  * @param context $newcontext The Moodle context the questions are being moved to
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function question_move_question_tags_to_new_context(array $questions, context $newcontext): void {
+    debugging('Function question_move_question_tags_to_new_context() is deprecated, please use 
+    core_question\local\bank\question_tags_manager::question_move_question_tags_to_new_context() instead.', DEBUG_DEVELOPER);
     // If the questions are moving to a new course/activity context then we need to
     // find any existing tag instances from any unavailable course contexts and
     // delete them because they will no longer be applicable (we don't support
@@ -672,8 +711,11 @@ function question_move_question_tags_to_new_context(array $questions, context $n
  * @param int $limitfrom
  * @param int $limitnum
  * @return array
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function idnumber_exist_in_question_category($questionidnumber, $categoryid, $limitfrom = 0, $limitnum = 1): array {
+    debugging('Function idnumber_exist_in_question_category() is deprecated, please use 
+    \core_question\question_categories_manager::idnumber_exist_in_question_category() instead.', DEBUG_DEVELOPER);
     global $DB;
     $response  = false;
     $record = [];
@@ -702,8 +744,11 @@ function idnumber_exist_in_question_category($questionidnumber, $categoryid, $li
  * @param array $questionids of question ids.
  * @param integer $newcategoryid the id of the category to move to.
  * @return bool
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_move_questions_to_category($questionids, $newcategoryid): bool {
+    debugging('Function question_move_questions_to_category() is deprecated, please use 
+    \core_question\question_categories_manager::question_move_questions_to_category() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $newcategorydata = $DB->get_record('question_categories', ['id' => $newcategoryid]);
@@ -735,7 +780,8 @@ function question_move_questions_to_category($questionids, $newcategoryid): bool
                     $question->id, $question->contextid, $newcategorydata->contextid);
         }
         // Check whether there could be a clash of idnumbers in the new category.
-        list($idnumberclash, $rec) = idnumber_exist_in_question_category($question->idnumber, $newcategoryid);
+        list($idnumberclash, $rec) = \core_question\question_categories_manager::
+        idnumber_exist_in_question_category($question->idnumber, $newcategoryid);
         if ($idnumberclash) {
             $unique = 1;
             if (count($rec)) {
@@ -766,7 +812,7 @@ function question_move_questions_to_category($questionids, $newcategoryid): bool
     }
 
     $newcontext = context::instance_by_id($newcategorydata->contextid);
-    question_move_question_tags_to_new_context($questions, $newcontext);
+    core_question\local\bank\question_tags_manager::question_move_question_tags_to_new_context($questions, $newcontext);
 
     // TODO Deal with datasets.
 
@@ -819,8 +865,11 @@ function move_question_set_references(int $oldcategoryid, int $newcatgoryid,
  * @param integer $oldcontextid the old context id.
  * @param integer $newcontextid the new context id.
  * @param bool $purgecache if calling this function will purge question from the cache or not.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_move_category_to_context($categoryid, $oldcontextid, $newcontextid, $purgecache = true) {
+    debugging('Function question_move_category_to_context() is deprecated, please use 
+    \core_question\question_categories_manager::question_move_category_to_context() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $questions = [];
@@ -845,13 +894,13 @@ function question_move_category_to_context($categoryid, $oldcontextid, $newconte
     }
 
     $newcontext = context::instance_by_id($newcontextid);
-    question_move_question_tags_to_new_context($questions, $newcontext);
+    core_question\local\bank\question_tags_manager::question_move_question_tags_to_new_context($questions, $newcontext);
 
     $subcatids = $DB->get_records_menu('question_categories', ['parent' => $categoryid], '', 'id,1');
     foreach ($subcatids as $subcatid => $notused) {
         $DB->set_field('question_categories', 'contextid', $newcontextid,
                 array('id' => $subcatid));
-        question_move_category_to_context($subcatid, $oldcontextid, $newcontextid, $purgecache);
+        \core_question\question_categories_manager::question_move_category_to_context($subcatid, $oldcontextid, $newcontextid, $purgecache);
     }
 }
 
@@ -871,8 +920,11 @@ function question_move_category_to_context($categoryid, $oldcontextid, $newconte
  *
  * @return array partially complete question objects. You need to call get_question_options
  * on them before they can be properly used.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_preload_questions($questionids = null, $extrafields = '', $join = '', $extraparams = [], $orderby = ''): array {
+    debugging('Function question_preload_questions() is deprecated, please use 
+    \core_question\question_manager::question_preload_questions() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     if ($questionids === null) {
@@ -936,12 +988,15 @@ function question_preload_questions($questionids = null, $extrafields = '', $joi
  * @param string $extrafields extra SQL code to be added to the query.
  * @param string $join extra SQL code to be added to the query.
  * @return array|string question objects.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_load_questions($questionids, $extrafields = '', $join = '') {
+    debugging('Function question_load_questions() is deprecated, please use 
+    \core_question\question_manager::question_load_questions() instead.', DEBUG_DEVELOPER);
     $questions = question_preload_questions($questionids, $extrafields, $join);
 
     // Load the question type specific information.
-    if (!get_question_options($questions)) {
+    if (!core_question\question_manager::get_question_options($questions)) {
         return get_string('questionloaderror', 'question');
     }
 
@@ -955,8 +1010,11 @@ function question_load_questions($questionids, $extrafields = '', $join = '') {
  * @param stdClass $category The question_categories record for the given $question.
  * @param stdClass[]|null $tagobjects The tags for the given $question.
  * @param stdClass[]|null $filtercourses The courses to filter the course tags by.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function _tidy_question($question, $category, array $tagobjects = null, array $filtercourses = null): void {
+    debugging('Function _tidy_question() is deprecated, please use 
+    core_question\local\bank\question_options_manager::_tidy_question() instead.', DEBUG_DEVELOPER);
     // Load question-type specific fields.
     if (!question_bank::is_qtype_installed($question->qtype)) {
         $question->questiontext = html_writer::tag('p', get_string('warningmissingtype',
@@ -976,7 +1034,7 @@ function _tidy_question($question, $category, array $tagobjects = null, array $f
 
     if (!is_null($tagobjects)) {
         $categorycontext = context::instance_by_id($category->contextid);
-        $sortedtagobjects = question_sort_tags($tagobjects, $categorycontext, $filtercourses);
+        $sortedtagobjects = core_question\local\bank\question_tags_manager::question_sort_tags($tagobjects, $categorycontext, $filtercourses);
         $question->coursetagobjects = $sortedtagobjects->coursetagobjects;
         $question->coursetags = $sortedtagobjects->coursetags;
         $question->tagobjects = $sortedtagobjects->tagobjects;
@@ -986,7 +1044,7 @@ function _tidy_question($question, $category, array $tagobjects = null, array $f
 
 /**
  * Updates the question objects with question type specific
- * information by calling {@see get_question_options()}
+ * information by calling {@see core_question\question_manager::get_question_options()}
  *
  * Can be called either with an array of question objects or with a single
  * question object.
@@ -996,8 +1054,11 @@ function _tidy_question($question, $category, array $tagobjects = null, array $f
  * @param bool $loadtags load the question tags from the tags table. Optional, default false.
  * @param stdClass[] $filtercourses The courses to filter the course tags by.
  * @return bool Indicates success or failure.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function get_question_options(&$questions, $loadtags = false, $filtercourses = null) {
+    debugging('Function get_question_options() is deprecated, please use 
+    core_question\question_manager::get_question_options() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $questionlist = is_array($questions) ? $questions : [$questions];
@@ -1013,7 +1074,7 @@ function get_question_options(&$questions, $loadtags = false, $filtercourses = n
         if (isset($question->category)) {
             $qcategoryid = $question->category;
         } else {
-            $qcategoryid = get_question_bank_entry($question->id)->questioncategoryid;
+            $qcategoryid = core_question\question_manager::get_question_bank_entry($question->id)->questioncategoryid;
             $question->questioncategoryid = $qcategoryid;
         }
 
@@ -1037,9 +1098,9 @@ function get_question_options(&$questions, $loadtags = false, $filtercourses = n
             $tagobjects = $tagobjectsbyquestion[$question->id];
         }
         $qcategoryid = $question->category ?? $question->questioncategoryid ??
-            get_question_bank_entry($question->id)->questioncategoryid;
+            core_question\question_manager::get_question_bank_entry($question->id)->questioncategoryid;
 
-        _tidy_question($question, $categories[$qcategoryid], $tagobjects, $filtercourses);
+        \core_question\local\bank\question_options_manager::_tidy_question($question, $categories[$qcategoryid], $tagobjects, $filtercourses);
     }
 
     return true;
@@ -1055,8 +1116,11 @@ function get_question_options(&$questions, $loadtags = false, $filtercourses = n
  * @param stdClass $categorycontext The question categories context.
  * @param stdClass[]|null $filtercourses The courses to filter the course tags by.
  * @return stdClass $sortedtagobjects Sorted tag objects.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function question_sort_tags($tagobjects, $categorycontext, $filtercourses = null): stdClass {
+    debugging('Function question_sort_tags() is deprecated, please use 
+    core_question\local\bank\question_tags_manager::question_sort_tags() instead.', DEBUG_DEVELOPER);
 
     // Questions can have two sets of tag instances. One set at the
     // course context level and another at the context the question
@@ -1134,8 +1198,11 @@ function question_sort_tags($tagobjects, $categorycontext, $filtercourses = null
  * @param object $question The question object for which the icon is required.
  *       Only $question->qtype is used.
  * @return string the HTML for the img tag.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function print_question_icon($question): string {
+    debugging('Function get_question_options() is deprecated, please use 
+    core_question\question_manager::get_question_options() instead.', DEBUG_DEVELOPER);
     global $PAGE;
 
     if (gettype($question->qtype) == 'object') {
@@ -1159,8 +1226,11 @@ function print_question_icon($question): string {
  * @param int $id
  * @param int $level
  * @return array
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
+    debugging('Function sort_categories_by_tree() is deprecated, please use 
+    \core_question\question_categories_manager::sort_categories_by_tree() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $children = [];
@@ -1170,7 +1240,7 @@ function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
         if (!isset($categories[$key]->processed) && $categories[$key]->parent == $id) {
             $children[$key] = $categories[$key];
             $categories[$key]->processed = true;
-            $children = $children + sort_categories_by_tree(
+            $children = $children + \core_question\question_categories_manager::sort_categories_by_tree(
                     $categories, $children[$key]->id, $level + 1);
         }
     }
@@ -1183,7 +1253,7 @@ function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
                             'id' => $categories[$key]->parent))) {
                 $children[$key] = $categories[$key];
                 $categories[$key]->processed = true;
-                $children = $children + sort_categories_by_tree(
+                $children = $children + \core_question\question_categories_manager::sort_categories_by_tree(
                         $categories, $children[$key]->id, $level + 1);
             }
         }
@@ -1196,8 +1266,11 @@ function sort_categories_by_tree(&$categories, $id = 0, $level = 1): array {
  *
  * @param integer $contextid a context id.
  * @return object|bool the default question category for that context, or false if none.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_get_default_category($contextid) {
+    debugging('Function question_get_default_category() is deprecated, please use 
+    \core_question\question_categories_manager::question_get_default_category() instead.', DEBUG_DEVELOPER);
     global $DB;
     $category = $DB->get_records_select('question_categories', 'contextid = ? AND parent <> 0',
                                         [$contextid], 'id', '*', 0, 1);
@@ -1215,8 +1288,11 @@ function question_get_default_category($contextid) {
  * @param int $contextid A context id.
  * @param bool $create Whether create a top category if it doesn't exist.
  * @return bool|stdClass The top question category for that context, or false if none.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_get_top_category($contextid, $create = false) {
+    debugging('Function question_get_top_category() is deprecated, please use 
+    \core_question\question_categories_manager::question_get_top_category() instead.', DEBUG_DEVELOPER);
     global $DB;
     $category = $DB->get_record('question_categories', ['contextid' => $contextid, 'parent' => 0]);
 
@@ -1240,8 +1316,11 @@ function question_get_top_category($contextid, $create = false) {
  *
  * @param array $contextids List of context ids
  * @return array
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_get_top_categories_for_contexts($contextids): array {
+    debugging('Function question_get_top_categories_for_contexts() is deprecated, please use 
+    \core_question\question_categories_manager::question_get_top_categories_for_contexts() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $concatsql = $DB->sql_concat_join("','", ['id', 'contextid']);
@@ -1262,8 +1341,11 @@ function question_get_top_categories_for_contexts($contextids): array {
  *
  * @param array $contexts  The context objects for this context and all parent contexts.
  * @return object The default category - the category in the course context
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_make_default_categories($contexts): object {
+    debugging('Function question_make_default_categories() is deprecated, please use 
+    \core_question\question_categories_manager::question_make_default_categories() instead.', DEBUG_DEVELOPER);
     global $DB;
     static $preferredlevels = array(
         CONTEXT_COURSE => 4,
@@ -1276,7 +1358,7 @@ function question_make_default_categories($contexts): object {
     $preferredness = 0;
     // If it already exists, just return it.
     foreach ($contexts as $key => $context) {
-        $topcategory = question_get_top_category($context->id, true);
+        $topcategory = \core_question\question_categories_manager::question_get_top_category($context->id, true);
         if (!$exists = $DB->record_exists("question_categories",
                 array('contextid' => $context->id, 'parent' => $topcategory->id))) {
             // Otherwise, we need to make one.
@@ -1292,7 +1374,7 @@ function question_make_default_categories($contexts): object {
             $category->stamp = make_unique_id_code();
             $category->id = $DB->insert_record('question_categories', $category);
         } else {
-            $category = question_get_default_category($context->id);
+            $category = \core_question\question_categories_manager::question_get_default_category($context->id);
         }
         $thispreferredness = $preferredlevels[$context->contextlevel];
         if (has_any_capability(array('moodle/question:usemine', 'moodle/question:useall'), $context)) {
@@ -1315,8 +1397,11 @@ function question_make_default_categories($contexts): object {
  *
  * @param int $categoryid
  * @return array of question category ids of the category and all subcategories.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_categorylist($categoryid): array {
+    debugging('Function question_categorylist() is deprecated, please use 
+    \core_question\question_categories_manager::question_categorylist() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     // Final list of category IDs.
@@ -1347,8 +1432,11 @@ function question_categorylist($categoryid): array {
  * Get all parent categories of a given question category in decending order.
  * @param int $categoryid for which you want to find the parents.
  * @return array of question category ids of all parents categories.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_categorylist_parents(int $categoryid): array {
+    debugging('Function question_categorylist_parents() is deprecated, please use 
+    \core_question\question_categories_manager::question_categorylist_parents() instead.', DEBUG_DEVELOPER);
     global $DB;
     $parent = $DB->get_field('question_categories', 'parent', array('id' => $categoryid));
     if (!$parent) {
@@ -1373,8 +1461,11 @@ function question_categorylist_parents(int $categoryid): array {
  * Get list of available import or export formats
  * @param string $type 'import' if import list, otherwise export list assumed
  * @return array sorted list of import/export formats available
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function get_import_export_formats($type): array {
+    debugging('Function get_import_export_formats() is deprecated, please use 
+    \core_question\local\bank\question_import_export_manager::get_import_export_formats() instead.', DEBUG_DEVELOPER);
     global $CFG;
     require_once($CFG->dirroot . '/question/format.php');
 
@@ -1407,8 +1498,11 @@ function get_import_export_formats($type): array {
  * @param object $course the course the questions are in.
  * @param object $category the question category.
  * @return string the filename.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_default_export_filename($course, $category): string {
+    debugging('Function question_default_export_filename() is deprecated, please use 
+    \core_question\local\bank\question_import_export_manager::question_default_export_filename() instead.', DEBUG_DEVELOPER);
     // We build a string that is an appropriate name (questions) from the lang pack,
     // then the corse shortname, then the question category name, then a timestamp.
 
@@ -1437,6 +1531,8 @@ function question_default_export_filename($course, $category): string {
  * @return bool this user has the capability $cap for this question $question?
  */
 function question_has_capability_on($questionorid, $cap, $notused = -1): bool {
+    debugging('Function question_has_capability_on() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_has_capability_on() instead.', DEBUG_DEVELOPER);
     global $USER, $DB;
 
     if (is_numeric($questionorid)) {
@@ -1505,7 +1601,9 @@ function question_has_capability_on($questionorid, $cap, $notused = -1): bool {
  * @return bool
  */
 function question_require_capability_on($question, $cap): bool {
-    if (!question_has_capability_on($question, $cap)) {
+    debugging('Function question_require_capability_on() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_require_capability_on() instead.', DEBUG_DEVELOPER);
+    if (!core_question\local\bank\question_edit_contexts::question_has_capability_on($question, $cap)) {
         throw new moodle_exception('nopermissions', '', '', $cap);
     }
     return true;
@@ -1516,14 +1614,17 @@ function question_require_capability_on($question, $cap): bool {
  *
  * @param object $context a context
  * @return string|bool A URL for editing questions in this context.
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_edit_url($context) {
+    debugging('Function question_edit_url() is deprecated, please use 
+    core_question\local\bank\question_navigation_manager::question_edit_url() instead.', DEBUG_DEVELOPER);
     global $CFG, $SITE;
-    if (!has_any_capability(question_get_question_capabilities(), $context)) {
+    if (!has_any_capability(core_question\local\bank\question_edit_contexts::question_get_question_capabilities(), $context)) {
         return false;
     }
     $baseurl = $CFG->wwwroot . '/question/edit.php?';
-    $defaultcategory = question_get_default_category($context->id);
+    $defaultcategory = \core_question\question_categories_manager::question_get_default_category($context->id);
     if ($defaultcategory) {
         $baseurl .= 'cat=' . $defaultcategory->id . ',' . $context->id . '&amp;';
     }
@@ -1553,8 +1654,11 @@ function question_edit_url($context) {
  * @param string $baseurl the url of the base where the api is implemented from
  * @param bool $default If uses the default navigation or needs id as parameter.
  * @return navigation_node|void Returns the question branch that was added
+ * @deprecated since MDL-75128 Moodle 4.1
  */
 function question_extend_settings_navigation(navigation_node $navigationnode, $context, $baseurl = '/question/edit.php', $default = true) {
+    debugging('Function question_extend_settings_navigation() is deprecated, please use 
+    core_question\local\bank\question_navigation_manager::question_extend_settings_navigation() instead.', DEBUG_DEVELOPER);
     global $PAGE;
 
     if ($context->contextlevel == CONTEXT_MODULE) {
@@ -1670,6 +1774,8 @@ function question_extend_settings_navigation(navigation_node $navigationnode, $c
  * @return array all the capabilities that relate to accessing particular questions.
  */
 function question_get_question_capabilities(): array {
+    debugging('Function question_get_question_capabilities() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_get_question_capabilities() instead.', DEBUG_DEVELOPER);
     return [
         'moodle/question:add',
         'moodle/question:editmine',
@@ -1693,7 +1799,9 @@ function question_get_question_capabilities(): array {
  * @return array all the question bank capabilities.
  */
 function question_get_all_capabilities(): array {
-    $caps = question_get_question_capabilities();
+    debugging('Function question_get_all_capabilities() is deprecated, please use 
+    core_question\local\bank\question_edit_contexts::question_get_all_capabilities() instead.', DEBUG_DEVELOPER);
+    $caps = core_question\local\bank\question_edit_contexts::question_get_question_capabilities();
     $caps[] = 'moodle/question:managecategory';
     $caps[] = 'moodle/question:flag';
     return $caps;
@@ -1713,9 +1821,12 @@ function question_get_all_capabilities(): array {
  * @param int $itemid item ID
  * @param array $options options
  * @return string
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function question_rewrite_question_urls($text, $file, $contextid, $component, $filearea,
                                         array $ids, $itemid, array $options=null): string {
+    debugging('Function question_extend_settings_navigation() is deprecated, please use 
+    core_question\local\bank\question_navigation_manager::question_extend_settings_navigation() instead.', DEBUG_DEVELOPER);
 
     $idsstr = '';
     if (!empty($ids)) {
@@ -1743,10 +1854,13 @@ function question_rewrite_question_urls($text, $file, $contextid, $component, $f
  * @param string $previewcomponent component responsible for displaying the preview.
  * @param array $options text and file options ('forcehttps'=>false)
  * @return string $questiontext with URLs rewritten.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function question_rewrite_question_preview_urls($text, $questionid, $filecontextid, $filecomponent, $filearea, $itemid,
                                                 $previewcontextid, $previewcomponent, $options = null): string {
 
+    debugging('Function question_extend_settings_navigation() is deprecated, please use 
+    core_question\local\bank\question_navigation_manager::question_extend_settings_navigation() instead.', DEBUG_DEVELOPER);
     $path = "preview/$previewcontextid/$previewcomponent/$questionid";
     if ($itemid) {
         $path .= '/' . $itemid;
@@ -1817,13 +1931,13 @@ function question_pluginfile($course, $context, $component, $filearea, $args, $f
         $qformat->setContexts($contexts->having_one_edit_tab_cap('export'));
         $qformat->setCourse($course);
 
-        if ($cattofile == 'withcategories') {
+        if ($cattofile === 'withcategories') {
             $qformat->setCattofile(true);
         } else {
             $qformat->setCattofile(false);
         }
 
-        if ($contexttofile == 'withcontexts') {
+        if ($contexttofile === 'withcontexts') {
             $qformat->setContexttofile(true);
         } else {
             $qformat->setContexttofile(false);
@@ -1940,7 +2054,7 @@ function core_question_question_preview_pluginfile($previewcontext, $questionid,
     list($context, $course, $cm) = get_context_info_array($previewcontext->id);
     require_login($course, false, $cm);
 
-    question_require_capability_on($question, 'use');
+    core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'use');
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
@@ -2008,8 +2122,11 @@ function question_module_uses_questions($modname) {
  * @param string|null $oldidnumber a question idnumber, or can be null.
  * @param int $categoryid a question category id.
  * @return string|null suggested new idnumber for a question in that category, or null if one cannot be found.
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function core_question_find_next_unused_idnumber(?string $oldidnumber, int $categoryid): ?string {
+    debugging('Function core_question_find_next_unused_idnumber() is deprecated, please use 
+    core_question\question_manager::core_question_find_next_unused_idnumber() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     // The the old idnumber is not of the right form, bail now.
@@ -2043,8 +2160,11 @@ function core_question_find_next_unused_idnumber(?string $oldidnumber, int $cate
  * @param int $questionid Question id.
  * @return false|mixed
  * @throws dml_exception
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function get_question_bank_entry(int $questionid): object {
+    debugging('Function get_question_bank_entry() is deprecated, please use 
+    core_question\question_manager::get_question_bank_entry() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $sql = "SELECT qbe.*
@@ -2064,8 +2184,11 @@ function get_question_bank_entry(int $questionid): object {
  * @param int $questionid Question id.
  * @return array
  * @throws dml_exception
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function get_question_version($questionid): array {
+    debugging('Function get_question_version() is deprecated, please use 
+    core_question\question_manager::get_question_version() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $version = $DB->get_records('question_versions', ['questionid' => $questionid]);
@@ -2080,8 +2203,11 @@ function get_question_version($questionid): array {
  * @param int $questionbankentryid Question bank entry id.
  * @return int next version number.
  * @throws dml_exception
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function get_next_version(int $questionbankentryid): int {
+    debugging('Function get_next_version() is deprecated, please use 
+    core_question\question_manager::get_next_version() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $sql = "SELECT MAX(qv.version)
@@ -2104,8 +2230,11 @@ function get_next_version(int $questionbankentryid): int {
  * @param string $version Question version to check.
  * @param string $questionbankentryid Entry to check against.
  * @return bool
+ * @deprecated since Moodle 4.1 MDL-75128
  */
 function is_latest(string $version, string $questionbankentryid) : bool {
+    debugging('Function is_latest() is deprecated, please use 
+    core_question\question_manager::is_latest() instead.', DEBUG_DEVELOPER);
     global $DB;
 
     $sql = 'SELECT MAX(version) AS max

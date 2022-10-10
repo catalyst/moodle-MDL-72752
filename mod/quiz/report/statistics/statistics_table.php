@@ -189,7 +189,7 @@ class quiz_statistics_table extends flexible_table {
             return '';
         } else {
             $questionobject = $questionstat->question;
-            return print_question_icon($questionobject);
+            return core_question\question_manager::print_question_icon($questionobject);
         }
     }
 

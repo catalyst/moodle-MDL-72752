@@ -49,7 +49,7 @@ class question_usage_column extends column_base {
     protected function display_content($question, $rowclasses): void {
         $usagecount = helper::get_question_entry_usage_count($question);
         $attributes = [];
-        if (question_has_capability_on($question, 'view')) {
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
             $target = 'questionusagepreview_' . $question->id;
             $attributes = [
                 'href' => '#',

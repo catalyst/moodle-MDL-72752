@@ -58,7 +58,7 @@ class events_test extends \advanced_testcase {
 
         $contexts = new \core_question\local\bank\question_edit_contexts(\context_module::instance($quiz->cmid));
 
-        $defaultcategoryobj = question_make_default_categories([$contexts->lowest()]);
+        $defaultcategoryobj = \core_question\question_categories_manager::question_make_default_categories([$contexts->lowest()]);
         $defaultcategory = $defaultcategoryobj->id . ',' . $defaultcategoryobj->contextid;
 
         $qcobject = new question_category_object(
@@ -109,7 +109,7 @@ class events_test extends \advanced_testcase {
 
         $contexts = new \core_question\local\bank\question_edit_contexts(\context_module::instance($quiz->cmid));
 
-        $defaultcategoryobj = question_make_default_categories([$contexts->lowest()]);
+        $defaultcategoryobj = \core_question\question_categories_manager::question_make_default_categories([$contexts->lowest()]);
         $defaultcategory = $defaultcategoryobj->id . ',' . $defaultcategoryobj->contextid;
 
         $qcobject = new question_category_object(
@@ -188,7 +188,7 @@ class events_test extends \advanced_testcase {
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
-        question_delete_question($question->id);
+        \core_question\question_manager::delete_question($question->id);
         $events = $sink->get_events();
         $event = reset($events);
 
@@ -260,7 +260,7 @@ class events_test extends \advanced_testcase {
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
-        question_move_questions_to_category([$question->id], $cat2->id);
+        \core_question\question_categories_manager::question_move_questions_to_category([$question->id], $cat2->id);
         $events = $sink->get_events();
         $event = reset($events);
 

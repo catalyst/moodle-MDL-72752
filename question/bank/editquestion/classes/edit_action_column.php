@@ -89,9 +89,9 @@ class edit_action_column extends menu_action_column_base {
             return [null, null, null];
         }
 
-        if (question_has_capability_on($question, 'edit')) {
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit')) {
             return [$this->edit_question_moodle_url($question->id), 't/edit', $this->stredit];
-        } else if (question_has_capability_on($question, 'view')) {
+        } else if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
             return [$this->edit_question_moodle_url($question->id), 'i/info', $this->strview];
         } else {
             return [null, null, null];

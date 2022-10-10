@@ -57,7 +57,7 @@ class question_history_view_test extends \advanced_testcase {
         $questiondata2 = $questiongenerator->update_question($questiondata1, null,
             ['name' => 'Example question second version']);
 
-        $entry = get_question_bank_entry($questiondata1->id);
+        $entry = \core_question\question_manager::get_question_bank_entry($questiondata1->id);
 
         $pagevars = [
             'qpage' => 0,
@@ -103,7 +103,7 @@ class question_history_view_test extends \advanced_testcase {
         $questiondata1 = $questiongenerator->create_question('numerical', null,
             ['name' => 'First version', 'category' => $cat->id]);
 
-        $entry = get_question_bank_entry($questiondata1->id);
+        $entry = \core_question\question_manager::get_question_bank_entry($questiondata1->id);
         $pagevars = [
             'qpage' => 0,
             'qperpage' => DEFAULT_QUESTIONS_PER_PAGE,

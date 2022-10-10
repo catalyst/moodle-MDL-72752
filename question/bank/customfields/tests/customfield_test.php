@@ -226,8 +226,8 @@ class customfield_test extends \advanced_testcase {
         $this->assertEquals('some more text', $q2cfdata->f1);
 
         // Delete the questions.
-        question_delete_question($question1->id);
-        question_delete_question($question2->id);
+        \core_question\question_manager::delete_question($question1->id);
+        \core_question\question_manager::delete_question($question2->id);
 
         // Check the custom field data for the questions has also gone.
         $q1cfdata = $customfieldhandler->export_instance_data_object($question1->id);
@@ -274,8 +274,8 @@ class customfield_test extends \advanced_testcase {
 
         // Now delete everything.
         delete_course($this->course, false);
-        question_delete_question($question1->id);
-        question_delete_question($question2->id);
+        \core_question\question_manager::delete_question($question1->id);
+        \core_question\question_manager::delete_question($question2->id);
 
         // Check the custom field data for the questions has also gone.
         $q1cfdata = $customfieldhandler->export_instance_data_object($question1->id);

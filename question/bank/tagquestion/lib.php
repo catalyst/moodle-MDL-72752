@@ -68,7 +68,7 @@ function qbank_tagquestion_output_fragment_tags_form($args) {
             $tagobjectsbyquestion = core_tag_tag::get_items_tags('core_question', 'question', [$question->id]);
             if (!empty($tagobjectsbyquestion[$question->id])) {
                 $tagobjects = $tagobjectsbyquestion[$question->id];
-                $sortedtagobjects = question_sort_tags($tagobjects,
+                $sortedtagobjects = core_question\local\bank\question_tags_manager::question_sort_tags($tagobjects,
                         context::instance_by_id($category->contextid), $filtercourses);
             }
         }
@@ -88,7 +88,7 @@ function qbank_tagquestion_output_fragment_tags_form($args) {
                 'coursetags' => $sortedtagobjects->coursetags ?? [],
         ];
 
-        $cantag = question_has_capability_on($question, 'tag');
+        $cantag = core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'tag');
         $mform = new tags_form(null, $formoptions, 'post', '', null, $cantag, $data);
         $mform->set_data($data);
 

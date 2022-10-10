@@ -1418,12 +1418,12 @@ function quiz_question_edit_button($cmid, $question, $returnurl, $contentafteric
     // What sort of icon should we show?
     $action = '';
     if (!empty($question->id) &&
-            (question_has_capability_on($question, 'edit') ||
-                    question_has_capability_on($question, 'move'))) {
+            (core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'edit') ||
+                core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'move'))) {
         $action = $stredit;
         $icon = 't/edit';
     } else if (!empty($question->id) &&
-            question_has_capability_on($question, 'view')) {
+        core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
         $action = $strview;
         $icon = 'i/info';
     }
@@ -1476,7 +1476,7 @@ function quiz_question_preview_url($quiz, $question, $variant = null) {
  */
 function quiz_question_preview_button($quiz, $question, $label = false, $variant = null, $random = null) {
     global $PAGE;
-    if (!question_has_capability_on($question, 'use')) {
+    if (!core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use')) {
         return '';
     }
     return $PAGE->get_renderer('mod_quiz', 'edit')->question_preview_icon($quiz, $question, $label, $variant, null);
@@ -2220,7 +2220,7 @@ function quiz_question_tostring($question, $showicon = false, $showquestiontext 
     // Question name.
     $name = shorten_text(format_string($question->name), 200);
     if ($showicon) {
-        $name .= print_question_icon($question) . ' ' . $name;
+        $name .= core_question\question_manager::print_question_icon($question) . ' ' . $name;
     }
     $result .= html_writer::span($name, 'questionname');
 
@@ -2264,7 +2264,7 @@ function quiz_question_tostring($question, $showicon = false, $showquestiontext 
 function quiz_require_question_use($questionid) {
     global $DB;
     $question = $DB->get_record('question', array('id' => $questionid), '*', MUST_EXIST);
-    question_require_capability_on($question, 'use');
+    core_question\local\bank\question_edit_contexts::question_require_capability_on($question, 'use');
 }
 
 /**
@@ -2292,7 +2292,7 @@ function quiz_has_question_use($quiz, $slot) {
     if (!$question) {
         return false;
     }
-    return question_has_capability_on($question, 'use');
+    return core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use');
 }
 
 /**
@@ -2337,7 +2337,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
 
     $questionslots = $DB->get_records_sql($sql, [$quiz->id, 'mod_quiz', 'slot']);
 
-    $currententry = get_question_bank_entry($questionid);
+    $currententry = core_question\question_manager::get_question_bank_entry($questionid);
 
     if (array_key_exists($currententry->id, $questionslots)) {
         $trans->allow_commit();
@@ -2424,7 +2424,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
         $questionreferences->component = 'mod_quiz';
         $questionreferences->questionarea = 'slot';
         $questionreferences->itemid = $slotid;
-        $questionreferences->questionbankentryid = get_question_bank_entry($questionid)->id;
+        $questionreferences->questionbankentryid = core_question\question_manager::get_question_bank_entry($questionid)->id;
         $questionreferences->version = null; // Always latest.
         $DB->insert_record('question_references', $questionreferences);
 
@@ -2440,7 +2440,7 @@ function quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null) 
         $questionreferences->component = 'mod_quiz';
         $questionreferences->questionarea = 'slot';
         $questionreferences->itemid = $slotid;
-        $questionreferences->questionbankentryid = get_question_bank_entry($questionid)->id;
+        $questionreferences->questionbankentryid = core_question\question_manager::get_question_bank_entry($questionid)->id;
         $questionreferences->version = null; // Always latest.
         $DB->insert_record('question_references', $questionreferences);
     }

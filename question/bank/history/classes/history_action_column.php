@@ -52,7 +52,7 @@ class history_action_column extends menu_action_column_base {
             return [null, null, null];
         }
 
-        if (question_has_capability_on($question, 'use')) {
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use')) {
             $context = $this->qbank->get_most_specific_context();
             $url = helper::question_history_url($question->questionbankentryid, $this->qbank->returnurl, $context);
             return [$url, 't/log', $this->strpreview];

@@ -118,7 +118,7 @@ if (($up = optional_param('up', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     }
 
     // This function works fine for behaviours, as well as qtypes.
-    $neworder = question_reorder_qtypes($sortedbehaviours, $up, -1);
+    $neworder = \core_question\local\bank\question_options_manager::question_reorder_qtypes($sortedbehaviours, $up, -1);
     set_config('behavioursortorder', implode(',', $neworder), 'question');
     redirect($thispageurl);
 }
@@ -130,7 +130,7 @@ if (($down = optional_param('down', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     }
 
     // This function works fine for behaviours, as well as qtypes.
-    $neworder = question_reorder_qtypes($sortedbehaviours, $down, +1);
+    $neworder = \core_question\local\bank\question_options_manager::question_reorder_qtypes($sortedbehaviours, $down, +1);
     set_config('behavioursortorder', implode(',', $neworder), 'question');
     redirect($thispageurl);
 }

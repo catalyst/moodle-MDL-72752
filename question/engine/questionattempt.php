@@ -855,7 +855,8 @@ class question_attempt {
     }
 
     /**
-     * Calls {@link question_rewrite_question_urls()} with appropriate parameters
+     * Calls {@link core_question\local\bank\question_navigation_manager::question_rewrite_question_urls()}
+     * with appropriate parameters
      * for content belonging to this question.
      * @param string $text the content to output.
      * @param string $component the component name (normally 'question' or 'qtype_...')
@@ -864,13 +865,14 @@ class question_attempt {
      * @return string the content with the URLs rewritten.
      */
     public function rewrite_pluginfile_urls($text, $component, $filearea, $itemid) {
-        return question_rewrite_question_urls($text, 'pluginfile.php',
+        return core_question\local\bank\question_navigation_manager::question_rewrite_question_urls($text, 'pluginfile.php',
                 $this->question->contextid, $component, $filearea,
                 $this->extra_file_path_components(), $itemid);
     }
 
     /**
-     * Calls {@link question_rewrite_question_urls()} with appropriate parameters
+     * Calls {@link core_question\local\bank\question_navigation_manager::question_rewrite_question_urls()}
+     * with appropriate parameters
      * for content belonging to responses to this question.
      *
      * @param string $text the text to update the URLs in.

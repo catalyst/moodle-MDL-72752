@@ -377,7 +377,7 @@ class qformat_default {
                 $fractions = $question->fraction;
                 $invalidfractions = array();
                 foreach ($fractions as $key => $fraction) {
-                    $newfraction = match_grade_options($gradeoptionsfull, $fraction,
+                    $newfraction = \core_question\local\bank\question_options_manager::match_grade_options($gradeoptionsfull, $fraction,
                             $this->matchgrades);
                     if ($newfraction === false) {
                         $invalidfractions[] = $fraction;
@@ -616,7 +616,7 @@ class qformat_default {
         // Now create any categories that need to be created.
         foreach ($catnames as $key => $catname) {
             if ($parent == 0) {
-                $category = question_get_top_category($context->id, true);
+                $category = \core_question\question_categories_manager::question_get_top_category($context->id, true);
                 $parent = $category->id;
             } else if ($category = $DB->get_record('question_categories',
                     array('name' => $catname, 'contextid' => $context->id, 'parent' => $parent))) {
@@ -925,7 +925,7 @@ class qformat_default {
         // Get the parents (from database) for this category.
         $parents = [];
         if ($this->category) {
-            $parents = question_categorylist_parents($this->category->id);
+            $parents = \core_question\question_categories_manager::question_categorylist_parents($this->category->id);
         }
 
         // get the questions (from database) in this category
@@ -981,7 +981,7 @@ class qformat_default {
                     $addnewcat = true;
                     $trackcategory = $question->category;
                 }
-                $trackcategoryparents = question_categorylist_parents($trackcategory);
+                $trackcategoryparents = \core_question\question_categories_manager::question_categorylist_parents($trackcategory);
                 // Check if we need to record empty parents categories.
                 foreach ($trackcategoryparents as $trackcategoryparent) {
                     // If parent wasn't written.
@@ -1012,7 +1012,7 @@ class qformat_default {
             }
 
             // Add the question to result.
-            if (!$checkcapabilities || question_has_capability_on($question, 'view')) {
+            if (!$checkcapabilities || core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'view')) {
                 $expquestion = $this->writequestion($question, $contextid);
                 // Don't add anything if witequestion returned nothing.
                 // This will permit qformat plugins to exclude some questions.

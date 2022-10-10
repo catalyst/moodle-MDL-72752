@@ -40,7 +40,7 @@ class add_action_column extends \core_question\local\bank\action_column_base {
     }
 
     protected function display_content($question, $rowclasses) {
-        if (!question_has_capability_on($question, 'use')) {
+        if (!\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'use')) {
             return;
         }
         $this->print_icon('t/add', $this->stradd, $this->qbank->add_to_quiz_url($question->id));

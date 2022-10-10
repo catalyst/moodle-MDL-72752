@@ -137,7 +137,7 @@ if ($requestedqtype) {
         context_helper::preload_from_record($count);
         $context = context::instance_by_id($count->contextid);
         $contextname = $context->get_context_name();
-        $url = question_edit_url($context);
+        $url = core_question\local\bank\question_navigation_manager::question_edit_url($context);
         if ($url) {
             $contextname = '<a href="' . $url . '" title="' .
                     get_string('editquestionshere', 'report_questioninstances') .

@@ -238,4 +238,122 @@ class question_edit_contexts {
             throw new \moodle_exception('nopermissions', '', '', 'access question edit tab '.$tabname);
         }
     }
+
+    /**
+     * Get the array of capabilities for question.
+     *
+     * @return array all the capabilities that relate to accessing particular questions.
+     */
+    public static function question_get_question_capabilities(): array {
+        return [
+            'moodle/question:add',
+            'moodle/question:editmine',
+            'moodle/question:editall',
+            'moodle/question:viewmine',
+            'moodle/question:viewall',
+            'moodle/question:usemine',
+            'moodle/question:useall',
+            'moodle/question:movemine',
+            'moodle/question:moveall',
+            'moodle/question:tagmine',
+            'moodle/question:tagall',
+            'moodle/question:commentmine',
+            'moodle/question:commentall',
+        ];
+    }
+
+    /**
+     * Get the question bank caps.
+     *
+     * @return array all the question bank capabilities.
+     */
+    public static function question_get_all_capabilities(): array {
+        $caps = self::question_get_question_capabilities();
+        $caps[] = 'moodle/question:managecategory';
+        $caps[] = 'moodle/question:flag';
+        return $caps;
+    }
+
+    /**
+     * Require capability on question.
+     *
+     * @param object|int $question
+     * @param string $cap
+     * @return bool
+     */
+    public static function question_require_capability_on($question, $cap): bool {
+        if (!\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, $cap)) {
+            throw new \moodle_exception('nopermissions', '', '', $cap);
+        }
+        return true;
+    }
+
+    /**
+     * Check capability on category.
+     *
+     * @param int|\stdClass|\question_definition $questionorid object or id.
+     *      If an object is passed, it should include ->contextid and ->createdby.
+     * @param string $cap 'add', 'edit', 'view', 'use', 'move' or 'tag'.
+     * @return bool this user has the capability $cap for this question $question?
+     */
+    public static function question_has_capability_on($questionorid, $cap): bool {
+        global $USER, $DB;
+
+        if (is_numeric($questionorid)) {
+            $questionid = (int)$questionorid;
+        } else if (is_object($questionorid)) {
+            // All we really need in this function is the contextid and author of the question.
+            // We won't bother fetching other details of the question if these 2 fields are provided.
+            if (isset($questionorid->contextid) && isset($questionorid->createdby)) {
+                $question = $questionorid;
+            } else if (!empty($questionorid->id)) {
+                $questionid = $questionorid->id;
+            }
+        }
+
+        // At this point, either $question or $questionid is expected to be set.
+        if (isset($questionid)) {
+            try {
+                $question = \question_bank::load_question_data($questionid);
+            } catch (\Exception $e) {
+                // Let's log the exception for future debugging,
+                // but not during Behat, or we can't test these cases.
+                if (!defined('BEHAT_SITE_RUNNING')) {
+                    debugging($e->getMessage(), DEBUG_NORMAL, $e->getTrace());
+                }
+
+                $sql = 'SELECT q.id,
+                               q.createdby,
+                               qc.contextid
+                          FROM {question} q
+                          JOIN {question_versions} qv
+                            ON qv.questionid = q.id
+                          JOIN {question_bank_entries} qbe
+                            ON qbe.id = qv.questionbankentryid
+                          JOIN {question_categories} qc
+                            ON qc.id = qbe.questioncategoryid
+                         WHERE q.id = :id';
+
+                // Well, at least we tried. Seems that we really have to read from DB.
+                $question = $DB->get_record_sql($sql, ['id' => $questionid]);
+            }
+        }
+
+        if (!isset($question)) {
+            throw new \coding_exception('$questionorid parameter needs to be an integer or an object.');
+        }
+
+        $context = \context::instance_by_id($question->contextid);
+
+        // These are existing questions capabilities that are set per category.
+        // Each of these has a 'mine' and 'all' version that is appended to the capability name.
+        $capabilitieswithallandmine = ['edit' => 1, 'view' => 1, 'use' => 1, 'move' => 1, 'tag' => 1, 'comment' => 1];
+
+        if (!isset($capabilitieswithallandmine[$cap])) {
+            return has_capability('moodle/question:' . $cap, $context);
+        }
+
+        return has_capability('moodle/question:' . $cap . 'all', $context) ||
+            ($question->createdby == $USER->id && has_capability('moodle/question:' . $cap . 'mine', $context));
+    }
 }

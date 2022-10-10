@@ -279,7 +279,7 @@ abstract class question_bank {
     }
 
     /**
-     * Convert the question information loaded with {@link get_question_options()}
+     * Convert the question information loaded with {@link core_question\question_manager::get_question_options()}
      * to a question_definintion object.
      * @param object $questiondata raw data loaded from the database.
      * @return question_definition loaded from the database.
@@ -719,7 +719,7 @@ class question_finder implements cache_data_source {
                  WHERE q.id = :id';
 
         $questiondata = $DB->get_record_sql($sql, ['id' => $questionid], MUST_EXIST);
-        get_question_options($questiondata);
+        core_question\question_manager::get_question_options($questiondata);
         return $questiondata;
     }
 
@@ -748,7 +748,7 @@ class question_finder implements cache_data_source {
             if (!array_key_exists($id, $questiondata)) {
                 throw new dml_missing_record_exception('question', '', ['id' => $id]);
             }
-            get_question_options($questiondata[$id]);
+            core_question\question_manager::get_question_options($questiondata[$id]);
         }
         return $questiondata;
     }

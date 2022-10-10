@@ -54,7 +54,8 @@ class randomquestion_form extends \moodleform {
 
         $mform->addElement('advcheckbox', 'includesubcategories', get_string('recurse', 'quiz'), null, null, array(0, 1));
 
-        $tops = question_get_top_categories_for_contexts(array_column($contexts->all(), 'id'));
+        $tops = \core_question\question_categories_manager::
+        question_get_top_categories_for_contexts(array_column($contexts->all(), 'id'));
         $mform->hideIf('includesubcategories', 'category', 'in', $tops);
 
         $tags = \core_tag_tag::get_tags_by_area_in_contexts('core_question', 'question', $usablecontexts);

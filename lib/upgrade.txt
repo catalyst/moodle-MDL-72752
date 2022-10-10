@@ -42,6 +42,23 @@ information provided here is intended especially for developers.
   implemented by adhoc tasks. For backwards compatibility, a default implementation has been added to `\core\task\adhoc_task` to
   return the class name.
 * The function get_module_metadata() has been finally deprecated and can not be used anymore.
+* The following methods related to question capabilities are moved to a specialized class and deprecated in questionlib:
+  question_get_question_capabilities() -> core_question\local\bank\question_edit_contexts::question_get_question_capabilities()
+  question_get_all_capabilities() -> core_question\local\bank\question_edit_contexts::question_get_all_capabilities()
+  question_require_capability_on() -> core_question\local\bank\question_edit_contexts::question_require_capability_on()
+  question_has_capability_on() -> core_question\local\bank\question_edit_contexts::question_has_capability_on()
+* The following methods related to question categories are moved to a specialized class and deprecated in questionlib:
+  sort_categories_by_tree() -> core_question\question_categories_manager::sort_categories_by_tree()
+  question_get_default_category() -> core_question\question_categories_manager::question_get_default_category()
+  question_get_top_category() -> core_question\question_categories_manager::question_get_top_category()
+  question_get_top_categories_for_contexts() -> core_question\question_categories_manager::question_get_top_categories_for_contexts()
+  question_make_default_categories() -> core_question\question_categories_manager::question_make_default_categories()
+  question_categorylist() -> core_question\question_categories_manager::question_categorylist()
+  question_categorylist_parents() -> core_question\question_categories_manager::question_categorylist_parents()
+  question_move_category_to_context() -> core_question\question_categories_manager::question_move_category_to_context()
+  question_move_questions_to_category() -> core_question\question_categories_manager::question_move_questions_to_category()
+  idnumber_exist_in_question_category() -> core_question\question_categories_manager::idnumber_exist_in_question_category()
+  question_category_in_use() -> core_question\question_categories_manager::question_category_in_use()
 
 === 4.0 ===
 

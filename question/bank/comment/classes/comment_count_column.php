@@ -84,7 +84,7 @@ class comment_count_column extends column_base {
         ];
         $commentcount = $DB->count_records('comments', $args);
         $attributes = [];
-        if (question_has_capability_on($question, 'comment')) {
+        if (\core_question\local\bank\question_edit_contexts::question_has_capability_on($question, 'comment')) {
             $target = 'questioncommentpreview_' . $question->id;
             $attributes = [
                 'href' => '#',
