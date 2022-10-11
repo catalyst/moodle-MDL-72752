@@ -22,7 +22,6 @@ use question_hint_with_parts;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 
 /**
  * Test for question_hint and subclasses.

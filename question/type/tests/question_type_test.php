@@ -21,8 +21,6 @@ use question_bank;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/question/type/questiontypebase.php');
-
 
 /**
  * Tests for some of ../questionbase.php
