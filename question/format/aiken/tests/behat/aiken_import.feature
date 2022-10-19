@@ -23,10 +23,11 @@ Feature: Test importing questions from Aiken format.
 
   @javascript @_file_upload
   Scenario: import some Aiken questions
-    Given I am on the "Course 1" "core_question > course question import" page logged in as "teacher"
+    When I navigate to "Question bank" in current page administration
+    And I select "Import" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_aiken" to "1"
     And I upload "question/format/aiken/tests/fixtures/questions.aiken.txt" file to "Import" filemanager
-    When I press "id_submitbutton"
+    And I press "id_submitbutton"
     Then I should see "Parsing questions from import file."
     And I should see "Importing 2 questions from file"
     And I should see "The Moodle project was started by:"

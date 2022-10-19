@@ -46,7 +46,8 @@ Feature: Test creating a Select missing words question
 
   @javascript
   Scenario: Edit a Select missing words question with 2 choice and should not have empty choice.
-    Given I am on the "Course 1" "core_question > course question bank" page logged in as teacher
+    Given I am on the "C1" "Course" page logged in as "teacher"
+    And I follow "Test qbank name"
     And I add a "Select missing words" question filling the form with:
       | Question name            | Select missing words 002    |
       | Question text            | The [[1]] [[2]] on the mat. |

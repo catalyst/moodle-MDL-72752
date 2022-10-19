@@ -11,6 +11,9 @@ Feature: Test settings for Multiple choice question
     And the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C1        | 0        |
+    And the following "activities" exist:
+      | activity   | name             | intro                   | course | idnumber |
+      | qbank      | Test qbank name  | Test qbank description  | C1     | qbank1   |
     And the following "course enrolments" exist:
       | user    | course | role           |
       | teacher | C1     | editingteacher |
@@ -29,7 +32,10 @@ Feature: Test settings for Multiple choice question
       |id_s_qtype_multichoice_showstandardinstruction | 1               |
     And I press "Save changes"
     And I log out
-    And I am on the "Course 1" "core_question > course question bank" page logged in as teacher
+    And I log in as "teacher"
+    And I am on "Course 1" course homepage
+    And I navigate to "Question bank" in current page administration
+    And I follow "Test qbank name"
     And I add a "Multiple choice" question filling the form with:
       | Question name              | Multi-choice-001                       |
       | Question text              | Find the capital city of England.      |
