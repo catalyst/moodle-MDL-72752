@@ -74,15 +74,14 @@ Feature: A teacher can edit questions in the question bank
     And "Test question to be edited" row "Created by" column of "categoryquestions" table should contain "Admin User"
 
   Scenario: A question can have its idnumber removed
-    Given the following "questions" exist:
-      | questioncategory | qtype | name                   | idnumber |
-      | Test questions   | essay | Question with idnumber | frog     |
-    When I am on the "Course 1" "core_question > course question bank" page logged in as "teacher1"
-    Then I should see "frog" in the "Question with idnumber" "table_row"
-    When I choose "Edit question" action for "Question with idnumber" in the question bank
+    Given I am on the "Test question to be edited" "core_question > edit" page logged in as "teacher1"
+    And I set the field "ID number" to "frog"
+    And I press "id_submitbutton"
+    Then I should see "frog" in the "Test question to be edited" "table_row"
+    When I choose "Edit question" action for "Test question to be edited" in the question bank
     And I set the field "ID number" to ""
     And I press "id_submitbutton"
-    Then I should not see "frog" in the "Question with idnumber" "table_row"
+    Then I should not see "frog" in the "Test question to be edited" "table_row"
 
   Scenario: If the question type is no longer installed, then most edit actions are not present
     Given the following "questions" exist:

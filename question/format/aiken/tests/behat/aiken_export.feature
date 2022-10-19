@@ -29,7 +29,8 @@ Feature: Test exporting questions using Aiken format.
     And I follow "Test quiz"
 
   Scenario: Aiken export
-    When I am on the "Course 1" "core_question > course question export" page logged in as "teacher1"
+    When I navigate to "Question bank" in current page administration
+    And I select "Export" from the "Question bank tertiary navigation" singleselect
     And I set the field "id_format_aiken" to "1"
     When I press "Export questions to file"
     Then following "click here" should download between "68" and "70" bytes
