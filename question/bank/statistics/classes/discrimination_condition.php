@@ -102,8 +102,14 @@ class discrimination_condition extends condition {
      * @return array where sql and params
      */
     public static function build_query_from_filters(array $filters): array {
+        if (!isset($filters['discrimination'])) {
+            return ["", []];
+        }
         if (isset($filters['discrimination'])) {
             $filter = (object) $filters['discrimination'];
+            if (empty($filter->values[0])) {
+                return ["", []];
+            }
             $where = 'q.id IN (SELECT qs.questionid
                                FROM {question_statistics} qs
                           LEFT JOIN {question} q ON qs.questionid = q.id
