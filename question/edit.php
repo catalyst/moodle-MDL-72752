@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/question/editlib.php');
 $filters = optional_param('filter', '', PARAM_TEXT);
 
 $filters = helper::filter_query_to_array($filters);
-
+//var_dump($filters["filterverb"]);die;
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
         question_edit_setup('questions', '/question/edit.php');
 
