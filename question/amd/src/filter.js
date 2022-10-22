@@ -101,11 +101,7 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
         // Otherwise, the ws function should retrieves question based on default courseid and cateogryid.
         if (filterdata) {
             // Main join types.
-            // eslint-disable-next-line no-console
-            console.log(filterverb);
             if (filterverb !== null) {
-                // eslint-disable-next-line no-console
-                console.log('came came');
                 wsfilter.filteroptions.filterverb = filterverb;
             } else {
                 wsfilter.filteroptions.filterverb = parseInt(filterSet.dataset.filterverb, 10);
@@ -318,16 +314,10 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
     let initialFilters;
     let filterverb = null;
     if (pagevars.filters) {
-        // eslint-disable-next-line no-console
-        console.log('safat');
         // Load initial filter based on page vars.
         initialFilters = pagevars.filters;
         filterverb = pagevars.filterverb;
-        // eslint-disable-next-line no-console
-        console.log(filterverb);
     } else {
-        // eslint-disable-next-line no-console
-        console.log('shahin');
         // Otherwise, load filter from URL.
         initialFilters = loadUrlParams();
     }
@@ -341,8 +331,6 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
 
         // Add fitlers.
         let rowcount = 0;
-        // eslint-disable-next-line no-console
-        console.log(initialFilters);
         for (const urlFilter in initialFilters) {
             if (urlFilter === 'filterverb') {
                 filterverb = initialFilters[urlFilter];
@@ -364,8 +352,6 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
         coreFilter.filterSet.dataset.filterverb = filterverb;
         coreFilter.filterSet.querySelector(Selectors.filterset.fields.join).value = filterverb;
         // Apply filter.
-        // eslint-disable-next-line no-console
-        console.log(filterverb);
         applyFilter(initialFilters, filterverb);
     }
 };
