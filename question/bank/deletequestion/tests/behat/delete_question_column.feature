@@ -63,27 +63,27 @@ Feature: Use the qbank plugin manager page for deletequestion
 
   Scenario: Questions bank can display and filter delete/hidden questions
     Given quiz "Test quiz" contains the following questions:
-      | question       | page |
-      | First question | 1    |
-    When I am on "Course 1" course homepage
+      | question              | page |
+      | First question second | 1    |
+    When I log in as "admin"
     And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
     And I click on "Clear filters" "button"
     And I set the field "type" in the "Filter 1" "fieldset" to "Category"
     And I set the field "Type or select..." in the "Filter 1" "fieldset" to "Test questions"
     And I click on "Apply filters" "button"
-    And I choose "Delete" action for "First question" in the question bank
+    And I choose "Delete" action for "First question second" in the question bank
     And I press "Delete"
     And I click on "Clear filters" "button"
     And I set the field "type" in the "Filter 1" "fieldset" to "Category"
     And I set the field "Type or select..." in the "Filter 1" "fieldset" to "Test questions"
     And I click on "Apply filters" "button"
-    And I should not see "First question"
+    And I should not see "First question second"
     And I click on "Clear filters" "button"
     And I set the field "type" in the "Filter 1" "fieldset" to "Category"
     And I set the field "Type or select..." in the "Filter 1" "fieldset" to "Test questions"
     And I click on "Add condition" "button"
-    And I set the field "type" in the "Filter 2" "fieldset" to "Show old questions"
+    And I set the field "type" in the "Filter 2" "fieldset" to "Also show old questions"
     And I set the field "hidden" in the "Filter 2" "fieldset" to "Yes"
     And I click on "Apply filters" "button"
-    And I should see "First question"
+    And I should see "First question second"

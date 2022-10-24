@@ -55,14 +55,6 @@ Feature: The questions in the question bank can be filtered by categories
     And I should see "question 1 name" in the "categoryquestions" "table"
     And I should not see "question 2 name" in the "categoryquestions" "table"
 
-  Scenario: URL parameters are sharable and category filter can be retrieved
-    And I add "Test questions" and "Course 1" with "Any" join type parameters to url and visit it
-    And I should see "question 1 name" in the "categoryquestions" "table"
-    And I should not see "question 2 name" in the "categoryquestions" "table"
-    And I add "Some other category" and "Course 1" with "None" join type parameters to url and visit it
-    And I should see "question 1 name" in the "categoryquestions" "table"
-    And I should not see "question 2 name" in the "categoryquestions" "table"
-
   Scenario: Question subcategories can be properly filtered
     When I click on "jump" "select"
     And I click on "Categories" "option"
@@ -76,7 +68,7 @@ Feature: The questions in the question bank can be filtered by categories
     And I should see "question 2 name"
     And I should not see "question 3 name"
     And I click on "Add condition" "button"
-    And I set the field "type" in the "Filter 2" "fieldset" to "Show questions subcategories"
+    And I set the field "type" in the "Filter 2" "fieldset" to "Also show questions from subcategories"
     And I set the field "subcategories" in the "Filter 2" "fieldset" to "Yes"
     And I click on "Apply filters" "button"
     And I should see "question 2 name"

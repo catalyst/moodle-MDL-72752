@@ -32,7 +32,7 @@ Feature: A teacher can put questions with idnumbers in categories with idnumbers
     And I press "Add category"
     And I set the following fields to these values:
       | Name            | New cat           |
-      | Parent category | Top for Course 1  |
+      | Parent category | Top  |
       | Category info   | Created as a test |
       | ID number       | c1used            |
     And I click on "Add category" "button" in the "Add category" modal
