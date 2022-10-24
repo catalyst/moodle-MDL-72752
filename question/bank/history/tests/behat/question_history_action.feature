@@ -51,7 +51,7 @@ Feature: Use the qbank plugin manager page for question history
     And I set the field "id_name" to "Renamed question v2"
     And I set the field "id_questiontext" to "edited question"
     And I press "id_submitbutton"
-    And I should not see "First question"
+    And I should see "First question"
     And I should see "Renamed question v2"
     And I click on ".dropdown-toggle" "css_element" in the "First question" "table_row"
     Then I should not see "History" in the "region-main" "region"
