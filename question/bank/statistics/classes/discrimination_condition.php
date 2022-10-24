@@ -94,7 +94,7 @@ class discrimination_condition extends condition {
         }
         if (isset($filters['discrimination'])) {
             $filter = (object) $filters['discrimination'];
-            if (empty($filter->values[0])) {
+            if (!isset($filter->values[0])) {
                 return ["", []];
             }
             $where = 'q.id IN (SELECT qs.questionid
@@ -109,9 +109,9 @@ class discrimination_condition extends condition {
                 $where .= ' < ' . $filter->values[0] . ')';
             }
             if ($filter->rangetype === self::RANGETYPE_BETWEEN) {
-                $where .= ' > '
+                $where .= ' >= '
                     . $filter->values[0]
-                    . ' AND AVG(qs.discriminationindex) <'
+                    . ' AND AVG(qs.discriminationindex) <='
                     . $filter->values[1]
                     . ')';
             }
