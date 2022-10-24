@@ -22,7 +22,7 @@
  */
 
 import ajax from 'core/ajax';
-import CoreFilter from 'core/datafilter';
+import CoreFilter from 'core_question/qbank_datafilter';
 import Notification from 'core/notification';
 import Selectors from 'core/datafilter/selectors';
 import Templates from 'core/templates';
@@ -316,7 +316,9 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
     if (pagevars.filters) {
         // Load initial filter based on page vars.
         initialFilters = pagevars.filters;
-        filterverb = pagevars.filterverb;
+        if (pagevars.filterverb) {
+            filterverb = pagevars.filterverb;
+        }
     } else {
         // Otherwise, load filter from URL.
         initialFilters = loadUrlParams();
@@ -334,6 +336,8 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
         for (const urlFilter in initialFilters) {
             if (urlFilter === 'filterverb') {
                 filterverb = initialFilters[urlFilter];
+                coreFilter.filterSet.dataset.filterverb = filterverb;
+                coreFilter.filterSet.querySelector(Selectors.filterset.fields.join).value = filterverb;
                 continue;
             }
             if (urlFilter !== 'courseid') {
@@ -349,8 +353,6 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
                 coreFilter.addFilterRow(filterdata);
             }
         }
-        coreFilter.filterSet.dataset.filterverb = filterverb;
-        coreFilter.filterSet.querySelector(Selectors.filterset.fields.join).value = filterverb;
         // Apply filter.
         applyFilter(initialFilters, filterverb);
     }
