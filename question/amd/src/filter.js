@@ -336,8 +336,6 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
         for (const urlFilter in initialFilters) {
             if (urlFilter === 'filterverb') {
                 filterverb = initialFilters[urlFilter];
-                coreFilter.filterSet.dataset.filterverb = filterverb;
-                coreFilter.filterSet.querySelector(Selectors.filterset.fields.join).value = filterverb;
                 continue;
             }
             if (urlFilter !== 'courseid') {
@@ -353,6 +351,8 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
                 coreFilter.addFilterRow(filterdata);
             }
         }
+        coreFilter.filterSet.dataset.filterverb = filterverb;
+        coreFilter.filterSet.querySelector(Selectors.filterset.fields.join).value = filterverb;
         // Apply filter.
         applyFilter(initialFilters, filterverb);
     }

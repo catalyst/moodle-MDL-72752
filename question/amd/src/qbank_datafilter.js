@@ -152,6 +152,10 @@ export default class extends CoreFilter {
         typeField.disabled = 'disabled';
         // Update the join list.
         this.updateJoinList(filterDataNode.dataset.joinList, filterRow);
+        const joinField = filterRow.querySelector(Selectors.filter.fields.join);
+        if (isNaN(filterJoin) === false) {
+            joinField.value = filterJoin;
+        }
         // Update the list of available filter types.
         this.updateFiltersOptions();
 
@@ -179,7 +183,6 @@ export default class extends CoreFilter {
             toRemove.forEach((joinType) => {
                 joinField.options.remove(joinType);
             });
-            // joinField.value = filterJoin;
         }
     }
 }
