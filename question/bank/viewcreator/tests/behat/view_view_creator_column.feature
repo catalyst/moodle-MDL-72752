@@ -30,5 +30,3 @@ Feature: Use the qbank plugin manager page for viewcreator plugin
     And I am on the "Test quiz" "quiz activity" page
     And I navigate to "Question bank" in current page administration
     Then I should see "Created by"
-
-
