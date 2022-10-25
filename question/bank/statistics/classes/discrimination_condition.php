@@ -82,6 +82,12 @@ class discrimination_condition extends condition {
         return false;
     }
 
+    public function get_join_list(): array {
+        return [
+            self::JOINTYPE_ALL,
+        ];
+    }
+
     /**
      * Build query from filter value
      *

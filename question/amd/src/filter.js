@@ -74,7 +74,7 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
 
     // Init function with apply callback.
     const coreFilter = new CoreFilter(filterSet, function(filters, pendingPromise) {
-        applyFilter(filters, null, pendingPromise);
+        applyFilter(filters, pendingPromise);
     });
     coreFilter.init();
 
@@ -93,19 +93,14 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
      * Retrieve table data.
      *
      * @param {Object} filterdata data
-     * @param {string} filterverb main filter join type
      * @param {Promise} pendingPromise pending promise
      */
-    const applyFilter = (filterdata, filterverb = null, pendingPromise) => {
+    const applyFilter = (filterdata, pendingPromise) => {
         // Getting filter data.
         // Otherwise, the ws function should retrieves question based on default courseid and cateogryid.
         if (filterdata) {
             // Main join types.
-            if (filterverb !== null) {
-                wsfilter.filteroptions.filterverb = filterverb;
-            } else {
-                wsfilter.filteroptions.filterverb = parseInt(filterSet.dataset.filterverb, 10);
-            }
+            wsfilter.filteroptions.filterverb = parseInt(filterSet.dataset.filterverb, 10);
             // Clean old filter
             wsfilter.filters = [];
             delete filterdata.filterverb;
@@ -354,6 +349,6 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
         coreFilter.filterSet.dataset.filterverb = filterverb;
         coreFilter.filterSet.querySelector(Selectors.filterset.fields.join).value = filterverb;
         // Apply filter.
-        applyFilter(initialFilters, filterverb);
+        applyFilter(initialFilters);
     }
 };

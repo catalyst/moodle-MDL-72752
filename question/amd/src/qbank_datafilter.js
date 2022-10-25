@@ -22,15 +22,10 @@
  */
 
 import CoreFilter from 'core/datafilter';
-// import CourseFilter from 'core/datafilter/filtertypes/courseid';
-// import GenericFilter from 'core/datafilter/filtertype';
-// import {get_strings as getStrings} from 'core/str';
 import Notification from 'core/notification';
 import Pending from 'core/pending';
 import Selectors from 'core/datafilter/selectors';
 import Templates from 'core/templates';
-import CustomEvents from 'core/custom_interaction_events';
-import jQuery from 'jquery';
 import GenericFilter from 'core/datafilter/filtertype';
 
 export default class extends CoreFilter {
@@ -38,61 +33,10 @@ export default class extends CoreFilter {
         super(filterSet, applyCallback);
     }
 
-    /**
-     * Initialise event listeners to the filter.
-     */
-    init() {
-        // Add listeners for the main actions.
-        this.filterSet.querySelector(Selectors.filterset.region).addEventListener('click', e => {
-            if (e.target.closest(Selectors.filterset.actions.addRow)) {
-                e.preventDefault();
-
-                this.addFilterRow();
-            }
-
-            if (e.target.closest(Selectors.filterset.actions.applyFilters)) {
-                e.preventDefault();
-
-                this.updateTableFromFilter();
-            }
-
-            if (e.target.closest(Selectors.filterset.actions.resetFilters)) {
-                e.preventDefault();
-
-                this.removeAllFilters();
-            }
-        });
-
-        // Add the listener to remove a single filter.
-        this.filterSet.querySelector(Selectors.filterset.regions.filterlist).addEventListener('click', e => {
-            if (e.target.closest(Selectors.filter.actions.remove)) {
-                e.preventDefault();
-
-                this.removeOrReplaceFilterRow(e.target.closest(Selectors.filter.region), true);
-            }
-        });
-
-        // Add listeners for the filter type selection.
-        let filterRegion = jQuery(this.getFilterRegion());
-        CustomEvents.define(filterRegion, [CustomEvents.events.accessibleChange]);
-        filterRegion.on(CustomEvents.events.accessibleChange, e => {
-            const typeField = e.target.closest(Selectors.filter.fields.type);
-            if (typeField && typeField.value) {
-                const filter = e.target.closest(Selectors.filter.region);
-
-                this.addFilter(filter, typeField.value);
-            }
-        });
-
-        this.filterSet.querySelector(Selectors.filterset.fields.join).addEventListener('change', e => {
-            this.filterSet.dataset.filterverb = e.target.value;
-        });
-    }
-
     addFilterRow(filterdata = {}) {
         const pendingPromise = new Pending('core/datafilter:addFilterRow');
         const rownum = filterdata.rownum ?? 1 + this.getFilterRegion().querySelectorAll(Selectors.filter.region).length;
-        return Templates.renderForPromise('core/datafilter/filter_row', {"rownumber": rownum})
+        return Templates.renderForPromise('core_question/qbank_filter_row', {"rownumber": rownum})
             .then(({html, js}) => {
                 const newContentNodes = Templates.appendNodeContents(this.getFilterRegion(), html, js);
 
@@ -153,6 +97,7 @@ export default class extends CoreFilter {
         // Update the join list.
         this.updateJoinList(filterDataNode.dataset.joinList, filterRow);
         const joinField = filterRow.querySelector(Selectors.filter.fields.join);
+        joinField.disabled = false;
         if (isNaN(filterJoin) === false) {
             joinField.value = filterJoin;
         }
@@ -165,23 +110,19 @@ export default class extends CoreFilter {
     updateJoinList(filterJoinData, filterRow) {
         const regularJoinList = [0, 1, 2];
         const filterJoinList = JSON.parse(filterJoinData);
-        // eslint-disable-next-line no-console
-        console.log(regularJoinList);
-        // eslint-disable-next-line no-console
-        console.log(filterJoinList);
-        let toRemove = [];
-        regularJoinList.forEach((joinType) => {
-            if (!filterJoinList.includes(joinType)) {
-                toRemove.push(joinType);
-            }
-        });
-        // eslint-disable-next-line no-console
-        console.log(toRemove);
         // Re-construct join type and list.
-        if (toRemove.length !== 0) {
+        if (filterJoinList.length !== 0) {
             const joinField = filterRow.querySelector(Selectors.filter.fields.join);
-            toRemove.forEach((joinType) => {
-                joinField.options.remove(joinType);
+            regularJoinList.forEach((join) => {
+                if (!filterJoinList.includes(join)) {
+                    joinField.options[join].classList.add('hidden');
+                    joinField.options[join].disabled = true;
+                }
+            });
+            joinField.options.forEach((element, index) => {
+                if (element.disabled) {
+                    joinField.options[index] = null;
+                }
             });
         }
     }
