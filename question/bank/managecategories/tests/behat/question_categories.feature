@@ -1,4 +1,4 @@
-@qbank @qbank_managecategories @javascript @nathan
+@qbank @qbank_managecategories @javascript
 Feature: A teacher can put questions in categories in the question bank
   In order to organize my questions
   As a teacher
