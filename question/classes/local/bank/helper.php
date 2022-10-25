@@ -74,6 +74,63 @@ class helper {
     /**
      * Transform query string to array
      *
+     * @param array $query query string
+     * @return string
+     */
+    public static function filter_array_to_query(array $filters): string {
+        if (empty($filters)) {
+            return '';
+        }
+        var_dump($filters);die;
+
+        foreach ($filters as $key => $filter) {
+
+        }
+
+
+
+        $filters = [];
+
+        // Filters are join by '&'.
+        $encodedfilters = explode('&', $query);
+
+        foreach ($encodedfilters as $encodedfilter) {
+            // Filter key and data are separate by '='.
+            $encodedfilter = explode('=', $encodedfilter);
+            $key = $encodedfilter[0];
+            if ($key === 'filterverb') {
+                $filters[$key] = $encodedfilter[1];
+                continue;
+            }
+            $filters[$key] = [];
+            $params = explode('&', urldecode($encodedfilter[1]));
+            foreach ($params as $param) {
+                $param = explode('=', $param);
+                $name = $param[0];
+                $values = urldecode($param[1]);
+                if ($name === 'values') {
+                    if (strpos($values, '=') !== false) {
+                        // This containes multiple values.
+                        $values = explode('&', $values);
+                        foreach ($values as $value) {
+                            list($index, $avalue) = explode('=', $value);
+                            $filters[$key][$name][$index] = $avalue;
+                        }
+                    } else {
+                        $filters[$key][$name] = [$values];
+                    }
+                } else {
+                    // This container only one value.
+                    $filters[$key][$name] = $values;
+                }
+            }
+        }
+        return $filters;
+    }
+
+    /**
+     * Transform query string to array
+     *
      * @param string $query query string
      * @return array
      */

@@ -31,9 +31,10 @@ use core_question\local\bank\view;
 require_once(__DIR__ . '/../config.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 
-$filters = optional_param('filter', '', PARAM_TEXT);
+$filter = optional_param('filter', '', PARAM_TEXT);
 
-$filters = helper::filter_query_to_array($filters);
+$filters = helper::filter_query_to_array($filter);
+//$filter = helper::filter_array_to_query($filters);
 //var_dump($filters["filterverb"]);die;
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
         question_edit_setup('questions', '/question/edit.php');
@@ -56,7 +57,7 @@ $extraparams = [];
 if ($cm) {
     $extraparams['cmid'] = $cm->id;
 }
-
+$thispageurl->param('filter', $filter);
 $questionbank = new view($contexts, $thispageurl, $COURSE, $cm, $pagevars, $extraparams);
 
 $context = $contexts->lowest();

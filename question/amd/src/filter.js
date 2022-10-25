@@ -71,6 +71,7 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
         SORT_LINK: '#questionscontainer div.sorters a',
         PAGINATION_LINK: '#questionscontainer a[href].page-link',
     };
+    let filterQuery = '';
 
     // Init function with apply callback.
     const coreFilter = new CoreFilter(filterSet, function(filters, pendingPromise) {
@@ -115,7 +116,9 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
                 wsfilter.filters.push(filter);
             }
             if (Object.keys(filterdata).length !== 0) {
-                filterdata.filterverb = wsfilter.filteroptions.filterverb;
+                if (isNaN(wsfilter.filteroptions.filterverb) === false) {
+                    filterdata.filterverb = wsfilter.filteroptions.filterverb;
+                }
                 updateUrlParams(filterdata);
             }
         }
@@ -161,6 +164,16 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
      * @return {*}
      */
     const renderQuestiondata = (filtercondition) => {
+        let data = JSON.parse(extraparams);
+        if (data.length !== 0 && data.filterquery) {
+            data.filterquery = filterQuery;
+            extraparams = JSON.stringify(data);
+        } else {
+            extraparams = {filterquery: filterQuery};
+            extraparams = JSON.stringify(extraparams);
+        }
+        // eslint-disable-next-line no-console
+        console.log(extraparams);
         const viewData = {
             component: component,
             callback: callback,
@@ -179,8 +192,8 @@ export const init = (filterRegionId, defaultcourseid, defaultcategoryid,
      */
     const updateUrlParams = (filters) => {
         const url = new URL(location.href);
-        const query = objectToQuery(filters);
-        url.searchParams.set('filter', query);
+        filterQuery = objectToQuery(filters);
+        url.searchParams.set('filter', filterQuery);
         history.pushState(filters, '', url);
     };
 

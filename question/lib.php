@@ -140,7 +140,7 @@ function core_question_output_fragment_question_data($args) {
     } else {
         $thispageurl->param('courseid', $params['courseid']);
     }
-
+    $thispageurl->param('filter', $extraparams['filterquery']);
     $questionbank = new $viewclass($contexts, $thispageurl, $course, $cm, $params, $extraparams);
     list($questionhtml, $jsfooter) = $questionbank->display_questions_table();
     return [$questionhtml, $jsfooter];
