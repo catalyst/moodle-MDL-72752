@@ -36,9 +36,13 @@ function qbank_viewquestionname_inplace_editable($itemtype, $itemid, $newvalue):
         global $CFG, $DB;
         require_once($CFG->libdir . '/questionlib.php');
         $record = $DB->get_record('question', ['id' => $itemid], '*', MUST_EXIST);
-        \external_api::validate_context(context_system::instance());
+        $question = question_bank::load_question($record->id);
+        \external_api::validate_context(context::instance_by_id($question->contextid));
         $record->name = $newvalue;
         $DB->update_record('question', $record);
+        question_bank::notify_question_edited($record->id);
+        $event = \core\event\question_updated::create_from_question_instance($question);
+        $event->trigger();
         // Prepare the element for the output.
         return \qbank_viewquestionname\helper::make_question_name_inplace_editable($record);
     }

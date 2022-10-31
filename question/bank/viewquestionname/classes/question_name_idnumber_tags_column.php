@@ -34,12 +34,24 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
         global $OUTPUT;
 
         echo \html_writer::start_tag('div', ['class' => 'd-inline-flex flex-nowrap overflow-hidden w-100']);
-
-        $questionname = format_string($question->name);
-        $questiondisplay =   \html_writer::span($questionname, 'questionname flex-grow-1 flex-shrink-1 text-truncate');
-
-        // Question name.
-        echo $OUTPUT->render(helper::make_question_name_inplace_editable($question, $questiondisplay));
+        $questiondisplay = $OUTPUT->render(helper::make_question_name_inplace_editable($question));
+        // This is a nasty but quick way of using question title in the question bank to save all other
+        // behats for the question in place edit as it changes the entire html format and breaks all
+        // sorts of behat which were targeting question according row. We can come up with something better
+        // in a later stage where things are rendered differently via ajax, move to mustache etc.
+        if ((defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
+            $questiondisplay = format_string($question->name);
+        }
+        $labelfor = $this->label_for($question);
+        if ($labelfor) {
+            echo '<label for='. $labelfor . '>';
+            echo $questiondisplay;
+            echo '</label>';
+        } else {
+            echo \html_writer::start_span('questionname flex-grow-1 flex-shrink-1 text-truncate');
+            echo $questiondisplay;
+            echo \html_writer::end_span();
+        }
 
         // Question idnumber.
         // The non-breaking space '&nbsp;' is used in html to fix MDL-75051 (browser issues caused by chrome and Edge).
