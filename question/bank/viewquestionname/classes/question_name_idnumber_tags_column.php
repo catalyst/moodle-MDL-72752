@@ -35,13 +35,6 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
 
         echo \html_writer::start_tag('div', ['class' => 'd-inline-flex flex-nowrap overflow-hidden w-100']);
         $questiondisplay = $OUTPUT->render(helper::make_question_name_inplace_editable($question));
-        // This is a nasty but quick way of using question title in the question bank to save all other
-        // behats for the question in place edit as it changes the entire html format and breaks all
-        // sorts of behat which were targeting question according row. We can come up with something better
-        // in a later stage where things are rendered differently via ajax, move to mustache etc.
-        if ((defined('BEHAT_TEST') && BEHAT_TEST) || defined('BEHAT_SITE_RUNNING')) {
-            $questiondisplay = format_string($question->name);
-        }
         $labelfor = $this->label_for($question);
         if ($labelfor) {
             echo '<label for='. $labelfor . '>';
