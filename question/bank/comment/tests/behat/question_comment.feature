@@ -137,8 +137,7 @@ Feature: A Teacher can comment in a question
     Given I am on the "Test quiz" "mod_quiz > question bank" page logged in as "teacher1"
     And I set the field "Select a category" to "Test questions"
     And I should see "First question"
-    And I click on "Edit" "link" in the "First question" "table_row"
-    And I follow "Edit question"
+    And I choose "Edit question" action for "First question" in the question bank
     And I set the field "id_name" to "Renamed question v2"
     And I set the field "id_questiontext" to "edited question"
     And I press "id_submitbutton"
