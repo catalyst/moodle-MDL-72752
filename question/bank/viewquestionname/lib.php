@@ -26,25 +26,32 @@
 /**
  * In place editing callback for question name.
  *
- * @param string $itemtype
- * @param int $itemid
- * @param string $newvalue
- * @return \core\output\inplace_editable|void
+ * @param string $itemtype type of the item, questionname for this instance
+ * @param int $itemid question id to change the title
+ * @param string $newvalue the changed question title
+ * @return \core\output\inplace_editable
  */
-function qbank_viewquestionname_inplace_editable($itemtype, $itemid, $newvalue): \core\output\inplace_editable {
+function qbank_viewquestionname_inplace_editable ($itemtype, $itemid, $newvalue) : \core\output\inplace_editable {
     if ($itemtype === 'questionname') {
         global $CFG, $DB;
         require_once($CFG->libdir . '/questionlib.php');
+        // Get the question data and to confirm any invalud itemid is not passed.
         $record = $DB->get_record('question', ['id' => $itemid], '*', MUST_EXIST);
+        // Load question data from question engine.
         $question = question_bank::load_question($record->id);
+        // Context validation.
         \external_api::validate_context(context::instance_by_id($question->contextid));
+
+        // Now update the question data.
         $record->name = $newvalue;
         $DB->update_record('question', $record);
+
+        // Trigger events.
         question_bank::notify_question_edited($record->id);
         $event = \core\event\question_updated::create_from_question_instance($question);
         $event->trigger();
-        // Prepare the element for the output.
-        return \qbank_viewquestionname\helper::make_question_name_inplace_editable($record);
-    }
 
+        // Prepare the element for the output.
+        return new \qbank_viewquestionname\output\questionname($record);
+    }
 }

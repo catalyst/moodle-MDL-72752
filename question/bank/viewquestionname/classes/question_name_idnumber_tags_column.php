@@ -34,12 +34,12 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
         global $OUTPUT;
 
         echo \html_writer::start_tag('div', ['class' => 'd-inline-flex flex-nowrap overflow-hidden w-100']);
-        $questiondisplay = $OUTPUT->render(helper::make_question_name_inplace_editable($question));
+        $questiondisplay = $OUTPUT->render(new \qbank_viewquestionname\output\questionname($question));
         $labelfor = $this->label_for($question);
         if ($labelfor) {
-            echo '<label for='. $labelfor . '>';
-            echo $questiondisplay;
-            echo '</label>';
+            echo \html_writer::tag('label', $questiondisplay, [
+                'for' => $labelfor,
+            ]);
         } else {
             echo \html_writer::start_span('questionname flex-grow-1 flex-shrink-1 text-truncate');
             echo $questiondisplay;
