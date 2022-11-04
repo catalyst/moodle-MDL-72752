@@ -77,6 +77,7 @@ abstract class bulk_action_base {
      * @return string
      */
     public function get_bulk_action_key(): string {
+        debugging('Function get_bulk_action_key() is deprecated, please use get_key instead.', DEBUG_DEVELOPER);
         return '';
     }
 }

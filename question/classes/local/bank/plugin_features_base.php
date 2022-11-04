@@ -62,6 +62,7 @@ class plugin_features_base {
      * @return null|bulk_action_base
      */
     public function get_bulk_actions(): ?bulk_action_base {
+        debugging('Function get_bulk_actions() is deprecated, please use get_bulk_action_items instead.', DEBUG_DEVELOPER);
         return null;
     }
 
